@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primaryColor: #00624F;
+  --primaryColorLight: #C0DCD5;
+
+  --greyscale50: #F3F3F3;
+  --greyscale100: #E5E5E5;
+  --greyscale200: #CCCCCC;
+  --greyscale300: #B3B3B3;
+  --greyscale400: #9B9B9B;
+  --greyscale500: #131313;
+  /* 👈 last wali rakho */
+  --greyscale600: #848484;
+  --greyscale700: #4E4E4E;
+  --greyscale800: #2E2E2E;
+  --greyscale900: #1D1D1D;
+  --tealBlue: #087589;
+  --tealBlueLight: #B2EBFF;
+  --blue: #3B82F6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primaryColor: var(--primaryColor);
+  --color-primaryColorLight: var(--primaryColorLight);
+
+  --color-greyscale50: var(--greyscale50);
+  --color-greyscale100: var(--greyscale100);
+  --color-greyscale200: var(--greyscale200);
+  --color-greyscale300: var(--greyscale300);
+  --color-greyscale400: var(--greyscale400);
+  --color-greyscale500: var(--greyscale500);
+  --color-greyscale600: var(--greyscale600);
+  --color-greyscale700: var(--greyscale700);
+  --color-greyscale800: var(--greyscale800);
+  --color-greyscale900: var(--greyscale900);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.h1Semi {
+  @apply text-greyscale500 text-[32px] md:text-[48px] font-semibold leading-[57.6px];
+  font-family: Onest, -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+.headlineRegular {
+  @apply text-greyscale600 text-[16px] sm:text-[20px] font-normal leading-[30px];
+}
+
+.textMedium {
+  @apply text-greyscale600 text-[16px] sm:text-[20px] font-normal leading-[30px];
+
+}
+
+.textH3Semi {
+  @apply text-greyscale500 text-[24px] leading-[42px] font-semibold
+}
+
+.textHeadlineSemi {
+  @apply text-greyscale500 text-[20px] leading-[30px] font-[600]
+}
+
+.agBold {
+  @apply text-greyscale500 text-[16px] leading-[24px] font-[600]
+}
+
+.agBodyRegular {
+  @apply text-greyscale500 text-[16px] leading-[24px]
+}
+
+.agBodyRegularGrey {
+  @apply text-[#374151] text-[16px] leading-[24px]
+}
+
+.agBodyMediumGrey {
+  @apply text-greyscale600 text-[14px] leading-[21px] font-[500]
+}
+
+.agBodyMediumGrey900 {
+  @apply text-greyscale900 text-[14px] leading-[21px] font-[500] tracking-wide
+}
+
+.agBodyBaseGrey600 {
+  @apply text-greyscale600 text-[16px] leading-[21px] font-[500] tracking-wide
+}

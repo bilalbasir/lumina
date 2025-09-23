@@ -1,0 +1,1 @@
+export const dateConvert = (createdAt: string) => { return new Date(createdAt).toLocaleDateString("en-GB") }
