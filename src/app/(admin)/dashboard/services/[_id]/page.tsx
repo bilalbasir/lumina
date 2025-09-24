@@ -20,6 +20,8 @@ type FormValues = {
     status: string;
     serviceSuccessRate: string;
     description: string;
+    serviceOverView: string
+    subTitle: string
 };
 
 const categories = [
@@ -70,6 +72,8 @@ const Page = () => {
                     status: data.status,
                     serviceSuccessRate: data.serviceSuccessRate,
                     description: data.description,
+                    serviceOverView: data.serviceOverView,
+                    subTitle: data.subTitle,
                 });
 
                 setTags(data.tags || []);
@@ -96,6 +100,8 @@ const Page = () => {
             formData.append("status", data.status);
             formData.append("serviceSuccessRate", data.serviceSuccessRate);
             formData.append("description", data.description);
+            formData.append("serviceOverView", data.serviceOverView);
+            formData.append("subTitle", data.subTitle);
 
             if (data.bannerImage?.[0]) {
                 formData.append("bannerImage", data.bannerImage[0]);
@@ -201,7 +207,33 @@ const Page = () => {
                         />
                     </div>
                 </div>
+                <div className='flex items-center justify-between w-full'>
 
+                    <div className='w-[100%] md:w-[49%]'>
+
+                        <InputField
+                            label="Service Sub Title"
+
+                            name="subTitle"
+                            placeholder="Enter service sub title"
+                            register={register}
+                            error={errors.subTitle}
+                            required
+                        />
+                    </div>
+                    <div className='w-[100%] md:w-[49%]'>
+
+                        <InputField
+                            label="Service Over view"
+
+                            name="serviceOverView"
+                            placeholder="Enter service overview"
+                            register={register}
+                            error={errors.serviceOverView}
+                            required
+                        />
+                    </div>
+                </div>
                 <div className="w-[100%]">
                     <UploadFile
                         label="Banner Image"

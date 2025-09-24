@@ -51,14 +51,20 @@ const Navbar = () => {
     >
       <div className="flex justify-between items-center w-full px-2 py-4 md:px-20  md:py-4">
         {/* Logo */}
-        <div className=" hidden md:block ">
-          <Link href="/" className="flex items-center md:w-[28%] gap-2">
-            <div className='relative hidden md:block md:w-[100%] h-[55px]'>
-
-              <Image fill alt='logo' src={"/assets/logo.png"} className='object-cover' />
+        <div className="hidden md:block">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="relative h-[55px] w-[150px]">
+              <Image
+                src="/assets/logo.png"
+                alt="logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
           </Link>
         </div>
+
 
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center gap-6">

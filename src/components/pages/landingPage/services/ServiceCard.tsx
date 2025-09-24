@@ -1,4 +1,5 @@
 'use client'
+import { imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl'
 import ForwardIcon from '@/components/icons/forwardIcon/ForwardIcon'
 import { slugify } from '@/utils/slugify'
 import Link from 'next/link'
@@ -26,7 +27,7 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
         >
             {/* Background Image */}
             <img
-                src={props.image}
+                src={`${imageBaseUrl}/${props.image}`}
                 alt={props.cardHeading}
                 className="absolute inset-0 w-full h-full object-cover"
             />

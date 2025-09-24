@@ -9,7 +9,7 @@ import MessageIcon from '@/components/icons/messageIcon/MessageIcon'
 import CallIcon from '@/components/icons/callIcon/CallIcon'
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
 import { dateConvert } from '@/utils/dateConvert'
-import { baseUrl } from '@/app/apiServices/baseUrl/BaseUrl'
+import { imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl'
 
 interface ViewApplicationModalProps {
     id: string
@@ -17,9 +17,8 @@ interface ViewApplicationModalProps {
 
 const ViewApplicationModal: React.FC<ViewApplicationModalProps> = (id) => {
 
-    const [applicantData, setApplicantData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    console.log("<<<<<<<<<<<<id", id?.id);
+    const [applicantData, setApplicantData] = useState(null);
+    console.log("<<<<<<<<<<<<id", applicantData);
 
     // Fetch service detail
     useEffect(() => {
@@ -33,8 +32,6 @@ const ViewApplicationModal: React.FC<ViewApplicationModalProps> = (id) => {
                 setApplicantData(res); // API response
             } catch (err) {
                 console.error("❌ Error fetching service:", err);
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -44,16 +41,10 @@ const ViewApplicationModal: React.FC<ViewApplicationModalProps> = (id) => {
     const handleDownload = () => {
         if (!applicantData?.resume) return;
 
-        // backend ka path jahan resume store hai
-        const fileUrl = `http://localhost:5000/uploads/${applicantData?.resume}`;;
-        window.open(fileUrl, "_blank");
-        // anchor element create karke force download
-        // const link = document.createElement("a");
-        // link.href = fileUrl;
-        // link.setAttribute("download", applicantData.resume); // ✅ filename maintain
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
+        // `fl_attachment` ko `fl_inline` me convert karo
+        const previewUrl = `${imageBaseUrl}/${applicantData.resume}`;
+
+        window.open(previewUrl, "_blank"); // 👈 ab browser me open hoga
     };
 
     console.log("applicantData>>>>>>>>>>", applicantData);

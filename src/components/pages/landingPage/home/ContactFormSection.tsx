@@ -59,7 +59,7 @@ const ContactFormSection = () => {
       toast.success("Message sent successfully!");
 
 
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error while adding lead:", error);
       toast.error(error?.response?.data?.message || "Failed to send message.");
     }
@@ -197,7 +197,14 @@ const ContactFormSection = () => {
                 error={errors.message}
                 required
               />
+              {/* Consent Checkbox */}
 
+              <CheckboxField
+                name="consent"
+                label="Yes, I would like to receive regular updates on thought leadership, industry insights and upcoming events from Korn Ferry. I understand that I may withdraw my consent at any time."
+                control={control}
+                labelColor="text-white"
+              />
               {/* Submit Button */}
               <button
                 type="submit"
@@ -209,14 +216,7 @@ const ContactFormSection = () => {
             </form>
           </div>
 
-          {/* Consent Checkbox */}
 
-          <CheckboxField
-            name="consent"
-            label="Yes, I would like to receive regular updates on thought leadership, industry insights and upcoming events from Korn Ferry. I understand that I may withdraw my consent at any time."
-            control={control}
-            labelColor="text-white"
-          />
 
         </div>
       </div>

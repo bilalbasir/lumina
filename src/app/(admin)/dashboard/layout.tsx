@@ -34,12 +34,12 @@ export default function DashboardLayout({
   const getLinkClasses = (href: string) =>
     `px-3 py-2 rounded-[12px] flex cursor-pointer items-center gap-x-3 transition ${isActive(href)
       ? "bg-primaryColor text-white"
-      : "text-greyscale600 hover:bg-primaryColor hover:text-white"
+      : "text-greyscale600 hover:bg-[#E5E5E5] "
     }`;
 
   const getIconColor = (href: string) => {
     if (pathname === href) return "#fff"; // ✅ active
-    if (hovered === href) return "#fff"; // ✅ hover
+    if (hovered === href) return "#848484"; // ✅ hover
     return "#686868"; // ✅ default
   };
 

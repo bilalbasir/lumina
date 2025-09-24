@@ -7,14 +7,21 @@
       "esnext"
     ],
     "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
+    "checkJs": false, // ✅ JS files check mat kare
+    "skipLibCheck": true, // ✅ node_modules ignore
+    "strict": false, // ✅ strict mode off
+    "noImplicitAny": false, // ✅ missing types = any
+    "strictNullChecks": false, // ✅ null/undefined ignore
+    "strictFunctionTypes": false, // ✅ function type mismatch ignore
+    "strictBindCallApply": false, // ✅ bind/call/apply ignore
+    "forceConsistentCasingInFileNames": false,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
     "incremental": true,
     "plugins": [

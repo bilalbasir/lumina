@@ -9,7 +9,6 @@ import UrlSlugField from '@/components/inputField/UrlSlugField'
 import UploadFile from '@/components/uploadFile/UploadFile'
 import UploadMultiFile from '@/components/uploadFile/UploadMultiFile'
 import PrimaryButton from '@/components/button/PrimaryButton'
-import { Link } from 'lucide-react'
 import AddIcon from '@/components/icons/addIcon/AddIcon'
 import EmptyContentOverview from '@/components/inputField/EmptyContentOverview'
 import TextEditor from '@/components/inputField/TextEditor'
@@ -28,14 +27,13 @@ type FormValues = {
     featuredImage: FileList
     content: string;
 
-    control: any;
-    formstate: any;
-    register: any;
+    formstate: unknown;
+    register: unknown;
 }
 
-const page = () => {
+const Page = () => {
 
-    const { register, formState: { errors }, control, handleSubmit } = useForm<FormValues>()
+    const { register, formState: { errors }, handleSubmit } = useForm<FormValues>()
     // tags state
     const [tags, setTags] = useState<string[]>([])
     const [tagInput, setTagInput] = useState("")
@@ -285,4 +283,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

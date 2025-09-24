@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation"; // 👈 params lene k liye
 import serviceApi from "@/app/apiServices/servicesApi/ServiceApi"; // 👈 aapka API service
 import CheckIcon from "@/components/icons/checkIcon/CheckIcon";
+import { cloudinaryBaseUrl, imageBaseUrl } from "@/app/apiServices/baseUrl/BaseUrl";
 
 const Page = () => {
     const params = useParams(); // { id: "68caa14b59b6ab089420761b" }
@@ -65,7 +66,7 @@ const Page = () => {
                         Banner Image
                     </label>
                     <img
-                        src={`http://localhost:5000/uploads/${serviceData.bannerImage}`}
+                        src={`${cloudinaryBaseUrl}/${serviceData.bannerImage}`}
                         alt="Banner"
                         className="w-full h-auto object-cover rounded-md mt-2"
                     />

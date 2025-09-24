@@ -194,7 +194,14 @@ const ContactUsSection = () => {
                 error={errors.message}
                 required
               />
+              {/* Consent Checkbox */}
 
+              <CheckboxField
+                name="regularUpdates"
+                label="Yes, I would like to receive regular updates on thought leadership, industry insights and upcoming events from Korn Ferry. I understand that I may withdraw my consent at any time."
+                control={control}
+
+              />
               {/* Submit Button */}
               <button
                 type="submit"
@@ -206,14 +213,7 @@ const ContactUsSection = () => {
             </form>
           </div>
 
-          {/* Consent Checkbox */}
 
-          <CheckboxField
-            name="regularUpdates"
-            label="Yes, I would like to receive regular updates on thought leadership, industry insights and upcoming events from Korn Ferry. I understand that I may withdraw my consent at any time."
-            control={control}
-
-          />
 
         </div>
       </div>

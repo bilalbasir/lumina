@@ -10,6 +10,7 @@ import Loader from '@/components/loader/Loader'
 import { useGetAllCareers, useGetAllCareersWoPagination } from '@/hooks/use-career-hook'
 import { useGetAllLeads, useGetAllLeadsWoPagination } from '@/hooks/use-lead-hook'
 import { useGetAllServices, useGetAllServicesWoPagination } from '@/hooks/use-service-hook'
+import { isCurrentMonth } from '@/utils/currentMonthFun'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
@@ -22,8 +23,29 @@ const CardData = () => {
     const totalCareers = careersRes?.data?.careers?.length || 0
     const totalServices = servicesRes?.data?.data?.length || 0
     const totalContactLeads = leadsRes?.data?.data?.length || 0
+    // helper
+    const isCurrentMonth = (dateStr?: string) => {
+        if (!dateStr) return false;
+        const d = new Date(dateStr);
+        const now = new Date();
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    };
 
+    // services
+    const allServices = servicesRes?.data?.data || [];
+    const newServicesThisMonth = allServices.filter(
+        (s: any) => isCurrentMonth(s.createdAt)
+    ).length;
 
+    // careers
+    const allCareers = careersRes?.data?.careers || [];
+    const activeJobs = allCareers.filter((c: any) => c.status === "Open").length;
+
+    // leads
+    const allLeads = leadsRes?.data?.data || [];
+    const newLeadsThisMonth = allLeads.filter(
+        (l: any) => isCurrentMonth(l.createdAt)
+    ).length;
 
     return (
         <div>
@@ -39,7 +61,7 @@ const CardData = () => {
                         </div>
                         <p className={`font-bold text-[36px] ${montserrat.className}`}>{totalServices}</p>
                         <p className={`agBold ${montserrat.className}`}>Total Services</p>
-                        <p className={`agBodyMediumGrey ${montserrat.className}`}>5 new services this month</p>
+                        <p className={`agBodyMediumGrey ${montserrat.className}`}>{newServicesThisMonth} new services this month</p>
                         <Link href="/dashboard/services" className='text-[#00624F] flex items-center gap-x-4 opacity-0 group-hover:opacity-100 duration-500 transition-all cursor-pointer'>
                             <p>Manage Services</p>
                             <ForwardIcon color='#00624F' />
@@ -56,14 +78,14 @@ const CardData = () => {
                         </div>
                         <p className={`font-bold text-[36px] ${montserrat.className}`}>{totalCareers}</p>
                         <p className={`agBold ${montserrat.className}`}>Active Jobs</p>
-                        <p className={`agBodyMediumGrey ${montserrat.className}`}>8 positions currently open</p>
+                        <p className={`agBodyMediumGrey ${montserrat.className}`}>{activeJobs} positions currently open</p>
                         <Link href="/dashboard/careers" className='text-[#00624F] flex items-center gap-x-4 opacity-0 group-hover:opacity-100 duration-500 transition-all cursor-pointer'>
                             <p>Manage Careers</p>
                             <ForwardIcon color='#00624F' />
                         </Link>
                     </div>
                 </Card>
-                <Card heading='Blogs' hover="hover:bg-[#E5F8FF]">
+                <Card heading='Blogs' hover="hover:bg-[#FAEDFF]">
                     <div className='flex flex-col items-center justify-center w-full gap-y-3 group'>
 
                         <div className='h-[48px] w-[48px] rounded-full border-[7px] border-solid border-[#FAEDFF] bg-[#ECB2FF] flex items-center justify-center'>
@@ -86,7 +108,7 @@ const CardData = () => {
                         </div>
                         <p className={`font-bold text-[36px] ${montserrat.className}`}>{totalContactLeads}</p>
                         <p className={`agBold ${montserrat.className}`}>Recent Leads</p>
-                        <p className={`agBodyMediumGrey ${montserrat.className}`}>23 leads this week</p>
+                        <p className={`agBodyMediumGrey ${montserrat.className}`}>{newLeadsThisMonth} leads this week</p>
                         <Link href="/dashboard/contact-leads" className='text-[#00624F] flex items-center gap-x-4 opacity-0 group-hover:opacity-100 duration-500 transition-all cursor-pointer'>
                             <p>Manage Contact Leads</p>
                             <ForwardIcon color='#00624F' />

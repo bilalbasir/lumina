@@ -6,30 +6,9 @@ import CirclePlusIcon from '@/components/icons/circlePlusIcon/CirclePlusIcon';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import serviceApi from '@/app/apiServices/servicesApi/ServiceApi';
+import { imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl';
 
-// Service data mapping
-const serviceData = {
-  'talent-acquisition': {
-    title: 'Talent Acquisition',
-    subtitle: 'Strategic recruitment solutions to find and attract top talent for your organization with AI-powered.',
-    backgroundImage: 'https://api.builder.io/api/v1/image/assets/TEMP/7621b75141fa3780c29b7597ce509dbe2c0236cf?width=2960'
-  },
-  'hr-analytics-insights': {
-    title: 'HR Analytics & Insights',
-    subtitle: 'Data-driven insights to optimize your workforce performance and make informed HR decisions.',
-    backgroundImage: 'https://api.builder.io/api/v1/image/assets/TEMP/7621b75141fa3780c29b7597ce509dbe2c0236cf?width=2960'
-  },
-  'leadership-training': {
-    title: 'Leadership Training',
-    subtitle: 'Comprehensive leadership development programs to build strong organizational leaders.',
-    backgroundImage: 'https://api.builder.io/api/v1/image/assets/TEMP/7621b75141fa3780c29b7597ce509dbe2c0236cf?width=2960'
-  },
-  'workforce-strategy': {
-    title: 'Workforce Strategy',
-    subtitle: 'Strategic workforce planning and optimization to align talent with business objectives.',
-    backgroundImage: 'https://api.builder.io/api/v1/image/assets/TEMP/7621b75141fa3780c29b7597ce509dbe2c0236cf?width=2960'
-  }
-};
+
 
 
 
@@ -78,7 +57,7 @@ export default function ServiceDetailPage() {
         <div className="absolute inset-0">
 
           <img
-            src={`http://localhost:5000/uploads/${serviceData.bannerImage}`}
+            src={`${imageBaseUrl}/${serviceData.bannerImage}`}
             alt="Hero Background"
             className="absolute inset-0 w-full h-full object-cover"
           />
@@ -131,7 +110,7 @@ export default function ServiceDetailPage() {
                 style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
               >
                 {/* {service.subtitle} */}
-                {serviceData.serivceOverview || "Subtile Here"}
+                {serviceData.subTitle || "Subtile Here"}
               </p>
             </div>
           </div>
@@ -151,7 +130,7 @@ export default function ServiceDetailPage() {
                   className="text-3xl  md:text-4xl lg:text-[48px] font-bold text-[#1D1D1D] leading-[43.3px] md:leading-[63.2px] lg:leading-[83.2px] xl:leading-[120%]"
                   style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
-                  {serviceData.subServiceHeading || "Strategic Talent Solutions"}
+                  {serviceData.subTitle || "Strategic Talent Solutions"}
                 </h2>
 
                 {/* Description */}

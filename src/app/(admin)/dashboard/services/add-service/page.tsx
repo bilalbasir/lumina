@@ -22,6 +22,8 @@ type FormValues = {
     status: string;
     serviceSuccessRate: string
     description: string
+    serviceOverView: string
+    subTitle: string
 }
 const categories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
 const serviceRate = ["5%", "10%", "15%"]
@@ -108,6 +110,8 @@ const page = () => {
         const formData = new FormData();
 
         formData.append("name", data.name);
+        formData.append("serviceOverView", data.serviceOverView);
+        formData.append("subTitle", data.subTitle);
         formData.append("category", data.category);
         formData.append("status", data.status);
         formData.append("serviceSuccessRate", data.serviceSuccessRate);
@@ -140,7 +144,7 @@ const page = () => {
                             label="Service Name"
 
                             name="name"
-                            placeholder="Enter your first name"
+                            placeholder="Enter your service name"
                             register={register}
                             error={errors.name}
                             required
@@ -157,6 +161,33 @@ const page = () => {
                             required
 
 
+                        />
+                    </div>
+                </div>
+                <div className='flex items-center justify-between w-full'>
+
+                    <div className='w-[100%] md:w-[49%]'>
+
+                        <InputField
+                            label="Service Sub Title"
+
+                            name="subTitle"
+                            placeholder="Enter service sub title"
+                            register={register}
+                            error={errors.subTitle}
+                            required
+                        />
+                    </div>
+                    <div className='w-[100%] md:w-[49%]'>
+
+                        <InputField
+                            label="Service Over view"
+
+                            name="serviceOverView"
+                            placeholder="Enter service overview"
+                            register={register}
+                            error={errors.serviceOverView}
+                            required
                         />
                     </div>
                 </div>

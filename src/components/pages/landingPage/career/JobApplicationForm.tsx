@@ -8,6 +8,7 @@ import DropdownField from '@/components/dropdown/DropDown';
 import TextArea from '@/components/inputField/TextArea';
 import careerApi from '@/app/apiServices/careerApi/CareerApi';
 import toast from 'react-hot-toast';
+import Loader from '@/components/loader/Loader';
 type FormValues = {
   firstName: string;
   lastName: string;
@@ -27,6 +28,7 @@ interface JobApplicationFormProps {
 const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
 
   const { register, handleSubmit, control, formState: { errors } } = useForm<FormValues>()
+  const [loading, setLoading] = useState(false)
   const [department, setDepartment] = useState("")
   const [formData, setFormData] = useState({
     resume: null as File | null,
@@ -56,6 +58,7 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
 
 
   const submitForm = async (data: FormValues) => {
+    setLoading(true)
     try {
       const formDataToSend = new FormData();
 
@@ -85,7 +88,10 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
       console.error("❌ Submit error:", err);
       toast.error("Failed to submit application. Please try again.");
     }
-  };
+    finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (!id) return;
@@ -147,172 +153,176 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
   );
 
   return (
-    <section className="flex flex-col justify-center items-center gap-10 w-full px-4 sm:px-6 lg:px-20 py-16">
-      {/* Back to Careers Link */}
-      <Link
-        href="/careers"
-        className="flex items-center gap-2 self-start max-w-[1280px] w-full mx-auto"
-      >
-        <BackArrowIcon />
-        <span
-          className="text-[#00634F] text-center text-base font-bold leading-6"
-          style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
+    <>{loading &&
+      <Loader />}
+      <section className="flex flex-col justify-center items-center gap-10 w-full px-4 sm:px-6 lg:px-20 py-16">
+
+        {/* Back to Careers Link */}
+        <Link
+          href="/careers"
+          className="flex items-center gap-2 self-start max-w-[1280px] w-full mx-auto"
         >
-          Back to Careers
-        </span>
-      </Link>
-
-      {/* Section Header */}
-      <div className="flex flex-col items-center gap-2 w-full max-w-[1280px] px-4 sm:px-6 lg:px-20">
-        <h1
-          className="text-gray-900 text-center text-2xl sm:text-3xl lg:text-[48px] font-semibold leading-tight lg:leading-[57.6px]"
-          style={{
-            fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif',
-            color: '#1D1D1D'
-          }}
-        >
-          Apply for {jobTitle}
-        </h1>
-        <p
-          className="w-full max-w-[884px] text-gray-600 text-center text-lg sm:text-xl leading-normal"
-          style={{
-            fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-            color: '#686868'
-          }}
-        >
-          Submit your application below and join our team
-        </p>
-      </div>
-
-      {/* Form Container */}
-      <div className="flex flex-col justify-center items-center gap-10 w-full max-w-[1120px] px-4 sm:px-6 lg:px-10 bg-white">
-        <form onSubmit={handleSubmit(submitForm)} className="flex flex-col items-start gap-6 w-full">
-          {/* First Row - First Name & Last Name */}
-          <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-7 w-full">
-            <InputField
-              label="First Name"
-              name="firstName"
-              placeholder="Enter your first name"
-              register={register}
-              error={errors.firstName}
-              required
-            />
-            <InputField
-              label="last Name"
-              name="lastName"
-              placeholder="Enter your last name"
-              register={register}
-              error={errors.lastName}
-              required
-            />
-          </div>
-
-          {/* Second Row - Email & Phone */}
-          <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-7 w-full">
-            <InputField
-              label="email"
-              name="email"
-              placeholder="Enter your email"
-              register={register}
-              error={errors.email}
-              required
-            />
-            <InputField
-              label="Phone Number "
-              name="phone"
-              placeholder="Enter your phone number"
-              register={register}
-              error={errors.phone}
-              required
-            />
-          </div>
-
-          {/* Resume Upload */}
-          <div className="flex flex-col items-start gap-2 w-full">
-            <label
-              className="w-full text-[#131313] text-sm font-medium leading-[150%]"
-              style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
-            >
-              Resume *
-            </label>
-            <label className="flex h-40 px-5 py-9 justify-center items-center w-full rounded border-2 border-dashed border-[#D1D5DB] cursor-pointer hover:border-[#00634F] transition-colors">
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx"
-                onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
-                className="hidden"
-                required
-              />
-              <div className="flex flex-col items-center gap-2">
-                <UploadIcon />
-                <div className="flex flex-col items-center">
-                  <p
-                    className="text-gray-900 text-center text-sm font-medium leading-5"
-                    style={{ fontFamily: 'Roboto, -apple-system, Roboto, Helvetica, sans-serif' }}
-                  >
-                    {formData.resume ? formData.resume.name : 'Landing Pages.docx'}
-                  </p>
-                  <p
-                    className="text-gray-500 text-center text-xs leading-4"
-                    style={{ fontFamily: 'Roboto, -apple-system, Roboto, Helvetica, sans-serif' }}
-                  >
-                    Click to change file
-                  </p>
-                </div>
-              </div>
-            </label>
-          </div>
-
-          {/* Cover Letter */}
-          <TextArea
-            label="Cover Letter"
-            name="coverLetter"
-            placeholder="Enter your phone number"
-            register={register}
-            error={errors.coverLetter}
-            required
-          />
-
-          {/* Department & Experience Row */}
-          <div className="flex flex-col lg:flex-row items-start gap-6 w-full">
-            <DropdownField
-              label="Select Department"
-              name="department"
-              options={[department]}
-              control={control}
-              error={errors.department}
-              required
-            />
-            <DropdownField
-              label="Select Experience"
-              name="experience"
-              options={experienceLevels}
-              control={control}
-              error={errors.experience}
-              required
-            />
-          </div>
-
-          {/* LinkedIn Profile */}
-          <InputField
-            label="Linkedin Profile"
-            name="linkedInProfile"
-            placeholder="Enter your Linkedin Profile"
-            register={register}
-            error={errors.linkedInProfile}
-          />
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="flex h-13 px-4 py-4 justify-center items-center gap-2 w-full rounded bg-[#00624F] text-white text-base font-medium hover:bg-[#004d3d] transition-colors duration-200"
+          <BackArrowIcon />
+          <span
+            className="text-[#00634F] text-center text-base font-bold leading-6"
             style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
           >
-            Submit
-          </button>
-        </form>
-      </div>
-    </section>
+            Back to Careers
+          </span>
+        </Link>
+
+        {/* Section Header */}
+        <div className="flex flex-col items-center gap-2 w-full max-w-[1280px] px-4 sm:px-6 lg:px-20">
+          <h1
+            className="text-gray-900 text-center text-2xl sm:text-3xl lg:text-[48px] font-semibold leading-tight lg:leading-[57.6px]"
+            style={{
+              fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif',
+              color: '#1D1D1D'
+            }}
+          >
+            Apply for {jobTitle}
+          </h1>
+          <p
+            className="w-full max-w-[884px] text-gray-600 text-center text-lg sm:text-xl leading-normal"
+            style={{
+              fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
+              color: '#686868'
+            }}
+          >
+            Submit your application below and join our team
+          </p>
+        </div>
+
+        {/* Form Container */}
+        <div className="flex flex-col justify-center items-center gap-10 w-full max-w-[1120px] px-4 sm:px-6 lg:px-10 bg-white">
+          <form onSubmit={handleSubmit(submitForm)} className="flex flex-col items-start gap-6 w-full">
+            {/* First Row - First Name & Last Name */}
+            <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-7 w-full">
+              <InputField
+                label="First Name"
+                name="firstName"
+                placeholder="Enter your first name"
+                register={register}
+                error={errors.firstName}
+                required
+              />
+              <InputField
+                label="last Name"
+                name="lastName"
+                placeholder="Enter your last name"
+                register={register}
+                error={errors.lastName}
+                required
+              />
+            </div>
+
+            {/* Second Row - Email & Phone */}
+            <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-7 w-full">
+              <InputField
+                label="email"
+                name="email"
+                placeholder="Enter your email"
+                register={register}
+                error={errors.email}
+                required
+              />
+              <InputField
+                label="Phone Number "
+                name="phone"
+                placeholder="Enter your phone number"
+                register={register}
+                error={errors.phone}
+                required
+              />
+            </div>
+
+            {/* Resume Upload */}
+            <div className="flex flex-col items-start gap-2 w-full">
+              <label
+                className="w-full text-[#131313] text-sm font-medium leading-[150%]"
+                style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
+              >
+                Resume *
+              </label>
+              <label className="flex h-40 px-5 py-9 justify-center items-center w-full rounded border-2 border-dashed border-[#D1D5DB] cursor-pointer hover:border-[#00634F] transition-colors">
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+                  className="hidden"
+                  required
+                />
+                <div className="flex flex-col items-center gap-2">
+                  <UploadIcon />
+                  <div className="flex flex-col items-center">
+                    <p
+                      className="text-gray-900 text-center text-sm font-medium leading-5"
+                      style={{ fontFamily: 'Roboto, -apple-system, Roboto, Helvetica, sans-serif' }}
+                    >
+                      {formData.resume ? formData.resume.name : 'Landing Pages.docx'}
+                    </p>
+                    <p
+                      className="text-gray-500 text-center text-xs leading-4"
+                      style={{ fontFamily: 'Roboto, -apple-system, Roboto, Helvetica, sans-serif' }}
+                    >
+                      Click to change file
+                    </p>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            {/* Cover Letter */}
+            <TextArea
+              label="Cover Letter"
+              name="coverLetter"
+              placeholder="Enter your phone number"
+              register={register}
+              error={errors.coverLetter}
+              required
+            />
+
+            {/* Department & Experience Row */}
+            <div className="flex flex-col lg:flex-row items-start gap-6 w-full">
+              <DropdownField
+                label="Select Department"
+                name="department"
+                options={[department]}
+                control={control}
+                error={errors.department}
+                required
+              />
+              <DropdownField
+                label="Select Experience"
+                name="experience"
+                options={experienceLevels}
+                control={control}
+                error={errors.experience}
+                required
+              />
+            </div>
+
+            {/* LinkedIn Profile */}
+            <InputField
+              label="Linkedin Profile"
+              name="linkedInProfile"
+              placeholder="Enter your Linkedin Profile"
+              register={register}
+              error={errors.linkedInProfile}
+            />
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="flex h-13 px-4 py-4 justify-center items-center gap-2 w-full rounded bg-[#00624F] text-white text-base font-medium hover:bg-[#004d3d] transition-colors duration-200"
+              style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
+            >
+              Submit
+            </button>
+          </form>
+        </div>
+      </section>
+    </>
   );
 };
 

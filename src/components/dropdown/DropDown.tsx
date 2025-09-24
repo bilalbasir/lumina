@@ -79,7 +79,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
                             {/* <ChevronDownIcon className="w-4 h-4 text-gray-500" /> */}
                         </div>
                         <ChevronDownIcon
-                            className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
+                            className={`w-4 h-4 absolute top-4 right-2 text-gray-500 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
                                 }`}
                         />
                         {isOpen && (
