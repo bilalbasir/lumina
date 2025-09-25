@@ -47,6 +47,7 @@ export const SequentialTyping = ({ lines, speed = 100 }: TypingLineProps) => {
                         whiteSpace: "pre-wrap",
                     }}
                 >
+
                     {line.split("").map((char, i) => {
                         const isCurrentChar = idx === currentLineIndex && i === currentCharIndex - 1;
 
