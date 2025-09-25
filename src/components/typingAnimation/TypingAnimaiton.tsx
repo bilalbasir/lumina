@@ -1,8 +1,10 @@
+import { minion } from "@/app/lib/font";
 import { useEffect, useState } from "react";
+import "./animation.css";
 
 interface TypingLineProps {
     lines: string[];
-    speed?: number; // typing speed in ms
+    speed?: number;
 }
 
 export const SequentialTyping = ({ lines, speed = 100 }: TypingLineProps) => {
@@ -14,17 +16,19 @@ export const SequentialTyping = ({ lines, speed = 100 }: TypingLineProps) => {
         if (currentLineIndex >= lines.length) return;
 
         const interval = setInterval(() => {
-            setDisplayedLines(prev => {
+            setDisplayedLines((prev) => {
                 const updated = [...prev];
-                updated[currentLineIndex] = (updated[currentLineIndex] || "") + lines[currentLineIndex][currentCharIndex];
+                updated[currentLineIndex] =
+                    (updated[currentLineIndex] || "") +
+                    lines[currentLineIndex][currentCharIndex];
                 return updated;
             });
-            setCurrentCharIndex(prev => prev + 1);
+            setCurrentCharIndex((prev) => prev + 1);
         }, speed);
 
-        if (currentCharIndex === lines[currentLineIndex].length) {
+        if (currentCharIndex === lines[currentLineIndex]?.length) {
             clearInterval(interval);
-            setCurrentLineIndex(prev => prev + 1);
+            setCurrentLineIndex((prev) => prev + 1);
             setCurrentCharIndex(0);
         }
 
@@ -36,10 +40,24 @@ export const SequentialTyping = ({ lines, speed = 100 }: TypingLineProps) => {
             {displayedLines.map((line, idx) => (
                 <p
                     key={idx}
-                    className="leading-[100px] drop-shadow-2xl transition-opacity duration-300"
-                    style={{ color: idx === 1 ? "#2CC294" : "#D5EED7", opacity: 1 }}
+                    className={`leading-[100px] drop-shadow-2xl transition-opacity duration-300 ${minion.className}`}
+                    style={{
+                        color: idx === 1 ? "#2CC294" : "#D5EED7",
+                        opacity: 1,
+                        whiteSpace: "pre-wrap",
+                    }}
                 >
-                    {line}
+                    {line.split("").map((char, i) => {
+                        const isCurrentChar = idx === currentLineIndex && i === currentCharIndex - 1;
+
+                        return (
+                            <span key={`${idx}-${i}`} className="relative inline-block">
+                                <span className={isCurrentChar ? "neon-char bounce" : ""}>{char}</span>
+                                {isCurrentChar && <span className="char-smoke" />}
+                            </span>
+                        );
+                    })}
+
                     {idx === currentLineIndex && <span className="animate-blink">|</span>}
                 </p>
             ))}

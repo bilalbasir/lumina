@@ -13,6 +13,7 @@ import ForwardIcon from '@/components/icons/forwardIcon/ForwardIcon';
 import { useState } from 'react';
 import { useGetAllServices, useGetAllServicesWoPagination } from '@/hooks/use-service-hook';
 import { SequentialTyping } from '@/components/typingAnimation/TypingAnimaiton';
+import { minion } from '../lib/font';
 
 export default function Home() {
 
@@ -28,7 +29,10 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section - Figma Design */}
-      <section className="relative w-full min-h-screen overflow-hidden bg-black bg-no-repeat bg-cover bg-center">
+      <section className="relative w-full min-h-screen overflow-hidden bg-black"
+
+
+      >
         {/* Background Video */}
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
@@ -52,15 +56,17 @@ export default function Home() {
             <div className="flex flex-col items-center gap-10">
               {/* Main Title */}
               <div className="flex flex-col items-center gap-1 mt-4 justify-center">
-                <h1 className="text-5xl md:text-8xl lg:text-[92px] font-bold leading-tight"
-                  style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}>
+                <h1 className={`${minion.variable} text-5xl md:text-8xl lg:text-[92px] font-bold leading-tight`}
+                // style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
+
+                >
                   <SequentialTyping
-                    lines={["SHAPING", "TOMORROW’S", "LEADER’S TODAY"]}
-                    speed={50} // smaller = smoother/faster typing
+                    lines={["SHAPING", "TOMORROW’S", "LEADERS TODAY"]}
+                    speed={200} // smaller = smoother/faster typing
                   />
                 </h1>
                 <p
-                  className="text-lg md:text-2xl lg:text-[28px] text-white max-w-4xl leading-relaxed"
+                  className="text-lg md:text-2xl  mt-4 lg:text-[28px] text-white max-w-4xl leading-relaxed"
                   style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif', lineHeight: '150%' }}
                 >
                   Strategic recruitment and leadership advisory, bridging Dubai and London to deliver world-class talent solutions
