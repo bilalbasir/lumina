@@ -6,6 +6,7 @@ import DeleteIcon from '@/components/icons/deleteIcon/DeleteIcon'
 import { isDeleteServicemodalCloseReducer } from '@/redux/slice/ModalSlice'
 import { useDispatch } from 'react-redux'
 import { useDeleteService } from '@/hooks/use-delete-service-hook'
+import toast from 'react-hot-toast'
 
 type Props = {
     id: string;
@@ -18,6 +19,10 @@ const DeleteServiceModal: React.FC<Props> = ({ id }) => {
     const handleDelete = () => {
         mutation.mutate(id, {
             onSuccess: () => {
+                dispatch(isDeleteServicemodalCloseReducer());
+            },
+            onError: () => {
+                toast.error("Something went wrong try again");
                 dispatch(isDeleteServicemodalCloseReducer());
             },
         });

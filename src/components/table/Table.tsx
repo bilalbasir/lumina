@@ -6,6 +6,7 @@ import DeleteIcon from "../icons/deleteIcon/DeleteIcon";
 import EyeIcon from "../icons/eyeIcon/EyeIcon";
 import { roboto } from "@/app/lib/font";
 import { Statustag } from "../tags/Statustag";
+import NoDataFound from "../noDataFound/NoDataFound";
 
 interface Column {
     key: string;
@@ -31,9 +32,8 @@ const Table: React.FC<TableProps> = ({
 
     return (
         <>
-            {data?.length === 0 ? <p className="w-full text-center p-2 border border-b-gray-300 rounded-lg">
-                No Data Found
-            </p> :
+            {data?.length === 0 ?
+                <NoDataFound link='/dashboard' linkName='Back to dashboard' text='No Data Found.' /> :
 
 
                 <div className="overflow-x-auto bg-white">

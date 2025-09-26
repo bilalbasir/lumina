@@ -32,7 +32,7 @@ const Page = () => {
 
             // redirect to dashboard after login
             window.location.href = "/dashboard";
-        } catch (error: any) {
+        } catch (error) {
             console.log("ERROR", error);
             toast.error(error.response?.data?.message || "Login failed");
         } finally {

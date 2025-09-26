@@ -15,11 +15,13 @@ import { slugify } from '@/utils/slugify'
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
 import { CareerType } from '@/types/CareerType'
 import { timeAgo } from '@/utils/timeCalcFunction'
+import Loader from '@/components/loader/Loader'
 interface jobDescriptionProps {
     id: string
 }
 const JobDetailModal: React.FC<jobDescriptionProps> = (id) => {
     const [jobDetailData, setJobDetailData] = useState<CareerType>()
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
         if (!id.id) return;
 
@@ -39,12 +41,17 @@ const JobDetailModal: React.FC<jobDescriptionProps> = (id) => {
     ])
     return (
         <ModalLayout>
+            {loading && <Loader />}
             <div className='w-full capitalize p-5 border-[1px] border-solid border-[#E5E7EB] rounded-lg'>
                 <div className='flex flex-col gap-y-2 sm:gap-y-0 sm:flex-row items-center justify-between text-[#131313] text-[20px] md:text-[24px] md:leading-[28px]'>
                     <p className='w-full sm:w-[70%] md:w-[80%] font-semibold'>{jobDetailData?.jobTitle}</p>
 
 
                     <Link
+                        onClick={() => {
+                            setLoading(true)
+                        }}
+
                         href={jobDetailData?.status === "Open" ? `/careers/${jobDetailData._id}` : ""}
                         className={`flex w-[100%] md:w-[48%] px-4 py-3 justify-center items-center gap-2  rounded ${jobDetailData?.status === "Open" ? "bg-[#00624F] cursor-pointer" : "bg-[#00624F]/30 cursor-not-allowed"}  text-white text-sm font-medium hover:bg-[#004d3d] transition-colors duration-200`}
                         style={{
@@ -94,7 +101,7 @@ const JobDetailModal: React.FC<jobDescriptionProps> = (id) => {
                     <p className='text-[#131313] font-semibold text-[20px]'>Key Responsibilities</p>
                     <div className='flex flex-col gap-y-2 mt-3 '>
                         {jobDetailData?.responsibilities?.map(data =>
-                            <p className='text-[14px] text-[#686868] flex items-center gap-x-3'>
+                            <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
 
                                 <div className='w-[20px]'>
 
@@ -113,7 +120,7 @@ const JobDetailModal: React.FC<jobDescriptionProps> = (id) => {
                     <p className='text-[#131313] font-semibold text-[20px]'>Requirements</p>
                     <div className='flex flex-col gap-y-2 mt-3 '>
                         {jobDetailData?.requirements?.map(data =>
-                            <p className='text-[14px] text-[#686868] flex items-center gap-x-3'>
+                            <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
 
                                 <div className='w-[20px]'>
 
@@ -130,7 +137,7 @@ const JobDetailModal: React.FC<jobDescriptionProps> = (id) => {
                     <p className='text-[#131313] font-semibold text-[20px]'>Benefits & Perks</p>
                     <div className='flex flex-col gap-y-2 mt-3 '>
                         {jobDetailData?.benefits?.map(data =>
-                            <p className='text-[14px] text-[#686868] flex items-center gap-x-3'>
+                            <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
 
                                 <div className='w-[20px]'>
 
@@ -157,6 +164,8 @@ const JobDetailModal: React.FC<jobDescriptionProps> = (id) => {
 
 
                 <Link
+                    onClick={() => setLoading(true)}
+
                     href={jobDetailData?.status === "Open" ? `/careers/${jobDetailData._id}` : ""}
                     className={`flex w-[100%]  px-4 py-3 justify-center items-center gap-2  rounded ${jobDetailData?.status === "Open" ? "bg-[#00624F] cursor-pointer" : "bg-[#00624F]/30 cursor-not-allowed"}  text-white text-sm font-medium hover:bg-[#004d3d] transition-colors duration-200`}
                     style={{

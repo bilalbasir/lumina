@@ -15,6 +15,7 @@ import { useMutation } from '@tanstack/react-query'
 import serviceApi from '@/app/apiServices/servicesApi/ServiceApi'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import Loader from '@/components/loader/Loader'
 type FormValues = {
     name: string,
     category: string,
@@ -26,8 +27,8 @@ type FormValues = {
     subTitle: string
 }
 const categories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
-const serviceRate = ["5%", "10%", "15%"]
-const page = () => {
+const serviceRate = Array.from({ length: 100 }, (_, i) => (i + 1).toString())
+const Page = () => {
     const [tags, setTags] = useState<string[]>([])
     const [features, setFeatures] = useState<{ title: string; description: string }[]>([
         { title: "", description: "" }
@@ -38,7 +39,7 @@ const page = () => {
     const [tagInput, setTagInput] = useState<string>("")
     const navigate = useRouter()
     const { register, handleSubmit, formState: { errors }, control } = useForm<FormValues>()
-
+    const [loading, setLoading] = useState(false)
     const addNewFeatureFun = () => {
         const lastIndex = features.length - 1;
         const lastFeature = features[lastIndex];
@@ -95,6 +96,7 @@ const page = () => {
 
     const mutation = useMutation({
         mutationFn: (formData: FormData) => serviceApi.addService(formData),
+        onMutate: () => { setLoading(true) },
         onSuccess: (data) => {
             console.log("✅ Service added:", data);
             toast.success("Service has added successfully")
@@ -104,9 +106,23 @@ const page = () => {
         onError: (error) => {
             console.error("❌ Error adding service:", error);
         },
+        onSettled: () => { setLoading(false) },
+
     });
 
     const addServiceFun = (data: FormValues) => {
+        const invalidFeature = features.some(
+            (f) => f.title.trim() === "" || f.description.trim() === ""
+        );
+
+        if (invalidFeature) {
+            toast.error("Please add all features before submitting");
+            return;
+        }
+        if (tags?.length === 0) {
+            toast.error("Please add atleast one tag");
+            return;
+        }
         const formData = new FormData();
 
         formData.append("name", data.name);
@@ -133,9 +149,10 @@ const page = () => {
 
     return (
         <>
+            {loading && <Loader />}
             <LayoutHeader heading='Add Service' />
             <HorizontalLine />
-            <form action="" className='mt-6 flex flex-col items-start gap-y-8' onSubmit={handleSubmit(addServiceFun)}>
+            <form action="" className='mt-6 flex flex-col items-start gap-y-8' >
                 <div className='flex items-center justify-between w-full'>
 
                     <div className='w-[100%] md:w-[49%]'>
@@ -233,7 +250,7 @@ const page = () => {
                         <DropdownField
                             label="status"
                             name="status"
-                            options={["Active", "InActive"]}
+                            options={["Active", "Inactive"]}
                             control={control}
                             error={errors.status}
                             required
@@ -242,7 +259,9 @@ const page = () => {
                         />
                     </div>
                 </div>
-                <div className='w-[100%]'>
+                <div className='w-[100%] mt-4'>
+                    <label className="block text-sm font-medium mb-1">Features *</label>
+
                     {features.map((feature, index) => (
                         <div key={index} className='w-[100%] flex flex-col md:flex-row items-center justify-between gap-2 mb-3'>
                             <input
@@ -272,7 +291,7 @@ const page = () => {
                 </div>
 
                 <div className="w-full mt-4">
-                    <label className="block text-sm font-medium mb-1">Tags</label>
+                    <label className="block text-sm font-medium mb-1">Tags *</label>
                     <div className="flex flex-wrap gap-2 border border-[#E6E6E6] rounded px-2 py-2">
 
                         <input
@@ -302,11 +321,11 @@ const page = () => {
                     </div>
                 </div>
                 <div className='w-[100%] flex items-center justify-end gap-x-3'>
-                    <PrimaryButton text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" borderColor="border-[#CCCCCC]" />
-                    <PrimaryButton text='Add Service' bgColor='bg-primaryColor' textColor='text-white' py="py-2" />
+                    <PrimaryButton text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" type='button' borderColor="border-[#CCCCCC]" onClick={() => navigate.push("/dashboard/services")} />
+                    <PrimaryButton text='Add Service' bgColor='bg-primaryColor' textColor='text-white' py="py-2" onClick={handleSubmit(addServiceFun)} />
                 </div>
             </form>
         </>)
 }
 
-export default page
+export default Page

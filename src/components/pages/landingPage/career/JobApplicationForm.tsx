@@ -9,6 +9,8 @@ import TextArea from '@/components/inputField/TextArea';
 import careerApi from '@/app/apiServices/careerApi/CareerApi';
 import toast from 'react-hot-toast';
 import Loader from '@/components/loader/Loader';
+import { modalCloseReducer } from '@/redux/slice/ModalSlice';
+import { useDispatch } from 'react-redux';
 type FormValues = {
   firstName: string;
   lastName: string;
@@ -30,6 +32,7 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
   const { register, handleSubmit, control, formState: { errors } } = useForm<FormValues>()
   const [loading, setLoading] = useState(false)
   const [department, setDepartment] = useState("")
+  const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     resume: null as File | null,
 
@@ -109,6 +112,7 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
     };
 
     fetchCareer();
+    dispatch(modalCloseReducer())
   }, [id]);
 
   const BackArrowIcon = () => (

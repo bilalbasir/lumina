@@ -16,6 +16,7 @@ import { dateConvert } from '@/utils/dateConvert'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
+import { ServiceType } from '@/types/ServiceType'
 
 const ServicesPage = () => {
     const columns = [
@@ -37,7 +38,7 @@ const ServicesPage = () => {
     // Fetch services for current page
     const { data: servicesRes, isLoading } = useGetAllServices(currentPage, searchTerm);
     // Map services with formatted date
-    const services = servicesRes?.data?.data?.map((service: any) => ({
+    const services = servicesRes?.data?.data?.map((service: ServiceType) => ({
         ...service,
         date: dateConvert(service.createdAt),
     })) || []

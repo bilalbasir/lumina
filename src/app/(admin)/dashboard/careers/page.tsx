@@ -11,13 +11,13 @@ import Table from '@/components/table/Table'
 import { useGetAllCareers } from '@/hooks/use-career-hook'
 import { isDeleteCareermodalOpenReducer } from '@/redux/slice/ModalSlice'
 import { RootState } from '@/redux/store'
+import { CareerType } from '@/types/CareerType'
 import { dateConvert } from '@/utils/dateConvert'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-const page = () => {
+const Page = () => {
     const columns = [
         { key: "jobTitle", label: "JOB TITLE" },
         { key: "department", label: "DEPARTMENT" },
@@ -32,15 +32,13 @@ const page = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1)
     const [loading, setLoading] = useState(false)
-    const { data: careersRes, isLoading, isError } = useGetAllCareers(currentPage, searchTerm);
-    const careers = careersRes?.data?.careers?.map((career: any) => ({
+    const { data: careersRes, isLoading } = useGetAllCareers(currentPage, searchTerm);
+    const careers = careersRes?.data?.careers?.map((career: CareerType) => ({
         ...career,
         date: dateConvert(career.createdAt),
     })) || [];
-    const totalPages = careersRes?.data?.totalPages || 1
 
-    console.log("CAREERS", careersRes);
-    const data = careers;
+
     const isDeleteCareerModalOpen = useSelector((state: RootState) => state.ModalDetail.isDeleteCareerModalOpen)
 
     const navigate = useRouter()
@@ -55,9 +53,7 @@ const page = () => {
         setLoading(true)
         navigate.push(`/dashboard/careers/view/${id}`)
     };
-    // const filteredCareers = careers?.filter((careers: any) =>
-    //     careers?.jobTitle?.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
+
 
     const handleDeleteClick = (id: string) => {
         setSelectedCareerId(id)
@@ -110,4 +106,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

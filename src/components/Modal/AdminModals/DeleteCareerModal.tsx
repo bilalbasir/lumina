@@ -13,6 +13,7 @@ import { isDeletecareermodalCloseReducer, isDeleteCareermodalOpenReducer, isDele
 import { useDispatch } from 'react-redux'
 import { useDeleteService } from '@/hooks/use-delete-service-hook'
 import { useDeleteCareer } from '@/hooks/use-delete-career-hook'
+import toast from 'react-hot-toast'
 type Props = {
     id: string;
 };
@@ -23,9 +24,18 @@ const DeleteCareerModal: React.FC<Props> = ({ id }) => {
     const handleDelete = () => {
         mutation.mutate(id, {
             onSuccess: () => {
+                toast.success("Data deleted")
+
                 dispatch(isDeletecareermodalCloseReducer())
 
             },
+            onError: () => {
+                toast.error("Something went wrong")
+
+                dispatch(isDeletecareermodalCloseReducer())
+
+            },
+
         });
     }
     return (

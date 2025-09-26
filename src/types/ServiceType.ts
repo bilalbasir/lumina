@@ -8,8 +8,12 @@ export interface ServiceType {
     description?: string;
     serviceSuccessRate?: string;
     status: ServiceStatus;
-    features?: string[];
-    tags?: string[];
+    features: FeatureType[]; tags?: string[];
     createdAt: string;
     updatedAt: string;
+}
+
+export interface FeatureType {
+    title: string,
+    description: string
 }

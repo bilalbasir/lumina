@@ -9,7 +9,7 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
-    // if (totalPages <= 1) return null; // hide if only one page
+    if (totalPages <= 1) return null; // hide if only one page
 
     const pageNumbers = Array.from({ length: totalPages }, (_, idx) => idx + 1);
 

@@ -1,9 +1,7 @@
 'use client'
 
-import CrossIcon from '@/components/icons/crossIcon/CrossIcon'
 import Loader from '@/components/loader/Loader'
 import DeleteLeadsModal from '@/components/Modal/AdminModals/DeleteLeadsModal'
-import ViewApplicationModal from '@/components/Modal/AdminModals/ViewApplicationModal'
 import ViewLeadModal from '@/components/Modal/AdminModals/ViewLeadModal'
 import LayoutHeader from '@/components/pages/adminSide/LayoutHeader'
 import Pagination from '@/components/pagination/Pagination'
@@ -16,7 +14,7 @@ import { LeadType } from '@/types/LeadType'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const page = () => {
+const Page = () => {
     const columns = [
         { key: "contactInfo", label: "CONTACT INFO" },
         { key: "message", label: "MESSAGE" },
@@ -33,7 +31,7 @@ const page = () => {
     console.log("LEAD RES", leads);
 
     // ✅ Transform leads before passing to Table
-    const formattedLeads = (leads as LeadType[]).map((lead: any) => ({
+    const formattedLeads = (leads as LeadType[]).map((lead: LeadType) => ({
         ...lead,
         contactInfo: {
             name: `${lead.firstName} ${lead.lastName}`,
@@ -108,4 +106,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

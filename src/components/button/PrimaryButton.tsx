@@ -13,6 +13,7 @@ interface PrimaryButtonProps {
     textColor?: string
     width?: string
     icon?: React.ReactNode
+    type?: "button" | "submit" | "reset";
 
 }
 
@@ -27,9 +28,11 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     bgColor = "bg-[#D5EED7]",
     textColor = "text-[#131313]",
     icon,
-    width }) => {
+    width,
+    type = "submit" }) => {
     return (
         <button
+            type={type}
             onClick={onClick}
             className={`inline-flex ${width} items-center cursor-pointer justify-center gap-x-2  ${px} ${py} 
         ${bgColor} ${textColor} font-medium rounded text-base  ${borderColor}

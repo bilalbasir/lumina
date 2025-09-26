@@ -4,7 +4,6 @@ import DropdownField from '@/components/dropdown/DropDown'
 import { HorizontalLine } from '@/components/horizontalLine/HorizontalLine'
 import InputField from '@/components/inputField/InputField'
 import LayoutHeader from '@/components/pages/adminSide/LayoutHeader'
-import UploadFile from '@/components/uploadFile/UploadFile'
 import DeleteIcon from "../../../../../components/icons/deleteIcon/DeleteIcon";
 
 import React, { useState } from 'react'
@@ -29,16 +28,13 @@ type FormValues = {
 
 
 }
-const categories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
-const page = () => {
-    const [tags, setTags] = useState<string[]>([])
+const Page = () => {
     const [requirements, setRequirements] = useState<string[]>([""])
     const [requirementErrors, setRequirementErrors] = useState<boolean[]>([false])
     const [responsibilities, setResponsibilities] = useState<string[]>([""])
     const [responsibilitiesErrors, setResponsibilitiesErrors] = useState<boolean[]>([false])
     const [benifitsPerks, setBenifitsPerks] = useState<string[]>([""])
     const [benifitsPerksErrors, setBenifitsPerksErrors] = useState<boolean[]>([false])
-    const [tagInput, setTagInput] = useState<string>("")
     const navigate = useRouter()
     const { register, handleSubmit, formState: { errors }, control } = useForm<FormValues>()
 
@@ -176,6 +172,30 @@ const page = () => {
         },
     });
     const addCareerFun = (data: FormValues) => {
+        const invalidRequirements = requirements.some(
+            (f) => f.trim() === ""
+        );
+        const invalidResponsiability = responsibilities.some(
+            (f) => f.trim() === ""
+        );
+        const invalidBenefits = benifitsPerks.some(
+            (f) => f.trim() === ""
+        );
+
+
+
+        if (invalidRequirements) {
+            toast.error("Please add all requirements before submitting");
+            return;
+        }
+        if (invalidResponsiability) {
+            toast.error("Please add all responsiability before submitting");
+            return;
+        }
+        if (invalidBenefits) {
+            toast.error("Please add all benefits and perks before submitting");
+            return;
+        }
         const allData = { ...data, requirements, responsibilities, benefits: benifitsPerks }
         mutation.mutate(allData);
 
@@ -324,7 +344,7 @@ const page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Requirements
+                        Requirements *
                     </label>
                     {requirements.map((req, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`req-${index}`}>
@@ -342,7 +362,7 @@ const page = () => {
 
                     <div className='border-[2px]  mt-4 cursor-pointer agBodyMediumGrey900  border-dashed text-center border-[#E6E6E6] px-4 py-3 rounded'
                         onClick={addNewRequirementFun}>
-                        Add more Requirement
+                        Add more Requirement *
                     </div>
                 </div>
                 <div className='w-[100%]'>
@@ -353,7 +373,7 @@ const page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Responsibilities
+                        Responsibilities *
                     </label>
                     {responsibilities.map((resp, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`resp-${index}`}>
@@ -413,4 +433,4 @@ const page = () => {
         </>)
 }
 
-export default page
+export default Page

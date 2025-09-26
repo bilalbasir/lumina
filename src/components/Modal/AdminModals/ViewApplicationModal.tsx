@@ -53,9 +53,7 @@ const ViewApplicationModal: React.FC<ViewApplicationModalProps> = (id) => {
             <div className='w-full'>
                 <div className='mb-4'>
                     <p className='w-full sm:w-[70%] md:w-[80%] font-semibold'>{applicantData?.firstName} {applicantData?.lastName}</p>
-                    <p className="text-[#4B5563] text-base leading-[24px]">
-                        Application for Senior Software Engineer
-                    </p>
+
 
                 </div>
 

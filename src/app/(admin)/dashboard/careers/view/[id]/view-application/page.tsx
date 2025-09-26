@@ -1,7 +1,6 @@
 'use client'
 
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
-import CrossIcon from '@/components/icons/crossIcon/CrossIcon'
 import DeleteApplicantModal from '@/components/Modal/AdminModals/DeleteApplicantModal'
 import ViewApplicationModal from '@/components/Modal/AdminModals/ViewApplicationModal'
 import LayoutHeader from '@/components/pages/adminSide/LayoutHeader'
@@ -10,12 +9,13 @@ import SearchBar from '@/components/searchBar/SearchBar'
 import Table from '@/components/table/Table'
 import { isDeleteApplicantmodalOpenReducer, isViewApplicationmodalOpenReducer } from '@/redux/slice/ModalSlice'
 import { RootState } from '@/redux/store'
+import { ApplicantType } from '@/types/CareerType'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const page = () => {
+const Page = () => {
     const columns = [
         { key: "candidate", label: "CANDIDATE" },
         { key: "experience", label: "EXPERIENCE" },
@@ -26,35 +26,34 @@ const page = () => {
     const params = useParams();
     const id = params?.id as string;
     console.log("ID", params);
-    const [allApplicationData, setAllApplicationData] = useState<any>(null);
+    const [allApplicationData, setAllApplicationData] = useState<ApplicantType[]>(null);
     const [selectedApplicantId, setSelectedApplicantId] = useState<string>('')
-    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState(""); // ✅ new state
-    const filteredApplicant = allApplicationData?.filter((data: any) =>
+    const filteredApplicant = allApplicationData?.filter((data) =>
         data?.candidate?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const [totalPages, setTotalPages] = useState(1);
-
+    const fetchApplicants = async () => {
+        try {
+            const res = await careerApi.getApplicationByJob(id, currentPage, searchTerm); // pass page + search
+            const formattedApplicants = res.applicants.map((app: ApplicantType) => ({
+                _id: app._id,
+                candidate: { name: `${app.firstName} ${app.lastName}`, email: app.email },
+                experience: `${app.experience} years`,
+                appliedDate: new Date(app.createdAt).toLocaleDateString("en-GB")
+            }));
+            setAllApplicationData(formattedApplicants);
+            setTotalPages(res.totalPages);
+        } catch (err) {
+            console.error(err);
+        }
+    };
     // Fetch service detail
     useEffect(() => {
         if (!id) return;
 
-        const fetchApplicants = async () => {
-            try {
-                const res = await careerApi.getApplicationByJob(id, currentPage, searchTerm); // pass page + search
-                const formattedApplicants = res.applicants.map((app: any) => ({
-                    _id: app._id,
-                    candidate: { name: `${app.firstName} ${app.lastName}`, email: app.email },
-                    experience: `${app.experience} years`,
-                    appliedDate: new Date(app.createdAt).toLocaleDateString("en-GB")
-                }));
-                setAllApplicationData(formattedApplicants);
-                setTotalPages(res.totalPages);
-            } catch (err) {
-                console.error(err);
-            }
-        };
+
 
         fetchApplicants();
     }, [id, currentPage, searchTerm]);
@@ -89,14 +88,16 @@ const page = () => {
     return (
         <div>
             {isDeleteApplicantemodal &&
-                <DeleteApplicantModal id={selectedApplicantId} />
+                <DeleteApplicantModal id={selectedApplicantId} careerId={id}
+                    fetchApplicants={fetchApplicants}
+                />
             }
             {isViewApplicationmodal &&
                 <ViewApplicationModal id={selectedApplicantId} />
             }
             <LayoutHeader heading='Applicants'
                 subHeading='Applications for Senior Software Engineer'
-                button={<Link href={"/dashboard/careers/view/111"}><CrossIcon /></Link>}
+                button={<Link href={"/dashboard/careers/view/111"}></Link>}
                 searchBar={<SearchBar
                     placeholder="Search Applicants by name"
                     value={searchTerm}
@@ -120,4 +121,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

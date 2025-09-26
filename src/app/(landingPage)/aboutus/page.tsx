@@ -78,7 +78,7 @@ export default function AboutUs() {
             <h1 className='text-[24px]  md:text-[32px] lg:text-[48px] md:leading-[57px] text-[#131313] font-semibold'>
               Our Mission
             </h1>
-            <p className='text-[16px] text-[#383838] leading-6'>At Lumina Talent Advisory, we believe that exceptional talent is the cornerstone of organizational success. We partner with forward-thinking companies to identify, attract, and develop the leaders who will drive innovation and growth in tomorrow's economy.</p>
+            <p className='text-[16px] text-[#383838] leading-6'>At Lumina Talent Advisory, we believe that exceptional talent is the cornerstone of organizational success. We partner with forward-thinking companies to identify, attract, and develop the leaders who will drive innovation and growth in tomorrow&apos;s economy.</p>
             <p className='text-[16px] text-[#383838] leading-6 mt-4'>Our mission is to illuminate the path between ambitious organizations and transformational talent, creating connections that generate lasting value for businesses, individuals, and communities worldwide.</p>
           </div>
           <div className='relative h-[358px] rounded-2xl'>

@@ -4,7 +4,6 @@ import DropdownField from '@/components/dropdown/DropDown'
 import { HorizontalLine } from '@/components/horizontalLine/HorizontalLine'
 import InputField from '@/components/inputField/InputField'
 import LayoutHeader from '@/components/pages/adminSide/LayoutHeader'
-import UploadFile from '@/components/uploadFile/UploadFile'
 import DeleteIcon from "../../../../../components/icons/deleteIcon/DeleteIcon";
 
 import React, { useEffect, useState } from 'react'
@@ -30,14 +29,13 @@ type FormValues = {
     status: string;
 }
 const categories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
-const page = () => {
+const Page = () => {
     const [requirements, setRequirements] = useState<string[]>([""])
     const [requirementErrors, setRequirementErrors] = useState<boolean[]>([false])
     const [responsibilities, setResponsibilities] = useState<string[]>([""])
     const [responsibilitiesErrors, setResponsibilitiesErrors] = useState<boolean[]>([false])
     const [benifitsPerks, setBenifitsPerks] = useState<string[]>([""])
     const [benifitsPerksErrors, setBenifitsPerksErrors] = useState<boolean[]>([false])
-    const [isLoading, setIsLoading] = useState(false)
     const navigate = useRouter()
     const { register, handleSubmit, formState: { errors }, control, reset } = useForm<FormValues>({
     })
@@ -198,8 +196,6 @@ const page = () => {
                 );
             } catch (err) {
                 console.error("❌ Error fetching career:", err);
-            } finally {
-                setIsLoading(false);
             }
         };
 
@@ -207,8 +203,32 @@ const page = () => {
     }, [id, reset]);
 
     const updateCareerFun = async (data: FormValues) => {
+        const invalidRequirements = requirements.some(
+            (f) => f.trim() === ""
+        );
+        const invalidResponsiability = responsibilities.some(
+            (f) => f.trim() === ""
+        );
+        const invalidBenefits = benifitsPerks.some(
+            (f) => f.trim() === ""
+        );
+
+
+
+        if (invalidRequirements) {
+            toast.error("Please add all requirements before submitting");
+            return;
+        }
+        if (invalidResponsiability) {
+            toast.error("Please add all responsiability before submitting");
+            return;
+        }
+        if (invalidBenefits) {
+            toast.error("Please add all benefits and perks before submitting");
+            return;
+        }
         const allData = { ...data, requirements, responsibilities, benefits: benifitsPerks }
-        const res = await careerApi.updateCareer(id, allData);
+        await careerApi.updateCareer(id, allData);
         toast.success("Career has updated")
         router.push("/dashboard/careers");
 
@@ -347,7 +367,7 @@ const page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Requirements
+                        Requirements *
                     </label>
                     {requirements.map((req, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`req-${index}`}>
@@ -376,7 +396,7 @@ const page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Responsibilities
+                        Responsibilities *
                     </label>
                     {responsibilities.map((resp, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`resp-${index}`}>
@@ -405,7 +425,7 @@ const page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Benifits & Perks
+                        Benifits & Perks *
                     </label>
                     {benifitsPerks.map((perk, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`perk-${index}`}>
@@ -436,4 +456,4 @@ const page = () => {
         </>)
 }
 
-export default page
+export default Page

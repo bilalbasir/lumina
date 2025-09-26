@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import JobDetailModal from '../../../Modal/jobDetailModal/JobDetailModal';
 import { RootState } from '@/redux/store';
 import { useGetAllCareers, useGetAllCareersWoPagination } from '@/hooks/use-career-hook';
+import NoDataFound from '@/components/noDataFound/NoDataFound';
+import Loader from '@/components/loader/Loader';
 // Dummy job data
 const jobs = [
   {
@@ -71,7 +73,7 @@ const CurrentOpportunitiesSection = () => {
   const [selectedJobType, setSelectedJobType] = useState('');
   const isModalOpen = useSelector((state: RootState) => state.ModalDetail.isModalOpen)
   const dispatch = useDispatch()
-
+  const [loading, setLoading] = useState(false)
   const [selectedcareerId, setSelectedcareerId] = useState<string>("");
 
   const { data: careersRes, isLoading, isError } = useGetAllCareersWoPagination();
@@ -145,6 +147,7 @@ const CurrentOpportunitiesSection = () => {
   }
   return (
     <>
+      {loading && <Loader />}
       {isModalOpen &&
         <JobDetailModal id={selectedcareerId} />
       }
@@ -163,203 +166,205 @@ const CurrentOpportunitiesSection = () => {
               </h2>
             </div>
           </div>
-
-          {/* Form Fields Container */}
-          <div className="flex flex-col items-start gap-4 w-[100%]">
-            {/* First Row - Search Job */}
-            <div className="flex flex-col lg:flex-row items-center gap-4 w-full">
-              <div className="flex flex-col items-start gap-2 flex-1 w-[100%]">
-                <label
-                  className="w-full text-[#131313] text-sm font-medium leading-[150%]"
-                  style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
-                >
-                  Search Job
-                </label>
-                <div className="flex h-11 items-start gap-4 w-[100%]">
-                  <div className="flex h-11 px-4 py-3 items-center gap-2 flex-1 rounded border-[1.5px] border-[#E6E6E6] bg-white">
-                    <input
-                      type="text"
-                      value={searchJob}
-                      onChange={(e) => setSearchJob(e.target.value)}
-                      placeholder="Search job..."
-                      className="flex-1 text-[#686868] w-[100%] text-sm font-medium leading-[150%] bg-transparent border-none outline-none"
-                      style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
-                    />
+          {filteredCareers?.length === 0 ? <NoDataFound link='/' linkName='Back to home' text='No Careers Found.' /> : <>
+            {/* Form Fields Container */}
+            <div className="flex flex-col items-start gap-4 w-[100%]">
+              {/* First Row - Search Job */}
+              <div className="flex flex-col lg:flex-row items-center gap-4 w-full">
+                <div className="flex flex-col items-start gap-2 flex-1 w-[100%]">
+                  <label
+                    className="w-full text-[#131313] text-sm font-medium leading-[150%]"
+                    style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
+                  >
+                    Search Job
+                  </label>
+                  <div className="flex h-11 items-start gap-4 w-[100%]">
+                    <div className="flex h-11 px-4 py-3 items-center gap-2 flex-1 rounded border-[1.5px] border-[#E6E6E6] bg-white">
+                      <input
+                        type="text"
+                        value={searchJob}
+                        onChange={(e) => setSearchJob(e.target.value)}
+                        placeholder="Search job..."
+                        className="flex-1 text-[#686868] w-[100%] text-sm font-medium leading-[150%] bg-transparent border-none outline-none"
+                        style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
+                      />
+                    </div>
                   </div>
+                </div>
+
+                {/* Department Dropdown */}
+                <div className="w-[100%] lg:w-[24%]">
+                  <DropDownWOHook
+                    label="Department"
+                    value={selectedDepartment}
+                    options={departments as string[]}
+                    onClick={(value) => setSelectedDepartment(value)}
+                  />
+                </div>
+                {/* Location Dropdown */}
+                <div className="w-[100%] lg:w-[24%]">
+                  <DropDownWOHook
+                    label="Location"
+                    value={selectedLocation}
+
+                    options={locations as string[]}
+                    onClick={(value) => setSelectedLocation(value)}
+                  />
+                </div>
+
+                {/* Job Type Dropdown */}
+                <div className="w-[100%] lg:w-[24%]">
+                  <DropDownWOHook
+                    value={selectedJobType}
+
+                    label="Job Type"
+                    options={jobTypes as string[]}
+                    onClick={(value) => setSelectedJobType(value)}
+                  />
                 </div>
               </div>
 
-              {/* Department Dropdown */}
-              <div className="w-[100%] lg:w-[24%]">
-                <DropDownWOHook
-                  label="Department"
-                  value={selectedDepartment}
-                  options={departments as string[]}
-                  onClick={(value) => setSelectedDepartment(value)}
-                />
-              </div>
-              {/* Location Dropdown */}
-              <div className="w-[100%] lg:w-[24%]">
-                <DropDownWOHook
-                  label="Location"
-                  value={selectedLocation}
 
-                  options={locations as string[]}
-                  onClick={(value) => setSelectedLocation(value)}
-                />
-              </div>
-
-              {/* Job Type Dropdown */}
-              <div className="w-[100%] lg:w-[24%]">
-                <DropDownWOHook
-                  value={selectedJobType}
-
-                  label="Job Type"
-                  options={jobTypes as string[]}
-                  onClick={(value) => setSelectedJobType(value)}
-                />
-              </div>
             </div>
-
-
-          </div>
-          <div className='w-[100%]'>
-            <div className='flex items-end justify-end mb-4'>
-              <div
-                onClick={resetFun}
-                className="flex px-4 py-3 cursor-pointer justify-center items-center gap-x-3  border-[1px] border-solid border-[#CCCCCC]  rounded text-[#131313] bg-white text-sm font-medium hover:bg-[#00624F] hover:text-white transition-colors duration-500"
-                style={{
-                  fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                }}
-              >
-                <ResetIcon />
-                <p>
-
-                  Reset
-                </p>
-              </div>
-            </div>
-
-          </div>
-          <div className="w-[full]  ">
-
-            <div className="flex flex-wrap gap-6 items-start  mx-auto">
-              {filteredCareers.map((careers: any) => (
+            <div className='w-[100%]'>
+              <div className='flex items-end justify-end mb-4'>
                 <div
-                  key={careers.id}
-                  className="flex flex-wrap w-full md:w-[calc(50%-12px)] p-6 rounded-lg border border-gray-200 bg-white shadow-sm"
+                  onClick={resetFun}
+                  className="flex px-4 py-3 cursor-pointer justify-center items-center gap-x-3  border-[1px] border-solid border-[#CCCCCC]  rounded text-[#131313] bg-white text-sm font-medium hover:bg-[#00624F] hover:text-white transition-colors duration-500"
                   style={{
-                    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                    fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                   }}
                 >
-                  {/* Job Header */}
-                  <div className="flex items-start w-full pb-4">
-                    <div className="flex flex-col items-start flex-1">
-                      <div className="pb-2">
-                        <h3
-                          className="text-gray-900 text-xl font-bold leading-[30px]"
-                          style={{
-                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                            color: "#131313",
-                          }}
-                        >
-                          {careers.jobTitle || "Job post"}
-                        </h3>
-                      </div>
-                      <div className="pb-3">
-                        <p
-                          className="text-gray-600 text-base leading-6"
-                          style={{
-                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                            color: "#4B5563",
-                          }}
-                        >
-                          {careers.shortDescription || "Job Description"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <ResetIcon />
+                  <p>
 
-                  {/* Tags */}
-                  <div className="flex flex-wrap items-start gap-2 w-full pb-4">
-                    {/* Department Tag */}
-                    <div className={`flex h-6 px-3 py-1 items-center rounded-full ${getDepartmentBgColor(careers.department)}`}>
-                      <div className="flex items-center gap-1">
-                        <HealthIcon />
-                        <span
-                          className={`text-xs font-medium leading-[14.4px] tracking-[0.48px] ${getDepartmentTextColor(careers.department)}`}
-                          style={{
-                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                          }}
-                        >
-                          {careers.department}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Location Tag */}
-                    <div className="flex h-6 px-3 py-1 items-center rounded-full bg-green-50">
-                      <div className="flex items-center gap-1">
-                        <LocationIcon />
-                        <span
-                          className="text-xs font-medium leading-[14.4px] tracking-[0.48px] text-green-700"
-                          style={{
-                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                            color: "#166534",
-                          }}
-                        >
-                          {careers.location}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Job Type Tag */}
-                    <div className="flex h-6 px-3 py-1 items-center rounded-full bg-purple-50">
-                      <div className="flex items-center gap-1">
-                        <ClockIcon />
-                        <span
-                          className="text-xs font-medium leading-[14.4px] tracking-[0.48px] text-purple-700"
-                          style={{
-                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                            color: "#6B21A8",
-                          }}
-                        >
-                          {careers.jobType}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='flex flex-col md:flex-row gap-y-3 md:gap-y-0 items-center justify-between w-[100%] capitalize '>
-
-                    {/* Border Button */}
-                    <div
-                      className="flex px-4 w-[100%] md:w-[48%] py-3 cursor-pointer justify-center items-center gap-2  border-[1px] border-solid border-[#CCCCCC]  rounded text-[#131313] bg-white text-sm font-medium hover:bg-[#00624F] hover:text-white transition-colors duration-500"
-                      style={{
-                        fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                      }}
-                      onClick={() => showJobDetailFun(careers?._id)}
-                    >
-                      view job details
-                    </div>
-                    {/* Fill Button */}
-                    <Link
-                      href={careers?.status === "Open" ? `/careers/${careers._id}` : ""}
-                      className={`flex w-[100%] md:w-[48%] px-4 py-3 justify-center items-center gap-2  rounded ${careers?.status === "Open" ? "bg-[#00624F] cursor-pointer" : "bg-[#00624F]/30 cursor-not-allowed"}  text-white text-sm font-medium hover:bg-[#004d3d] transition-colors duration-200`}
-                      style={{
-                        fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                      }}
-                    >
-                      Apply Now
-                    </Link>
-                  </div>
+                    Reset
+                  </p>
                 </div>
-              ))}
+              </div>
+
             </div>
-          </div>
+            <div className="w-[full]  ">
+
+              <div className="flex flex-wrap gap-6 items-start  mx-auto">
+                {filteredCareers.map((careers: any) => (
+                  <div
+                    key={careers.id}
+                    className="flex flex-wrap w-full md:w-[calc(50%-12px)] p-6 rounded-lg border border-gray-200 bg-white shadow-sm"
+                    style={{
+                      boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                    }}
+                  >
+                    {/* Job Header */}
+                    <div className="flex items-start w-full pb-4">
+                      <div className="flex flex-col items-start flex-1">
+                        <div className="pb-2">
+                          <h3
+                            className="text-gray-900 text-xl font-bold leading-[30px]"
+                            style={{
+                              fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                              color: "#131313",
+                            }}
+                          >
+                            {careers.jobTitle || "Job post"}
+                          </h3>
+                        </div>
+                        <div className="pb-3">
+                          <p
+                            className="text-gray-600 text-base leading-6"
+                            style={{
+                              fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                              color: "#4B5563",
+                            }}
+                          >
+                            {careers.shortDescription || "Job Description"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap items-start gap-2 w-full pb-4">
+                      {/* Department Tag */}
+                      <div className={`flex h-6 px-3 py-1 items-center rounded-full ${getDepartmentBgColor(careers.department)}`}>
+                        <div className="flex items-center gap-1">
+                          <HealthIcon />
+                          <span
+                            className={`text-xs font-medium leading-[14.4px] tracking-[0.48px] ${getDepartmentTextColor(careers.department)}`}
+                            style={{
+                              fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                            }}
+                          >
+                            {careers.department}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Location Tag */}
+                      <div className="flex h-6 px-3 py-1 items-center rounded-full bg-green-50">
+                        <div className="flex items-center gap-1">
+                          <LocationIcon />
+                          <span
+                            className="text-xs font-medium leading-[14.4px] tracking-[0.48px] text-green-700"
+                            style={{
+                              fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                              color: "#166534",
+                            }}
+                          >
+                            {careers.location}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Job Type Tag */}
+                      <div className="flex h-6 px-3 py-1 items-center rounded-full bg-purple-50">
+                        <div className="flex items-center gap-1">
+                          <ClockIcon />
+                          <span
+                            className="text-xs font-medium leading-[14.4px] tracking-[0.48px] text-purple-700"
+                            style={{
+                              fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                              color: "#6B21A8",
+                            }}
+                          >
+                            {careers.jobType}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className='flex flex-col md:flex-row gap-y-3 md:gap-y-0 items-center justify-between w-[100%] capitalize '>
+
+                      {/* Border Button */}
+                      <div
+                        className="flex px-4 w-[100%] md:w-[48%] py-3 cursor-pointer justify-center items-center gap-2  border-[1px] border-solid border-[#CCCCCC]  rounded text-[#131313] bg-white text-sm font-medium hover:bg-[#00624F] hover:text-white transition-colors duration-500"
+                        style={{
+                          fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
+                        onClick={() => { showJobDetailFun(careers?._id); setLoading(true) }}
+                      >
+                        view job details
+                      </div>
+                      {/* Fill Button */}
+                      <Link
+                        href={careers?.status === "Open" ? `/careers/${careers._id}` : ""}
+                        onClick={() => setLoading(true)}
+                        className={`flex w-[100%] md:w-[48%] px-4 py-3 justify-center items-center gap-2  rounded ${careers?.status === "Open" ? "bg-[#00624F] cursor-pointer" : "bg-[#00624F]/30 cursor-not-allowed"}  text-white text-sm font-medium hover:bg-[#004d3d] transition-colors duration-200`}
+                        style={{
+                          fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
+                      >
+                        Apply Now
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div></>}
+
         </div>
 
-      </section>
+      </section >
     </>
 
   );

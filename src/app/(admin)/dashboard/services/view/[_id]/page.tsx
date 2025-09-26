@@ -6,14 +6,15 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation"; // 👈 params lene k liye
 import serviceApi from "@/app/apiServices/servicesApi/ServiceApi"; // 👈 aapka API service
 import CheckIcon from "@/components/icons/checkIcon/CheckIcon";
-import { cloudinaryBaseUrl, imageBaseUrl } from "@/app/apiServices/baseUrl/BaseUrl";
+import { cloudinaryBaseUrl } from "@/app/apiServices/baseUrl/BaseUrl";
+import { FeatureType, ServiceType } from "@/types/ServiceType";
 
 const Page = () => {
     const params = useParams(); // { id: "68caa14b59b6ab089420761b" }
     const id = params?._id as string;
     console.log("ID", params?._id, id);
 
-    const [serviceData, setServiceData] = useState<any>(null);
+    const [serviceData, setServiceData] = useState<ServiceType>(null);
     const [loading, setLoading] = useState(true);
 
     // Fetch service detail
@@ -105,13 +106,13 @@ const Page = () => {
                         Features
                     </label>
                     <ul className="list-disc pl-6 text-gray-700">
-                        {serviceData.features?.map((feature: any, idx: number) => (
+                        {serviceData.features?.map((feature: FeatureType, idx: number) => (
                             <li key={idx} className="flex items-start gap-x-2">
                                 <p className="mt-2">
 
                                     <CheckIcon color="#00624F" />
                                 </p>
-                                <div className="flwx items-center gap-x-2">
+                                <div className="flex items-center gap-x-2">
                                     <p className="font-semibold">
                                         {feature?.title}
                                     </p>

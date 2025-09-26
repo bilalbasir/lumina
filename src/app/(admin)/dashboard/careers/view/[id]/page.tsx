@@ -10,17 +10,18 @@ import LocationIcon from '@/components/icons/locationIcon/LocationIcon'
 import StarIcon from '@/components/icons/starIcon/StarIcon'
 import Loader from '@/components/loader/Loader'
 import Tags from '@/components/tags/Tags'
+import { CareerType } from '@/types/CareerType'
 import { timeAgo } from '@/utils/timeCalcFunction'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const Page = () => {
     const navigate = useRouter()
     const params = useParams();
     const id = params?.id as string;
     console.log("ID", id);
-    const [careerData, setCareerData] = useState<any>(null);
+    const [careerData, setCareerData] = useState<CareerType>(null);
     const [loading, setLoading] = useState(true);
 
     // Fetch service detail
@@ -108,7 +109,7 @@ const page = () => {
                 <div className='flex flex-col gap-y-2s mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Key Responsibilities</p>
                     <div className='flex flex-col gap-y-2 mt-3 '>
-                        {careerData?.responsibilities?.map((data: string) => <p className='text-[14px] text-[#686868] flex items-center gap-x-3'>
+                        {careerData?.responsibilities?.map((data: string) => <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
 
                             <div className='w-[20px]'>
 
@@ -123,7 +124,7 @@ const page = () => {
                 <div className='flex flex-col gap-y-2s mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Requirements</p>
                     <div className='flex flex-col gap-y-2 mt-3 '>
-                        {careerData?.requirements?.map((data: string) => <p className='text-[14px] text-[#686868] flex items-center gap-x-3'>
+                        {careerData?.requirements?.map((data: string) => <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3' >
 
                             <div className='w-[20px]'>
 
@@ -136,7 +137,7 @@ const page = () => {
                 <div className='flex flex-col gap-y-2s mt-4 mb-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Benefits & Perks</p>
                     <div className='flex flex-col gap-y-2 mt-3 '>
-                        {careerData?.benefits?.map((data: string) => <p className='text-[14px] text-[#686868] flex items-center gap-x-3'>
+                        {careerData?.benefits?.map((data: string) => <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
 
                             <div className='w-[20px]'>
 
@@ -149,8 +150,8 @@ const page = () => {
 
 
             </div>
-        </div>
+        </div >
     )
 }
 
-export default page
+export default Page

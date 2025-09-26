@@ -12,6 +12,8 @@ import TextArea from "@/components/inputField/TextArea";
 import PrimaryButton from "@/components/button/PrimaryButton";
 import { useRouter, useParams } from "next/navigation";
 import serviceApi from "@/app/apiServices/servicesApi/ServiceApi";
+import Loader from "@/components/loader/Loader";
+import toast from "react-hot-toast";
 
 type FormValues = {
     name: string;
@@ -93,6 +95,19 @@ const Page = () => {
 
     // ✅ Update Service
     const onSubmit = async (data: FormValues) => {
+        const invalidFeature = features.some(
+            (f) => f.title.trim() === "" || f.description.trim() === ""
+        );
+
+        if (invalidFeature) {
+            toast.error("Please add all features before submitting");
+            return;
+        }
+        if (tags?.length === 0) {
+            toast.error("Please add atleast one tag");
+            return;
+        }
+        setLoading(true)
         try {
             const formData = new FormData();
             formData.append("name", data.name);
@@ -120,6 +135,8 @@ const Page = () => {
             router.push("/dashboard/services");
         } catch (err) {
             console.error("❌ Error updating service:", err);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -174,10 +191,10 @@ const Page = () => {
         setTags(tags.filter((t) => t !== tag));
     };
 
-    if (loading) return <p className="p-4">⏳ Loading...</p>;
 
     return (
         <>
+            {loading && <Loader />}
             <LayoutHeader heading="Edit Service" />
             <HorizontalLine />
             <form
@@ -262,7 +279,7 @@ const Page = () => {
                         <DropdownField
                             label="Service Success Rate"
                             name="serviceSuccessRate"
-                            options={categories}
+                            options={Array.from({ length: 100 }, (_, i) => (i + 1).toString())}
                             control={control}
                             error={errors.serviceSuccessRate}
                             required
@@ -281,7 +298,9 @@ const Page = () => {
                 </div>
 
                 {/* Features Section */}
-                <div className="w-[100%]">
+                <div className="w-[100%] mt-4">
+                    <label className="block text-sm font-medium mb-1">Features *</label>
+
                     {features.map((feature, index) => (
                         <div key={index} className="flex gap-2 mb-2">
                             <input
@@ -312,7 +331,7 @@ const Page = () => {
 
                 {/* Tags Section */}
                 <div className="w-full mt-4">
-                    <label className="block text-sm font-medium mb-1">Tags</label>
+                    <label className="block text-sm font-medium mb-1">Tags *</label>
                     <div className="flex flex-wrap gap-2 border border-[#E6E6E6] rounded px-2 py-2">
                         <input
                             value={tagInput}

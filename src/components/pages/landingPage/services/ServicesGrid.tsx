@@ -3,6 +3,7 @@ import Link from 'next/link';
 import ServiceCard from './ServiceCard';
 import { useGetAllServices, useGetAllServicesWoPagination } from '@/hooks/use-service-hook';
 import { useState } from 'react';
+import NoDataFound from '@/components/noDataFound/NoDataFound';
 
 
 const ServicesGrid = () => {
@@ -29,22 +30,22 @@ const ServicesGrid = () => {
         {/* Bento Grid Layout */}
 
         <div className="flex  flex-wrap gap-8">
-          {activeServices?.length === 0 ? <div className='w-[100%] text-center'><p className='text-[#131313]  text-[16px] md:text-[24px] font-semibold leading-[57.6px]'>Comming Soon</p></div> : activeServices?.map((service: any) => {
-            return <div className='w-full sm:w-[40%%] md:w-[47%] lg:w-[48%]' key={service?.name}> <ServiceCard
-              _id={service?._id}
-              cardHeading={service?.name}
-              explanation={
-                service?.serviceOverView ||
-                "Stay tuned for our latest initiatives and featured film, soon to be released in cinemas."
-              }
-              image={
-                service?.bannerImage ||
-                "https://api.builder.io/api/v1/image/assets/TEMP/93a9bf9562c30d3d358bf088c67c4392d1754043?width=2028"
-              }
-            />
-            </div>
+          {activeServices?.length === 0 ? <NoDataFound link='/' linkName='Back to home' text='No Services Found.' />
+            : activeServices?.map((service: any) => {
+              return <div className='w-full sm:w-[40%%] md:w-[47%] lg:w-[48%]' key={service?.name}> <ServiceCard
+                _id={service?._id}
+                cardHeading={service?.name}
+                explanation={
+                  service?.serviceOverView ||
+                  "Stay tuned for our latest initiatives and featured film, soon to be released in cinemas."
+                }
+                image={
+                  service?.bannerImage
+                }
+              />
+              </div>
 
-          })}
+            })}
 
         </div>
       </div>

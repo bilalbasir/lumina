@@ -6,6 +6,8 @@ import CheckboxField from '../../../checkBox/CheckBox';
 import TextArea from '@/components/inputField/TextArea';
 import leadsApi from '@/app/apiServices/contactLeads/ContactLeadsApi';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
+import Loader from '@/components/loader/Loader';
 type FormValues = {
   firstName: string;
   lastName: string;
@@ -19,7 +21,7 @@ type FormValues = {
   regularUpdates: boolean
 };
 const ContactFormSection = () => {
-
+  const [loading, setLoading] = useState(false)
   const {
     register,
     handleSubmit, control,
@@ -52,9 +54,9 @@ const ContactFormSection = () => {
 
   const submitFun = async (data: FormValues) => {
     console.log("Form submitted:", data);
-
+    setLoading(true)
     try {
-      const response = await leadsApi.addContactLead(data);
+      await leadsApi.addContactLead(data);
 
       toast.success("Message sent successfully!");
 
@@ -62,7 +64,7 @@ const ContactFormSection = () => {
     } catch (error) {
       console.error("Error while adding lead:", error);
       toast.error(error?.response?.data?.message || "Failed to send message.");
-    }
+    } finally { setLoading(false) }
   };
 
 
@@ -71,6 +73,7 @@ const ContactFormSection = () => {
 
   return (
     <section className="flex flex-col items-start gap-2.5 w-full   py-16">
+      {loading && <Loader />}
       {/* Form Container */}
       <div className="flex flex-col justify-center items-start gap-4 w-full p-6 sm:p-8 lg:p-12 lg:px-20  bg-[#053328] text-white">
         <div className="flex flex-col items-start gap-10 w-full">

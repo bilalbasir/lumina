@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux'
 import { isDeleteLeadsmodalCloseReducer } from '@/redux/slice/ModalSlice'
 import { useDeleteService } from '@/hooks/use-delete-service-hook'
 import { useDeleteLead } from '@/hooks/use-delete-lead-hook'
+import toast from 'react-hot-toast'
 type Props = {
     id: string;
 };
@@ -23,8 +24,13 @@ const DeleteLeadsModal: React.FC<Props> = ({ id }) => {
     const handleDelete = () => {
         mutation.mutate(id, {
             onSuccess: () => {
+                toast.success("Data deleted")
                 dispatch(isDeleteLeadsmodalCloseReducer());
             },
+            onError: () => {
+                toast.error("Something went wrong")
+                dispatch(isDeleteLeadsmodalCloseReducer());
+            }
         });
     };
     return (

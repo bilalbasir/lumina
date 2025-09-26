@@ -14,26 +14,35 @@ import { isDeleteApplicantmodalCloseReducer, isDeleteLeadsmodalCloseReducer } fr
 import { useDeleteService } from '@/hooks/use-delete-service-hook'
 import { useDeleteApplicant } from '@/hooks/use-delete-applicant-hook'
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
+import toast from 'react-hot-toast'
 interface DeleteApplicantModalProps {
     id: string
+    careerId: string
+    fetchApplicants: () => void;
 }
-const DeleteApplicantModal: React.FC<DeleteApplicantModalProps> = (id) => {
+const DeleteApplicantModal: React.FC<DeleteApplicantModalProps> = ({ id, careerId, fetchApplicants }) => {
     const dispatch = useDispatch();
     const mutation = useDeleteApplicant();
+    console.log("id>>>>>>>>>>", id);
 
     const handleDelete = () => {
-        console.log("HANDLE DELETE", id?.id);
 
-        mutation.mutate(id?.id, {
+        mutation.mutate(id, {
 
             onSuccess: async () => {
-                await careerApi.getAllCareers();
+
+                fetchApplicants();
+                toast.error("Data deleted.")
+
                 dispatch(isDeleteApplicantmodalCloseReducer())
             },
-            onError: (error) => {
-                console.log("Error", error);
+            onError: () => {
+                toast.error("Something went wrong")
 
-            }
+                dispatch(isDeleteApplicantmodalCloseReducer())
+
+            },
+
         });
     };
 
