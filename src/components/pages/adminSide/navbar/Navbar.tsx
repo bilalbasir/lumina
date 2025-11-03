@@ -5,7 +5,7 @@ const Navbar = () => {
     return (
         <div className='px-5 pt-5 pb-0 flex items-center justify-between w-[100%]'>
             <div>
-                <p className={`${montserrat.className} text-[20px] sm:text-[24px] font-medium`}>Hi, Super admin</p>
+                <p className={`${montserrat.className} text-[20px] sm:text-[24px] font-medium text-black`}>Hi, Super admin</p>
                 <p className={`${montserrat.className} text-[#676767]  hidden sm:block sm:text-[16px]`}>
                     Welcome back to Lumina Talent</p>
             </div>
@@ -18,7 +18,7 @@ const Navbar = () => {
                     <Image src="/assets/logo_1.png"
                         alt="user"
                         fill
-                        className='absolute top-0 left-0 rounded-full bg-cover border-solid border-greyscale300'
+                        className='absolute bg-black top-0 left-0 rounded-full bg-cover border-solid border-greyscale300'
                     />
                 </div>
             </div>
