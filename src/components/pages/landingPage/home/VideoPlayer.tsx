@@ -28,9 +28,9 @@ const VideoPlayer = () => {
                 // Video (after click)
                 <iframe
                     src="https://drive.google.com/file/d/1fY1swx0GycFiUDDptBBMEn0qApi6yFAS/preview"
-                    width="100%"
-                    height="665"
-                    allow="autoplay"
+                    className="absolute inset-0 w-full h-full"
+                    loading="lazy"
+                    allow="autoplay; fullscreen"
                     allowFullScreen
                 ></iframe>
             )}

@@ -20,8 +20,8 @@ const OurTeamMembers = () => {
                     </div>
                 </div>
             </div>
-            <div className='flex flex-wrap flex-row items-center justify-between mt-10'>
-                <div className=' w-[100%] sm:w-[49%] lg:w-[16%] mt-6'>
+            <div className='flex flex-wrap flex-row items-start justify-left mt-10'>
+                <div className=' w-[100%] sm:w-[49%] mt-6'>
                     <div className='relative h-[300px] w-[100%]'>
 
                         <Image
@@ -32,68 +32,15 @@ const OurTeamMembers = () => {
                         />
                     </div>
                     <div className='text-center mt-4 flex flex-col items-center gap-y-1'>
-                        <p className='text-[#131313] font-bold text-[18px]'>Sarah Chen</p>
+                        <p className='text-[#131313] font-bold text-[18px]'>KHIZAR BUKHARI</p>
                         <p className='text-[#00624F]  text-[14px]'>Chief Executive Officer</p>
-                        <p className='text-[#4E4E4E]  text-[14px] w-[70%] text-center'>Former McKinsey Partner with 15+ years leading global talent transformation initiatives.</p>
+                        <p className='text-[#4E4E4E]  text-[14px] w-[70%] text-center'>19+ years Entrepreneurial Experience. Strategic Planner Business Development Networking Professional Multi Industry Search & Selection People Management</p>
 
                     </div>
 
                 </div>
-                <div className=' w-[100%] sm:w-[49%] lg:w-[16%] mt-6'>
+                <div className=' w-[100%] sm:w-[49%] mt-6'>
                     <div className='relative h-[300px] w-[100%]'>
-
-                        <Image
-                            src={"/assets/aboutUs/teamImages/teamMem4.png"}
-                            alt='Team member'
-                            className='rounded-2xl bg-fill object-contain'
-                            fill
-                        />
-                    </div>
-                    <div className='text-center mt-4 flex flex-col items-center gap-y-1'>
-                        <p className='text-[#131313] font-bold text-[18px]'>Sarah Chen</p>
-                        <p className='text-[#00624F]  text-[14px]'>Chief Executive Officer</p>
-                        <p className='text-[#4E4E4E]  text-[14px] w-[60%] text-center'>Former McKinsey Partner with 15+ years leading global talent transformation initiatives.</p>
-
-                    </div>
-
-                </div>
-                <div className='w-[100%] sm:w-[49%] lg:w-[16%] mt-6'>
-                    <div className='relative h-[300px] w-[100%]'>
-
-                        <Image
-                            src={"/assets/aboutUs/teamImages/teamMem2.png"}
-                            alt='Team member'
-                            className='rounded-2xl bg-fill object-contain'
-                            fill
-                        />
-                    </div>
-                    <div className='text-center mt-4 flex flex-col items-center gap-y-1'>
-                        <p className='text-[#131313] font-bold text-[18px]'>Sarah Chen</p>
-                        <p className='text-[#00624F]  text-[14px]'>Chief Executive Officer</p>
-                        <p className='text-[#4E4E4E]  text-[14px] w-[60%] text-center'>Former McKinsey Partner with 15+ years leading global talent transformation initiatives.</p>
-
-                    </div>
-
-                </div>
-                <div className='w-[100%] sm:w-[49%] lg:w-[16%] mt-6'>
-                    <div className='relative h-[300px] w-[100%]'>
-
-                        <Image
-                            src={"/assets/aboutUs/teamImages/teamMem3.png"}
-                            alt='Team member'
-                            className='rounded-2xl bg-fill object-contain'
-                            fill
-                        />
-                    </div>
-                    <div className='text-center mt-4 flex flex-col items-center gap-y-1'>
-                        <p className='text-[#131313] font-bold text-[18px]'>Sarah Chen</p>
-                        <p className='text-[#00624F]  text-[14px]'>Chief Executive Officer</p>
-                        <p className='text-[#4E4E4E]  text-[14px] w-[60%] text-center'>Former McKinsey Partner with 15+ years leading global talent transformation initiatives.</p>
-
-                    </div>
-                </div>
-                <div className='w-[100%] sm:w-[49%] lg:w-[16%] mt-6'>
-                    <div className='relative h-[300px] w-[100%] rounded-2xl'>
 
                         <Image
                             src={"/assets/aboutUs/teamImages/teamMem1.png"}
@@ -103,9 +50,9 @@ const OurTeamMembers = () => {
                         />
                     </div>
                     <div className='text-center mt-4 flex flex-col items-center gap-y-1'>
-                        <p className='text-[#131313] font-bold text-[18px]'>Sarah Chen</p>
+                        <p className='text-[#131313] font-bold text-[18px]'>BILAL BASIR</p>
                         <p className='text-[#00624F]  text-[14px]'>Chief Executive Officer</p>
-                        <p className='text-[#4E4E4E]  text-[14px] w-[60%] text-center'>Former McKinsey Partner with 15+ years leading global talent transformation initiatives.</p>
+                        <p className='text-[#4E4E4E]  text-[14px] w-[70%] text-center'>15+ years Entrepreneurial Experience Business Development & Scalling Estate Agency & Property Management Team Building & Leadership Sales & Lettings Expert Tech-Driven Marketing Strategist Flexible High-Commision Model Architect Local Market Authority-Central & SW London</p>
 
                     </div>
 

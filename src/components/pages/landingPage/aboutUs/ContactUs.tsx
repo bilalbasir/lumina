@@ -1,5 +1,6 @@
 import PrimaryButton from '@/components/button/PrimaryButton'
 import React from 'react'
+import Link from 'next/link'
 
 const ContactUs = () => {
     return (
@@ -11,7 +12,9 @@ const ContactUs = () => {
 
                 <div className='mt-6'>
 
+                    <Link href={"/contactus"}>
                     <PrimaryButton width='w-[90%] md:w-auto' text='Contact Us Today' textColor='text-white' bgColor='bg-[#00624F]' py='py-4' px="px-4" />
+                    </Link>
                 </div>
             </div>
         </div>

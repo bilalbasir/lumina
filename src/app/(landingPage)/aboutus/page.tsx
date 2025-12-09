@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function AboutUs() {
   return (
-    <div>
+    <div className='bg-white'>
       {/* Hero Section */}
       <section className="relative w-full h-screen overflow-hidden">
         {/* Hero Background Image */}

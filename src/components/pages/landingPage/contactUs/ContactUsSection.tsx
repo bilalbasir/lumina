@@ -203,7 +203,7 @@ const ContactUsSection = () => {
 
               <CheckboxField
                 name="regularUpdates"
-                label="Yes, I would like to receive regular updates on thought leadership, industry insights and upcoming events from Korn Ferry. I understand that I may withdraw my consent at any time."
+                label="Yes, I would like to receive regular updates on thought leadership, industry insights and upcoming events from Lumina Talent Advisory. I understand that I may withdraw my consent at any time."
                 control={control}
 
               />
