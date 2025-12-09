@@ -97,7 +97,7 @@ const Page = () => {
       console.log('Creating form data...');
       const formData = new FormData();
 
-      // ✅ Append text fields
+      //Append text fields
       formData.append("title", data.blogTitle);
       formData.append("description", data.blogDescription);
       formData.append("slugUrl", data.blogSlug);
@@ -144,12 +144,12 @@ const Page = () => {
       console.log("API Response:", result);
 
       if (result.success) {
-        alert("✅ Blog created successfully!");
+        alert("Blog created successfully!");
         reset();
         setTags([]);
         setBlogContent("");
       } else {
-        alert(`❌ Error: ${result.message}`);
+        alert(`Error: ${result.message}`);
       }
 
     } catch (error) {
