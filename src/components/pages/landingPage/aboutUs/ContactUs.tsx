@@ -1,7 +1,10 @@
+'use client';
 import PrimaryButton from '@/components/button/PrimaryButton'
 import React from 'react'
+import { useRouter } from 'next/navigation'
 
 const ContactUs = () => {
+    const router = useRouter()
     return (
         <div className='w-[100%] md:max-w-7xl mx-auto  py-12'>
 
@@ -11,7 +14,9 @@ const ContactUs = () => {
 
                 <div className='mt-6'>
 
-                    <PrimaryButton width='w-[90%] md:w-auto' text='Contact Us Today' textColor='text-white' bgColor='bg-[#00624F]' py='py-4' px="px-4" />
+                    <PrimaryButton onClick={() => {
+                        router.push('/contactus')
+                    }} width='w-[90%] md:w-auto' text='Contact Us Today' textColor='text-white' bgColor='bg-[#00624F]' py='py-4' px="px-4" />
                 </div>
             </div>
         </div>

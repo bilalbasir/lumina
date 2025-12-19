@@ -1,7 +1,7 @@
 const JoinOurTeamSection = () => {
   return (
-    <section className="flex flex-col items-start gap-10 w-[100%]  sm:px-6 lg:px-20 py-16">
-      <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-16 w-[100%]">
+    <section className="flex flex-col items-start gap-10 w-[100%]  sm:px-6 lg:px-20 py-16 bg-white">
+      <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-16 w-[100%] ">
         {/* Image */}
         <div className="flex-shrink-0">
           <img

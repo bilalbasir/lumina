@@ -74,7 +74,7 @@ const ContactUsSection = () => {
 
 
   return (
-    <section className="flex flex-col items-start gap-2.5 w-full   py-16">
+    <section className="flex flex-col items-start gap-2.5 w-full bg-white  py-16">
       {loading && <Loader />}
       {/* Form Container */}
       <div className="flex flex-col justify-center  items-start gap-4 w-[100%] md:w-[90%] md:rounded-[24px] m-auto p-6 sm:p-8 lg:p-12 lg:px-20  bg-[#F8F8F8] text-[#131313]">

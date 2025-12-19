@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function AboutUs() {
   return (
-    <div>
+    <div className='bg-white'>
       {/* Hero Section */}
       <section className="relative w-full h-screen overflow-hidden">
         {/* Hero Background Image */}
@@ -52,7 +52,7 @@ export default function AboutUs() {
       </section>
 
       {/* About Content */}
-      <div className="max-w-7xl mx-auto  py-12 ">
+      <div className="max-w-7xl mx-auto  py-12  ">
         {/* WHO WE ARE SECTION STARTS */}
         <div className="grid lg:grid-cols-2 gap-10 items-center  mb-8 sm:mb-12 md:mb-16">
           <div className="relative h-[358px] sm:rounded-2xl overflow-hidden">
