@@ -8,7 +8,7 @@ import DeleteIcon from "../../../../../components/icons/deleteIcon/DeleteIcon";
 
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import TextArea from '@/components/inputField/TextArea'
+import TipTapEditor from '@/components/inputField/TipTapEditor'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
@@ -233,22 +233,22 @@ const Page = () => {
                     </div>
                 </div>
                 <div className='w-[100%]'>
-                    <TextArea
+                    <TipTapEditor
                         label="Job description"
                         name="jobDescription"
                         required
                         placeholder="Write description"
-                        register={register}
+                        control={control}
                         error={errors.jobDescription}
                     />
                 </div>
                 <div className='w-[100%]'>
-                    <TextArea
+                    <TipTapEditor
                         label="Job Short description"
                         name="shortDescription"
                         required
                         placeholder="Write short job description"
-                        register={register}
+                        control={control}
                         error={errors.shortDescription}
                     />
                 </div>

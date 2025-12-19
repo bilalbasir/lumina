@@ -100,11 +100,14 @@ const Page = () => {
 
                 <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Job Overview</p>
-                    <p className='text-[14px] text-[#686868]'>{careerData?.shortDescription}</p>
+                    <div className='tiptap-content text-[14px] text-[#686868]' dangerouslySetInnerHTML={{ __html: careerData?.shortDescription }}></div>
                 </div>
                 <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Job Description</p>
-                    <p className='text-[14px] text-[#686868]'>{careerData?.jobDescription}</p>
+                    <div
+                        className="tiptap-content text-[14px] text-[#686868]"
+                        dangerouslySetInnerHTML={{ __html: careerData?.jobDescription }}
+                    />
                 </div>
                 <div className='flex flex-col gap-y-2s mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Key Responsibilities</p>

@@ -10,22 +10,59 @@ import { isDeleteBlogmodalOpenReducer } from '@/redux/slice/ModalSlice'
 import { RootState } from '@/redux/store'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import blogApi from '@/app/apiServices/blogApi/BlogApi'
+
+interface BlogData {
+    _id: string;
+    title: string;
+    authorName: string;
+    createdAt: string;
+    slugUrl: string;
+}
 
 const page = () => {
+    const [blogs, setBlogs] = useState<BlogData[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+
     const columns = [
         { key: "name", label: "BLOG NAME" },
         { key: "author", label: "AUTHOR" },
-        { key: "views", label: "VIEWS" },
         { key: "date", label: "DATE POSTED" },
     ];
 
-    const data = [
-        { id: "111", name: "UIUX Talent", author: "Dev", location: "NY", status: "Open", date: "20/01/2024", "applications": "12" },
-        { id: "222", name: "Backend Developer", author: "Dev", location: "NY", status: "Closed", date: "25/01/2024", "applications": "21" },
-        { id: "333", name: "Full Stack Developer", author: "Dev", location: "NY", status: "Open", date: "01/02/2024", "applications": "15" },
-    ];
+    useEffect(() => {
+        fetchBlogs();
+    }, [searchTerm]);
+
+    const fetchBlogs = async () => {
+        try {
+            setLoading(true);
+            const response = await blogApi.getAllBlogs(1, searchTerm);
+            if (response.success) {
+                setBlogs(response.data.blogs);
+            }
+        } catch (error) {
+            console.error('Error fetching blogs:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Transform blogs data for table format
+    const tableData = blogs.map(blog => ({
+        _id: blog._id,  // Table component expects _id field
+        id: blog._id,   // Keep id for backup
+        name: blog.title,
+        author: blog.authorName,
+        date: new Date(blog.createdAt).toLocaleDateString('en-US', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })
+    }));
 
     const isDeleteBlogmodal = useSelector((state: RootState) => state.ModalDetail.isDeleteBlogModalOpen)
     const navigate = useRouter()
@@ -38,9 +75,14 @@ const page = () => {
     };
     const handleViewClick = (id: string) => {
         console.log("View clicked, ID:", id);
+        console.log("Full URL will be:", `/dashboard/blogs/view-blog/${id}`);
+        if (!id || id === 'undefined') {
+            console.error('Invalid blog ID:', id);
+            console.log('Available blogs:', blogs);
+            console.log('Table data:', tableData);
+            return;
+        }
         navigate.push(`/dashboard/blogs/view-blog/${id}`)
-
-        // 👇 ab id apke pass hai, yahan navigate / state update / modal open kar skte ho
     };
     const handleDeleteClick = (id: string) => {
         console.log("View clicked, ID:", id);
@@ -65,7 +107,13 @@ const page = () => {
 
                 searchBar={<SearchBar placeholder='Search blog' />}
             />
-            <Table columns={columns} data={data} onEditClick={handleEditClick} onViewClick={handleViewClick} onDeleteClick={handleDeleteClick} />
+            {loading ? (
+                <div className="flex justify-center items-center py-20">
+                    <div className="text-lg">Loading blogs...</div>
+                </div>
+            ) : (
+                <Table columns={columns} data={tableData} onEditClick={handleEditClick} onViewClick={handleViewClick} onDeleteClick={handleDeleteClick} />
+            )}
         </>
     )
 }

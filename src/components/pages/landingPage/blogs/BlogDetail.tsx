@@ -6,6 +6,7 @@ interface BlogDetailProps {
     data: {
         overView: string
         data: { heading: string; data: string; img?: string }[]
+        featuredImage?: string
     }
     selectedContent: string
 }
@@ -28,23 +29,25 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ data, selectedContent }) => {
 
     return (
         <>
-            <img
-                src="/assets/blog/blogDetailImg1.png"
-                alt="Hero Background"
-                className=" w-full h-full object-cover rounded-[12px]"
-            />
+            {data?.featuredImage && (
+                <img
+                    src={data?.featuredImage}
+                    alt="Featured Image"
+                    className=" w-full h-full object-cover rounded-[12px]"
+                />
+            )}
             <div className='p-4 rounded-lg bg-[#F3F3F3] relative mt-6'>
                 <div className='flex items-center justify-between'>
                     <p className='text-[14px] font-semibold'>Overview</p>
                     <div className={`${isOverviewClose ? "rotate-0" : "rotate-45"} transition-all duration-500`}>
 
-                        <CrossIcon onlCick={() => setIsOverviewClose(!isOverviewClose)} />
+                        <CrossIcon onClick={() => setIsOverviewClose(!isOverviewClose)} />
                     </div>
                 </div>
-                <p className={`${isOverviewClose ? "block" : "hidden"} mt-2 leading-[24px] text-[14px] transition-all duration-500`}>
+                <div dangerouslySetInnerHTML={{ __html: data.overView }} className={`${isOverviewClose ? "block" : "hidden"} mt-2 leading-[24px] text-[14px] transition-all duration-500`} />
 
-                    {data.overView}
-                </p>
+
+
 
             </div>
             {data?.data?.map(data =>
@@ -54,9 +57,10 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ data, selectedContent }) => {
                     // return nothing
                 }}>
                     <p className='text-[22px] leading-[33px] font-semibold text-[#131313]'>{data?.heading}</p>
-                    <p className={` mt-3 leading-[24px] text-[14px] `}>
-
-                        {data?.data}                </p>
+                    <div
+                        className={` mt-3 leading-[24px] text-[14px] `}
+                        dangerouslySetInnerHTML={{ __html: data?.data || '' }}
+                    />
 
                     {data?.img !== "" &&
                         <img

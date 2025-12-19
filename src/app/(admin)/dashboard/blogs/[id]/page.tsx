@@ -5,6 +5,7 @@ import LayoutHeader from '@/components/pages/adminSide/LayoutHeader'
 import { useForm } from 'react-hook-form'
 import React, { useState } from 'react'
 import TextArea from '@/components/inputField/TextArea'
+import TipTapEditor from '@/components/inputField/TipTapEditor'
 import UrlSlugField from '@/components/inputField/UrlSlugField'
 import UploadFile from '@/components/uploadFile/UploadFile'
 import UploadMultiFile from '@/components/uploadFile/UploadMultiFile'
@@ -79,12 +80,12 @@ const Page = () => {
                                 error={errors.blogTitle}
                                 required
                             />
-                            <TextArea
+                            <TipTapEditor
                                 label="Short Description"
                                 name="blogDescription"
                                 required
                                 placeholder="Provide a detailed description of the role..."
-                                register={register}
+                                control={control}
                                 error={errors.blogDescription}
                             />
                             <UrlSlugField
@@ -119,21 +120,21 @@ const Page = () => {
                                 register={register}
                                 error={errors.featuredImage}
                             />
-                            <TextArea
+                            <TipTapEditor
                                 label="Short Description"
                                 name="blogDescription"
                                 required
                                 placeholder="Provide a detailed description..."
-                                register={register}
+                                control={control}
                                 error={errors.blogDescription}
                             />
 
                             <div className="w-[100%]">
-                                <TextEditor
+                                <TipTapEditor
                                     label="Blog Content"
                                     name="content"
                                     placeholder="Write full content here..."
-                                    register={register}
+                                    control={control}
                                     error={errors.content}
                                     required
                                 />

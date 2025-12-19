@@ -4,16 +4,16 @@ import InputField from '@/components/inputField/InputField'
 import LayoutHeader from '@/components/pages/adminSide/LayoutHeader'
 import { useForm } from 'react-hook-form'
 import React, { useState } from 'react'
-import TextArea from '@/components/inputField/TextArea'
 import UrlSlugField from '@/components/inputField/UrlSlugField'
 import UploadFile from '@/components/uploadFile/UploadFile'
 import UploadMultiFile from '@/components/uploadFile/UploadMultiFile'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import AddIcon from '@/components/icons/addIcon/AddIcon'
 import EmptyContentOverview from '@/components/inputField/EmptyContentOverview'
-import TextEditor from '@/components/inputField/TextEditor'
-
-
+import TipTapEditor from '@/components/inputField/TipTapEditor'
+import blogApi from '@/app/apiServices/blogApi/BlogApi'
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 type FormValues = {
     blogTitle: string;
@@ -26,14 +26,13 @@ type FormValues = {
     authorName: string;
     featuredImage: FileList
     content: string;
-
-    formstate: unknown;
-    register: unknown;
 }
 
 const Page = () => {
+    const router = useRouter();
+    const { register, formState: { errors }, handleSubmit, control } = useForm<FormValues>()
+    const [loading, setLoading] = useState(false);
 
-    const { register, formState: { errors }, handleSubmit } = useForm<FormValues>()
     // tags state
     const [tags, setTags] = useState<string[]>([])
     const [tagInput, setTagInput] = useState("")
@@ -53,19 +52,58 @@ const Page = () => {
         setTags(tags.filter(t => t !== tag))
     }
 
+    const addBlogFun = async (data: FormValues) => {
+        setLoading(true);
+        try {
+            const formData = new FormData();
 
-    const addBlogFun = (data: FormValues) => {
-        console.log("BLOG DATA", data);
+            // Text fields
+            formData.append("blogTitle", data.blogTitle);
+            formData.append("blogDescription", data.blogDescription);
+            formData.append("blogSlug", data.blogSlug);
+            formData.append("seoTitle", data.seoTitle || "");
+            formData.append("seoDescription", data.seoDescription || "");
+            formData.append("authorName", data.authorName);
+            formData.append("content", data.content);
 
+            // Complex fields
+            formData.append("tags", JSON.stringify(tags));
+
+            // Single files
+            if (data.bannerImage?.[0]) {
+                formData.append("bannerImage", data.bannerImage[0]);
+            }
+            if (data.featuredImage?.[0]) {
+                formData.append("featuredImage", data.featuredImage[0]);
+            }
+
+            // Multi files
+            if (data.additionalImages) {
+                Array.from(data.additionalImages).forEach((file) => {
+                    formData.append("additionalImages", file);
+                });
+            }
+
+            const res = await blogApi.addBlog(formData);
+            if (res.success) {
+                toast.success("Blog published successfully!");
+                router.push("/dashboard/blogs");
+            }
+        } catch (error) {
+            console.error("Error publishing blog:", error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
         <>
             <LayoutHeader heading='Add New Blog' />
             <HorizontalLine />
-            <div className=" flex flex-col lg:flex-row gap-6 mt-6">
+            <div className="flex flex-col lg:flex-row gap-6 mt-6">
                 <div className="w-[100%] lg:w-[60%]">
-                    <form action="" className='flex flex-col items-start gap-y-8' onSubmit={handleSubmit(addBlogFun)}>
+                    <form id="add-blog-form" className='flex flex-col items-start gap-y-8' onSubmit={handleSubmit(addBlogFun)}>
+                        {/* Blog Info Section */}
                         <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
                             <div className="w-[100%]">
                                 <InputField
@@ -78,12 +116,12 @@ const Page = () => {
                                 />
                             </div>
                             <div className="w-[100%]">
-                                <TextArea
+                                <TipTapEditor
                                     label="Short Description"
                                     name="blogDescription"
                                     required
-                                    placeholder="Provide a detailed description of the role..."
-                                    register={register}
+                                    placeholder="Provide a detailed description..."
+                                    control={control}
                                     error={errors.blogDescription}
                                 />
                             </div>
@@ -105,96 +143,81 @@ const Page = () => {
                                     name="bannerImage"
                                     required
                                     accept=".png,.jpg"
-                                    placeholder="Upload Service Banner Image.docx"
+                                    placeholder="Upload Service Banner Image"
                                     register={register}
                                     error={errors.bannerImage}
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
 
+                        {/* Content & Featured Image Section */}
+                        <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
                             <div className="w-[100%]">
                                 <LayoutHeader heading='Featured Image' />
                                 <UploadFile
                                     label="Upload featured image for blog banner"
                                     name="featuredImage"
                                     accept=".png,.jpg"
-                                    placeholder="Upload Service Banner Image.docx"
+                                    placeholder="Upload Featured Image"
                                     register={register}
                                     error={errors.featuredImage}
                                 />
                             </div>
+
                             <div className="w-[100%]">
-                                <TextArea
-                                    label="Short Description"
-                                    name="blogDescription"
-                                    required
-                                    placeholder="Provide a detailed description of the role..."
-                                    register={register}
-                                    error={errors.blogDescription}
-                                />
-                            </div>
-                            <div className="w-[100%]">
-                                <TextEditor
+                                <TipTapEditor
                                     label="Blog Content"
                                     name="content"
                                     placeholder="Write full content here..."
-                                    register={register}
+                                    control={control}
                                     error={errors.content}
                                     required
                                 />
-
-
                             </div>
-
-
                         </div>
-                        <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
 
+                        {/* Additional Images Section */}
+                        <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
                             <div className="w-[100%]">
                                 <LayoutHeader heading='Additional Images' />
                                 <UploadMultiFile
                                     label="Upload additional images for your blog content"
                                     name="additionalImages"
-                                    placeholder="Upload additional images for your blog content"
+                                    placeholder="Upload additional images"
                                     register={register}
                                     error={errors.additionalImages}
                                 />
-
-
                             </div>
-
-
-
                         </div>
+
+                        {/* SEO Settings Section */}
                         <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
-
-
                             <LayoutHeader heading='SEO Settings' />
-
                             <div className="w-[100%]">
                                 <InputField
                                     label="Meta Title"
                                     name="seoTitle"
-                                    placeholder="SEO optimized title (60 characters recommended)"
+                                    placeholder="SEO optimized title"
                                     register={register}
                                     error={errors.seoTitle}
                                 />
                             </div>
                             <div className="w-[100%]">
-                                <TextArea
+                                <TipTapEditor
                                     label="Meta Description"
                                     name="seoDescription"
-                                    placeholder="Brief description for search engines (160 characters recommended)"
-                                    register={register}
+                                    placeholder="Brief description for search engines"
+                                    control={control}
                                     error={errors.seoDescription}
                                 />
                             </div>
-
                         </div>
                     </form>
                 </div>
-                <div className="">
+
+                {/* Sidebar */}
+                <div className="w-[100%] lg:w-[40%] flex flex-col gap-6">
+                    {/* Author Section */}
                     <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
                         <div className="w-[100%]">
                             <InputField
@@ -207,15 +230,17 @@ const Page = () => {
                             />
                         </div>
                     </div>
+
+                    {/* Tags Section */}
                     <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
                         <div className="w-[100%]">
                             <LayoutHeader heading='Tags / Keywords' />
-                            <div className="w-full">
+                            <div className="w-full mt-2">
                                 <label className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2"
-                                    style={{
-                                        fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                                    }}>Tags</label>
-                                <div className="flex flex-wrap gap-2 border border-[#E6E6E6] rounded px-2 py-2">
+                                    style={{ fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif" }}>
+                                    Tags
+                                </label>
+                                <div className="flex flex-wrap gap-2 border border-[#E6E6E6] rounded px-2 py-2 bg-white">
                                     <input
                                         value={tagInput}
                                         onChange={(e) => setTagInput(e.target.value)}
@@ -226,9 +251,9 @@ const Page = () => {
                                 </div>
                                 <div className='flex flex-col items-start gap-3 mt-3'>
                                     <p className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%]"
-                                        style={{
-                                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                                        }}>Quick Add</p>
+                                        style={{ fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif" }}>
+                                        Quick Add
+                                    </p>
                                     <div className="flex flex-wrap gap-2">
                                         {tags.map((tag, idx) => (
                                             <span
@@ -249,34 +274,33 @@ const Page = () => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
+                    {/* Content Overview Section */}
                     <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
                         <div className="w-[100%]">
                             <LayoutHeader heading='Content Overview' />
-                            <p className='__className_667262 text-[#676767]  hidden sm:block sm:text-[16px]'>Create sidebar navigation links to your blog content</p>
-                            <div className="w-[100%] flex items-center gap-2">
+                            <p className='text-[#676767] hidden sm:block sm:text-[14px]'>Create sidebar navigation links to your blog content</p>
+                            <div className="w-[100%] flex items-center gap-2 mt-2">
                                 <InputField
                                     label=""
-                                    name="authorName"
+                                    name="linkName"
                                     placeholder="e.g. Guide to future work"
                                     register={register}
-                                    error={errors.authorName}
                                 />
-                                <div className='mt-2' ><PrimaryButton text='' py="py-2" px="px-2" bgColor='bg-[#00624F]' textColor='text-white' icon={<AddIcon color='white' width="20" height="20" />} /></div>
+                                <div className='mt-2'>
+                                    <PrimaryButton text='' py="py-2" px="px-2" bgColor='bg-[#00624F]' textColor='text-white' icon={<AddIcon color='white' width="20" height="20" />} />
+                                </div>
                             </div>
-
-
                         </div>
                         <div className="w-[100%]">
                             <EmptyContentOverview />
                         </div>
                         <div className='w-[100%] flex flex-col items-center justify-center gap-y-3'>
-                            <PrimaryButton className='w-full' text='Publish Blog' bgColor='bg-primaryColor' textColor='text-white' py="py-2" />
-                            <PrimaryButton className='w-full' text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" borderColor="border-[#CCCCCC]" />
+                            <PrimaryButton form="add-blog-form" type='submit' className='w-full' text={loading ? 'Publishing...' : 'Publish Blog'} bgColor='bg-primaryColor' textColor='text-white' py="py-2" />
+                            <PrimaryButton className='w-full' text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" borderColor="border-[#CCCCCC]" onClick={() => router.back()} />
                         </div>
                     </div>
-
                 </div>
             </div>
         </>

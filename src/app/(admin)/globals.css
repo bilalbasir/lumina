@@ -101,3 +101,51 @@ body {
 .agBodyBaseGrey600 {
   @apply text-greyscale600 text-[16px] leading-[21px] font-[500] tracking-wide
 }
+
+.rich-text-content h1 {
+  @apply text-[1.5rem] font-bold mt-4 mb-2 text-greyscale500;
+}
+
+.rich-text-content h2 {
+  @apply text-[1.25rem] font-semibold mt-3 mb-2 text-greyscale500;
+}
+
+.rich-text-content p {
+  @apply mb-2 leading-relaxed;
+}
+
+.rich-text-content ul {
+  @apply list-disc pl-6 my-2;
+}
+
+.rich-text-content ol {
+  @apply list-decimal pl-6 my-2;
+}
+
+.rich-text-content li {
+  @apply mb-1;
+}
+
+.rich-text-content strong {
+  @apply font-bold;
+}
+
+.rich-text-content em {
+  @apply italic;
+}
+
+.tiptap-content h1 {
+  @apply text-2xl font-bold text-black mb-3;
+}
+
+.tiptap-content h2 {
+  @apply text-xl font-semibold text-black mb-2;
+}
+
+.tiptap-content p {
+  @apply text-[14px] text-[#686868] mb-2;
+}
+
+.tiptap-content ul {
+  @apply list-disc pl-6 mb-2;
+}

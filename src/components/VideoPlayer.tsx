@@ -19,20 +19,32 @@ const VideoPlayer = () => {
                     />
                     {/* Play button overlay */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-                            ▶
+                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                            <svg 
+                                width="24" 
+                                height="24" 
+                                viewBox="0 0 24 24" 
+                                fill="none" 
+                                className="ml-1"
+                            >
+                                <path 
+                                    d="M8 5V19L19 12L8 5Z" 
+                                    fill="currentColor"
+                                />
+                            </svg>
                         </div>
                     </div>
                 </div>
             ) : (
-                // Video (after click)
+                // Video (after click) - with autoplay parameters
                 <iframe
-                    src="https://drive.google.com/file/d/1fY1swx0GycFiUDDptBBMEn0qApi6yFAS/preview"
+                    src="https://drive.google.com/file/d/1fY1swx0GycFiUDDptBBMEn0qApi6yFAS/preview?autoplay=1&start=1"
                     title="Lumina Talent Advisory Video"
                     width="100%"
-                    height="665"
-                    allow="autoplay"
+                    height="100%"
+                    allow="autoplay; fullscreen"
                     allowFullScreen
+                    className="w-full h-full"
                 ></iframe>
             )}
         </div>

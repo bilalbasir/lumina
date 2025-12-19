@@ -10,9 +10,11 @@ import React, { useEffect, useState } from 'react'
 interface ContentOverviewProps {
     contentOverview: { heading: string, image?: string, data?: string }[],
     onSelect: (data: string) => void;
+    authorName?: string;
+    date?: string;
 }
 
-const ContentOverview: React.FC<ContentOverviewProps> = ({ contentOverview, onSelect }) => {
+const ContentOverview: React.FC<ContentOverviewProps> = ({ contentOverview, onSelect, authorName = "Management", date = "July 14, 2025" }) => {
 
     const [isContentClose, setIsContentClose] = useState(true)
     // 👇 Effect to update state on screen resize
@@ -34,8 +36,8 @@ const ContentOverview: React.FC<ContentOverviewProps> = ({ contentOverview, onSe
         <>  <div className='flex items-center gap-x-2 px-4 lg:px-0 '>
             <UserIcon />
             <div className='flex flex-col justify-between items-start gap-y-2'>
-                <p className='text-[14px] font-semibold text-[#131313]'>Management</p>
-                <p className='text-[12px] font-medium text-[#A39F9F]'>Publish Date: <span>July 14, 2025</span></p>
+                <p className='text-[14px] font-semibold text-[#131313]'>{authorName}</p>
+                <p className='text-[12px] font-medium text-[#A39F9F]'>Publish Date: <span>{date}</span></p>
             </div>
         </div>
             <div className='flex items-center justify-between mt-6 mb-6'>

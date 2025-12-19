@@ -265,26 +265,6 @@ const Page = () => {
                         />
                     </div>
                 </div>
-                <div className='w-[100%]'>
-                    <TextArea
-                        label="Job description"
-                        name="jobDescription"
-                        required
-                        placeholder="Write description"
-                        register={register}
-                        error={errors.jobDescription}
-                    />
-                </div>
-                <div className='w-[100%]'>
-                    <TextArea
-                        label="Job Short description"
-                        name="shortDescription"
-                        required
-                        placeholder="Write short job description"
-                        register={register}
-                        error={errors.shortDescription}
-                    />
-                </div>
 
                 <div className='flex items-center justify-between w-full'>
 

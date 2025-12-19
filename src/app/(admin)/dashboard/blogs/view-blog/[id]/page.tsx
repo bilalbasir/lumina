@@ -1,98 +1,157 @@
 'use client'
 
-import SubtractIcon from '@/components/icons/subtractIcon/SubtractIcon';
-import UserIcon from '@/components/icons/userIcon/UserIcon';
 import BlogDetail from '@/components/pages/landingPage/blogs/BlogDetail';
 import ContentOverview from '@/components/pages/landingPage/blogs/ContentOverview';
 import HeroImgSvg from '@/components/svgDesign/heroImgSvg'
-import { useParams } from 'next/navigation';
-import React, { useState } from 'react'
-const blogDetailData = {
-  overView: "Mississauga is emerging as a prime destination in the Greater Toronto Area, boasting a population exceeding 825,000. Renowned for its rich cultural tapestry, robust job market, and excellent transit options, the city seamlessly blends urban and suburban lifestyles. Neighborhoods such as Port Credit, City Centre, and Churchill Meadows each offer their own unique charm. The real estate landscape is vibrant, with average home prices around $996,000, particularly driven by demand for condos and townhomes. Notable projects like M City Condos, Brightwater, and Lakeview Village are enhancing Mississauga's appeal. Whether you're a first-time buyer or an investor, Mississauga presents exceptional opportunities for all.",
-  data: [
-    {
-      heading: "Future Work Trends in Guelph: Insights and Predictions for 2025",
-      data: "The last quarter of 2024 signaled a pivotal change in the Guelph housing market. December witnessed an 80% surge in sales compared to December 2023, reflecting a robust revival in buyer interest. This uptick can be attributed to several factors, including lower interest rates, enhanced affordability, and renewed confidence in the market. Throughout 2024, various property types exhibited diverse trends, with detached homes holding steady, townhouses seeing modest growth, and condos facing challenges."
-      , img: "",
-    },
-    {
-      heading: "The Future of Work: Adapting to Hybrid Models",
-      data: "Companies are increasingly adopting hybrid work models, blending remote and on-site work, which has led to a re-evaluation of office space design. This shift is facilitating the need for collaborative spaces that foster creativity and teamwork, while also providing quiet zones for focused work. As a result, businesses are investing in technology to enhance virtual collaboration experiences, ensuring productivity remains high regardless of physical location."
-      , img: "",
+import { useParams, useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react'
+import blogApi from '@/app/apiServices/blogApi/BlogApi';
+import { imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl';
 
-    },
-    {
-      heading: "Sustainability in Business Operations",
-      data: "Organizations are prioritizing sustainability initiatives, with 70% of companies implementing green practices, such as renewable energy usage and waste reduction strategies. This transition not only helps to mitigate environmental impact but also attracts eco-conscious consumers and investors. Businesses are increasingly aligning their operations with sustainability goals, recognizing that a commitment to the planet can drive profitability and long-term success."
-      , img: "",
-
-    },
-    {
-      heading: "Technological Innovations Reshaping Industries",
-      data: "Emerging technologies, such as artificial intelligence and blockchain, are revolutionizing various sectors. AI is optimizing supply chain management and enhancing customer service through advanced data analytics. Meanwhile, blockchain technology is improving transparency and security in transactions, reshaping industries like finance and healthcare. As these innovations continue to evolve, companies must adapt to remain competitive in a rapidly changing landscape."
-      , img: "/assets/blog/blogDetailImg2.png",
-
-    }
-  ]
-
+interface BlogData {
+  _id: string;
+  title: string;
+  slugUrl: string;
+  bannerImage: string;
+  featuredImage: string;
+  shortDescription: string;
+  blogContent: string;
+  authorName: string;
+  tags: string[];
+  blogContextTable: string[];
+  additionalImages: string[];
+  createdAt: string;
+  seoTitle: string;
+  metaDescription: string;
 }
 
-const page = () => {
+const Page = () => {
   const params = useParams()
-  const slug = params?.slug
+  const router = useRouter()
+  const id = params?.id as string
+
   const [selectedContent, setSelectedContent] = useState<string>()
+  const [blogData, setBlogData] = useState<BlogData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (id) {
+      fetchBlogById()
+    }
+  }, [id])
+
+  const fetchBlogById = async () => {
+    try {
+      setLoading(true)
+      const response = await blogApi.getBlogId(id)
+      if (response.success) {
+        setBlogData(response.data)
+      } else {
+        setError('Blog not found')
+      }
+    } catch (err) {
+      setError('Failed to load blog')
+      console.error('Error fetching blog:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getImageUrl = (imageUrl: string) => {
+    if (!imageUrl) return "";
+    if (imageUrl.startsWith('http')) return imageUrl;
+    return `${imageBaseUrl}/${imageUrl}`;
+  };
+
+  const transformBlogData = (blog: BlogData) => {
+    return {
+      overView: blog.shortDescription || "",
+      featuredImage: getImageUrl(blog.featuredImage),
+      data: blog.blogContextTable && blog.blogContextTable.length > 0
+        ? blog.blogContextTable.map((heading, index) => ({
+          heading,
+          data: index === 0 ? blog.blogContent : "",
+          img: blog.additionalImages && blog.additionalImages[index]
+            ? getImageUrl(blog.additionalImages[index]) : ""
+        }))
+        : [{
+          heading: "Content",
+          data: blog.blogContent || "",
+          img: blog.additionalImages && blog.additionalImages[0]
+            ? getImageUrl(blog.additionalImages[0]) : ""
+        }]
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primaryColor"></div>
+      </div>
+    )
+  }
+
+  if (error || !blogData) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen gap-4">
+        <div className="text-red-500 text-2xl font-bold">{error || 'Blog not found'}</div>
+        <button onClick={() => router.back()} className="text-primaryColor underline">Go Back</button>
+      </div>
+    )
+  }
+
+  const transformedData = transformBlogData(blogData)
+
   return (
-    <div>
+    <div className="bg-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative w-full h-[600px] overflow-hidden">
+      <section className="relative w-full h-[400px] md:h-[600px] overflow-hidden">
         {/* Background Image */}
         <img
-          src="/assets/blog/blogImg1.png"
-          alt="Hero Background"
+          src={blogData.bannerImage ? getImageUrl(blogData.bannerImage) : "/assets/blog/blogImg1.png"}
+          alt={blogData.title}
           className="absolute inset-0 w-full h-full object-cover"
         />
 
         {/* Gradient Overlay */}
         <HeroImgSvg />
 
-
         {/* Hero Content */}
         <div className="relative z-10 flex items-center justify-center h-full px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center md:gap-10 max-w-4xl text-center">
             <div className="flex flex-col items-center gap-0.5">
               <h1
-                className="text-2xl md:text-5xl lg:text-[64px] font-bold leading-[53.2px] md:leading-[83.2px] lg:leading-[103.2px]"
+                className="text-3xl md:text-5xl lg:text-[64px] font-bold leading-tight md:leading-[1.2] lg:leading-[1.1] text-white"
                 style={{
                   fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                 }}
               >
-                <span className="text-[#D5EED7]">{slug}</span>
+                <span className="text-[#D5EED7]">{blogData.title}</span>
               </h1>
-
             </div>
           </div>
         </div>
       </section>
-      <div className='flex items-start  justify-between mx-auto flex-col-reverse lg:flex-row  px-4 sm:px-6 lg:px-20 py-5 md:pt-10 lg:py-16 gap-8'>
 
+      <div className='flex items-start justify-between mx-auto flex-col-reverse lg:flex-row px-4 sm:px-6 lg:px-20 py-5 md:pt-10 lg:py-16 gap-8'>
         {/* blog details section */}
-        <section className='w-[100%] lg:w-[72%] pr-4 '>
-          <BlogDetail data={blogDetailData} selectedContent={selectedContent || ""} />
+        <section className='w-[100%] lg:w-[72%] pr-0 lg:pr-4'>
+          <BlogDetail data={transformedData} selectedContent={selectedContent || ""} />
         </section>
 
-        {/* allcontent section */}
-        <section className='w-[100%] lg:w-[24%] sticky top-[68px] lg:top-20 self-start bg-white'>
+        {/* content overview section */}
+        <section className='w-[100%] lg:w-[24%] sticky top-[68px] lg:top-20 self-start bg-white z-20'>
           <ContentOverview
-            contentOverview={blogDetailData?.data}
+            contentOverview={transformedData?.data}
             onSelect={(heading) => setSelectedContent(heading)}
+            authorName={blogData.authorName}
+            date={new Date(blogData.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           />
         </section>
-
       </div>
-
-
     </div>
   )
 }
 
-export default page
+export default Page

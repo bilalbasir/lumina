@@ -11,6 +11,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import TextArea from '@/components/inputField/TextArea'
 import PrimaryButton from '@/components/button/PrimaryButton'
+import TipTapEditor from '@/components/inputField/TipTapEditor'
 import { useMutation } from '@tanstack/react-query'
 import serviceApi from '@/app/apiServices/servicesApi/ServiceApi'
 import toast from 'react-hot-toast'
@@ -221,12 +222,12 @@ const Page = () => {
                 </div>
 
                 <div className='w-[100%]'>
-                    <TextArea
+                    <TipTapEditor
                         label="description"
                         name="description"
                         required
                         placeholder="Write description"
-                        register={register}
+                        control={control}
                         error={errors.description}
                     />
                 </div>

@@ -77,9 +77,9 @@ const Page = () => {
                     <label className="w-full text-sm font-medium leading-[150%]">
                         Description
                     </label>
-                    <p className="text-base text-gray-700 mt-1">
-                        {serviceData.description}
-                    </p>
+
+                    <div className="rich-text-content tiptap-content" dangerouslySetInnerHTML={{ __html: serviceData?.description || '' }} />
+
                 </div>
 
                 <div className="flex items-center justify-between w-full">
