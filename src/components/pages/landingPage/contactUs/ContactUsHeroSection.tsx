@@ -2,7 +2,7 @@ import HeroImgSvg from "@/components/svgDesign/heroImgSvg";
 
 const ContactUsHeroSection = () => {
   return (
-    <section className="relative w-full h-[600px] overflow-hidden">
+    <section className="relative w-full h-[600px] overflow-hidden ">
       {/* Background Elements */}
       <div className="absolute inset-0">
 
