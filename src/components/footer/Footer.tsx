@@ -1,6 +1,9 @@
+'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Footer = () => {
+  const router = useRouter()
   return (
     <footer
       className="relative w-full lg:h-[475px] overflow-hidden"
@@ -17,7 +20,7 @@ const Footer = () => {
           <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-10 mb-8 lg:mb-0 lg:w-1/2">
             <div className="flex flex-col gap-8">
               {/* Logo */}
-              <div className="w-[294px] h-[62px]">
+              <div className="w-[294px] h-[62px] " onClick={() => router.push("/")}>
                 <svg width="295" height="63" viewBox="0 0 295 63" fill="none">
                   <path d="M55.3745 0.599609H2.85435L0 13.8975H0.638032C2.31706 6.87919 6.85045 1.1369 13.9024 1.1369H27.4018V49.5602V49.5937V55.0674C27.4018 59.0635 25.622 61.4141 23.1035 62.3208V62.9588H35.2597V62.2872C32.5396 61.2462 30.8606 59.1642 30.827 55.0338V49.5602V49.5266V1.1369H44.3264C51.3784 1.1369 55.9118 6.87919 57.5908 13.8975H58.2288L55.3745 0.599609Z" fill="white" />
                   <path d="M42.8825 38.6801C41.4049 44.5903 41.4385 49.1236 32.1367 49.1236V49.5602H41.1027L43.4198 38.6465H42.8825V38.6801Z" fill="white" />
@@ -145,12 +148,12 @@ const Footer = () => {
                     className="text-white text-sm leading-[21px]"
                     style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
-                    123 Business Ave<br />New York, NY 10001
+                    Meydan Grandstand, 6th Floor, Meydan Road, Nad Al Sheba, Dubai, U.A.E
                   </span>
                 </div>
 
                 {/* Email */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-start gap-2">
                   <svg width="16" height="17" viewBox="0 0 16 17" fill="none">
                     <g clipPath="url(#clip0_460_5656)">
                       <path d="M12.6667 0.897461H3.33333C2.4496 0.89852 1.60237 1.25005 0.97748 1.87494C0.352588 2.49983 0.00105857 3.34706 0 4.23079L0 12.2308C0.00105857 13.1145 0.352588 13.9618 0.97748 14.5866C1.60237 15.2115 2.4496 15.5631 3.33333 15.5641H12.6667C13.5504 15.5631 14.3976 15.2115 15.0225 14.5866C15.6474 13.9618 15.9989 13.1145 16 12.2308V4.23079C15.9989 3.34706 15.6474 2.49983 15.0225 1.87494C14.3976 1.25005 13.5504 0.89852 12.6667 0.897461ZM3.33333 2.23079H12.6667C13.0659 2.23158 13.4557 2.3518 13.786 2.576C14.1163 2.80019 14.3719 3.11809 14.52 3.48879L9.41467 8.59479C9.03895 8.969 8.53028 9.17911 8 9.17911C7.46972 9.17911 6.96105 8.969 6.58533 8.59479L1.48 3.48879C1.6281 3.11809 1.88374 2.80019 2.21403 2.576C2.54432 2.3518 2.93414 2.23158 3.33333 2.23079ZM12.6667 14.2308H3.33333C2.8029 14.2308 2.29419 14.0201 1.91912 13.645C1.54405 13.2699 1.33333 12.7612 1.33333 12.2308V5.23079L5.64267 9.53746C6.26842 10.1616 7.11617 10.5122 8 10.5122C8.88383 10.5122 9.73158 10.1616 10.3573 9.53746L14.6667 5.23079V12.2308C14.6667 12.7612 14.456 13.2699 14.0809 13.645C13.7058 14.0201 13.1971 14.2308 12.6667 14.2308Z" fill="white" />
@@ -163,9 +166,12 @@ const Footer = () => {
                   </svg>
                   <span
                     className="text-white text-sm leading-[21px]"
-                    style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
+                    style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif', }}
                   >
-                    info@akincares.net
+                    bilal@luminatalents.com
+                    <br />
+                    khizar@luminatalents.com
+
                   </span>
                 </div>
 
@@ -178,14 +184,14 @@ const Footer = () => {
                     className="text-white text-sm leading-[21px]"
                     style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
-                    +13333846282
+                    +971 55 279 6906
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Legal & Cookies */}
-            <div className="flex flex-col gap-4">
+            {/* <div className="flex flex-col gap-4">
               <h3
                 className="text-white text-xl font-bold leading-[30px]"
                 style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
@@ -204,7 +210,7 @@ const Footer = () => {
                   </Link>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 

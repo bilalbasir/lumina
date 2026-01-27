@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import MenuIcon from '../../../icons/menuIcon/MenuIcon';
 import Logo from '../../../icons/logo/Logo';
@@ -10,6 +10,7 @@ import Image from 'next/image';
 const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter()
   const [isScrolled, setIsScrolled] = useState(false)
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -116,7 +117,7 @@ const Navbar = () => {
           >
             <MenuIcon />
           </button>
-          <div className='relative w-[45%] h-[28px] sm:h-[36px] sm:w-[28%]'>
+          <div className='relative w-[45%] h-[28px] sm:h-[36px] sm:w-[28%]' onClick={() => router.push("/")}>
 
             <Image fill alt='logo' src={"/assets/logo.png"} className='object-cover' />
           </div>
