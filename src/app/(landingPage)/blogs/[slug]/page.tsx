@@ -64,24 +64,25 @@ const Page = () => {
     };
 
     const transformBlogData = (blog: BlogData) => {
+        // 1. Prepare Main Content for Rendering (Single Block)
+        const mainContentData = [{
+            heading: blog.title, // Or use a generic title, or leave empty if the HTML has the title
+            data: blog.blogContent || "",
+            img: blog.additionalImages && blog.additionalImages[0]
+                ? getImageUrl(blog.additionalImages[0]) : ""
+        }];
+
+        // 2. Prepare Sidebar Items (Table of Contents)
+        // Ensure we have at least one valid item or fallback to empty
+        const sidebarItems = blog.blogContextTable && blog.blogContextTable.length > 0
+            ? blog.blogContextTable.map(heading => ({ heading }))
+            : [{ heading: "Overview" }]; // Default if empty
+
         return {
             overView: blog.shortDescription || "",
             featuredImage: getImageUrl(blog.featuredImage),
-            data: blog.blogContextTable && blog.blogContextTable.length > 0
-                ? blog.blogContextTable.map((heading, index) => ({
-                    heading,
-                    // Note: If blogContent is a single block, we show it under the first heading
-                    // or repeated if intended. For now, we follow the existing pattern.
-                    data: index === 0 ? blog.blogContent : "",
-                    img: blog.additionalImages && blog.additionalImages[index]
-                        ? getImageUrl(blog.additionalImages[index]) : ""
-                }))
-                : [{
-                    heading: "Content",
-                    data: blog.blogContent || "",
-                    img: blog.additionalImages && blog.additionalImages[0]
-                        ? getImageUrl(blog.additionalImages[0]) : ""
-                }]
+            data: mainContentData, // Only one block for rendering
+            sidebarItems: sidebarItems // Separate list for the sidebar
         }
     }
 
@@ -144,7 +145,7 @@ const Page = () => {
                 {/* content overview section */}
                 <section className='w-[100%] lg:w-[24%] sticky top-[68px] lg:top-20 self-start bg-white z-20'>
                     <ContentOverview
-                        contentOverview={transformedData?.data}
+                        contentOverview={transformedData?.sidebarItems}
                         onSelect={(heading) => setSelectedContent(heading)}
                         authorName={blogData.authorName}
                         date={new Date(blogData.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}

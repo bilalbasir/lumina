@@ -41,10 +41,10 @@ const ContentOverview: React.FC<ContentOverviewProps> = ({ contentOverview, onSe
             </div>
         </div>
             <div className='flex items-center justify-between mt-6 mb-6'>
-                <p>Content Overview</p>
+                <p className='text-black'>Content Overview</p>
 
                 {isContentClose ?
-                    <div className='h-[40px] cursor-pointer w-[40px] rounded-full bg-[#F1F1F1] flex items-center justify-center'
+                    <div className='h-[40px] cursor-pointer w-[40px] rounded-full bg-[#F1F1F1] text-black flex items-center justify-center'
                         onClick={() => setIsContentClose(false)}>
 
 
@@ -52,7 +52,7 @@ const ContentOverview: React.FC<ContentOverviewProps> = ({ contentOverview, onSe
 
 
                     </div> :
-                    <div className='h-[40px] cursor-pointer w-[40px] rounded-full bg-[#F1F1F1] flex items-center justify-center'
+                    <div className='h-[40px] cursor-pointer w-[40px] rounded-full bg-[#F1F1F1] text-black flex items-center justify-center'
                         onClick={() => setIsContentClose(true)}>
 
 

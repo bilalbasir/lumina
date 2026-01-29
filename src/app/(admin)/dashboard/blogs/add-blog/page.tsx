@@ -14,6 +14,7 @@ import TipTapEditor from '@/components/inputField/TipTapEditor'
 import blogApi from '@/app/apiServices/blogApi/BlogApi'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import { slugify } from '@/utils/slugify'
 
 type FormValues = {
     blogTitle: string;
@@ -27,11 +28,20 @@ type FormValues = {
     featuredImage: FileList
     content: string;
 }
-
 const Page = () => {
     const router = useRouter();
-    const { register, formState: { errors }, handleSubmit, control } = useForm<FormValues>()
+    const { register, formState: { errors }, handleSubmit, control, watch, setValue } = useForm<FormValues>()
     const [loading, setLoading] = useState(false);
+
+    // Watch blog title to auto-generate slug
+    const watchedTitle = watch("blogTitle");
+    const watchedSlug = watch("blogSlug");
+
+    React.useEffect(() => {
+        if (watchedTitle && (!watchedSlug || watchedSlug.trim() === "")) {
+            setValue("blogSlug", slugify(watchedTitle));
+        }
+    }, [watchedTitle, setValue]);
 
     // tags state
     const [tags, setTags] = useState<string[]>([])
@@ -52,6 +62,22 @@ const Page = () => {
         setTags(tags.filter(t => t !== tag))
     }
 
+    // Content Overview state
+    const [contentOverviewItems, setContentOverviewItems] = useState<string[]>([])
+    const [overviewInput, setOverviewInput] = useState("")
+
+    const handleAddOverviewItem = () => {
+        if (overviewInput.trim() === "") return
+        if (!contentOverviewItems.includes(overviewInput.trim())) {
+            setContentOverviewItems([...contentOverviewItems, overviewInput.trim()])
+        }
+        setOverviewInput("")
+    }
+
+    const removeOverviewItem = (index: number) => {
+        setContentOverviewItems(contentOverviewItems.filter((_, i) => i !== index))
+    }
+
     const addBlogFun = async (data: FormValues) => {
         setLoading(true);
         try {
@@ -60,7 +86,7 @@ const Page = () => {
             // Text fields
             formData.append("blogTitle", data.blogTitle);
             formData.append("blogDescription", data.blogDescription);
-            formData.append("blogSlug", data.blogSlug);
+            formData.append("blogSlug", slugify(data.blogSlug));
             formData.append("seoTitle", data.seoTitle || "");
             formData.append("seoDescription", data.seoDescription || "");
             formData.append("authorName", data.authorName);
@@ -68,6 +94,7 @@ const Page = () => {
 
             // Complex fields
             formData.append("tags", JSON.stringify(tags));
+            formData.append("blogContextTable", JSON.stringify(contentOverviewItems));
 
             // Single files
             if (data.bannerImage?.[0]) {
@@ -282,20 +309,59 @@ const Page = () => {
                             <LayoutHeader heading='Content Overview' />
                             <p className='text-[#676767] hidden sm:block sm:text-[14px]'>Create sidebar navigation links to your blog content</p>
                             <div className="w-[100%] flex items-center gap-2 mt-2">
-                                <InputField
-                                    label=""
-                                    name="linkName"
-                                    placeholder="e.g. Guide to future work"
-                                    register={register}
-                                />
-                                <div className='mt-2'>
-                                    <PrimaryButton text='' py="py-2" px="px-2" bgColor='bg-[#00624F]' textColor='text-white' icon={<AddIcon color='white' width="20" height="20" />} />
+                                <div className="w-full">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Overview Item
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={overviewInput}
+                                        onChange={(e) => setOverviewInput(e.target.value)}
+                                        placeholder="e.g. Introduction"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primaryColor focus:border-primaryColor outline-none transition-all"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                handleAddOverviewItem();
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className='mt-6'>
+                                    <PrimaryButton
+                                        text=''
+                                        py="py-2"
+                                        px="px-2"
+                                        bgColor='bg-[#00624F]'
+                                        textColor='text-white'
+                                        icon={<AddIcon color='white' width="20" height="20" />}
+                                        onClick={handleAddOverviewItem}
+                                        type="button"
+                                    />
                                 </div>
                             </div>
                         </div>
-                        <div className="w-[100%]">
-                            <EmptyContentOverview />
+
+                        {/* List of Overview Items */}
+                        <div className="w-[100%] flex flex-col gap-2">
+                            {contentOverviewItems.length > 0 ? (
+                                contentOverviewItems.map((item, idx) => (
+                                    <div key={idx} className="flex justify-between items-center bg-white p-3 rounded border border-gray-200">
+                                        <span className="text-sm text-[#131313] font-medium">{item}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeOverviewItem(idx)}
+                                            className="text-red-500 hover:text-red-700 font-bold"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                ))
+                            ) : (
+                                <EmptyContentOverview />
+                            )}
                         </div>
+
                         <div className='w-[100%] flex flex-col items-center justify-center gap-y-3'>
                             <PrimaryButton form="add-blog-form" type='submit' className='w-full' text={loading ? 'Publishing...' : 'Publish Blog'} bgColor='bg-primaryColor' textColor='text-white' py="py-2" />
                             <PrimaryButton className='w-full' text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" borderColor="border-[#CCCCCC]" onClick={() => router.back()} />
@@ -306,5 +372,4 @@ const Page = () => {
         </>
     )
 }
-
 export default Page

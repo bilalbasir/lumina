@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
     isModalOpen: false,
@@ -9,6 +9,8 @@ const initialState = {
     isDeleteBlogModalOpen: false,
     isDeleteLeadsModalOpen: false,
     isDeleteApplicantModalOpen: false,
+    deleteId: "",
+
 }
 const ModalDetail = createSlice({
     name: "ModalDetail",
@@ -52,13 +54,16 @@ const ModalDetail = createSlice({
             state.isModalOpen = false
             state.isDeleteCareerModalOpen = false
         }),
-        isDeleteBlogmodalOpenReducer: ((state) => {
+        isDeleteBlogmodalOpenReducer: ((state, action: PayloadAction<string>) => {
             state.isModalOpen = true
             state.isDeleteBlogModalOpen = true
+            state.deleteId = action.payload
         }),
         isDeleteBlogmodalCloseReducer: ((state) => {
             state.isModalOpen = false
             state.isDeleteBlogModalOpen = false
+            // @ts-ignore
+            state.deleteId = ""
         }),
         isDeleteLeadsmodalOpenReducer: ((state) => {
             state.isDeleteLeadsModalOpen = true

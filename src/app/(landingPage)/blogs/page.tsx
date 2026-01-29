@@ -87,15 +87,15 @@ export default function Blogs() {
       </section>
 
       {/* Blog Content */}
-      <div className=" mx-auto px-4 sm:px-6 lg:px-20 py-12">
+      <div className=" mx-auto px-4 sm:px-6 lg:px-20 py-12 bg-white">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12">
           <div>
-            <p className='text-5xl leading-[57px] font-semibold'>Blogs</p>
+            <p className='text-5xl leading-[57px] font-semibold text-black'>Blogs</p>
             <p className='mt-6 text-[#686868] text-base font-medium max-w-4xl'>
               "Our blog provides in-depth insights, expert strategies, and practical guidance on recruitment, leadership, and workforce development. From attracting and securing top-tier talent to optimizing organizational processes, we cover the latest trends, proven methods, and actionable tips that help businesses achieve long-term growth."
             </p>
           </div>
-          
+
           {/* Search Bar */}
           <div className="mt-6 md:mt-0 md:ml-8">
             <div className="relative">
@@ -107,7 +107,7 @@ export default function Blogs() {
                   setSearchTerm(e.target.value);
                   setPage(1); // Reset to first page when searching
                 }}
-                className="w-full md:w-80 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00634F] focus:border-transparent"
+                className="w-full md:w-80 px-4 py-3 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00634F] focus:border-transparent"
               />
               {searchTerm && (
                 <button
@@ -168,8 +168,7 @@ export default function Blogs() {
                       </div>
                     </Link>
                   </div>
-                  <p className='text-[28px] mt-2 line-clamp-2'>{blog.title}</p>
-                  <p className='text-[14px] text-[#4E4E4E] mt-1'>By {blog.authorName}</p>
+                  <p className='text-[28px] text-[#131313] mt-2 line-clamp-2'>{blog.title}</p>
                   <p className='text-[14px] text-[#4E4E4E] mt-1'>{new Date(blog.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                   {blog.tags && blog.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
@@ -186,11 +185,11 @@ export default function Blogs() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center mt-12 gap-2">
+              <div className="flex justify-center mt-12 gap-2 text-black">
                 <button
                   onClick={() => setPage(prev => Math.max(prev - 1, 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-gray-700 text-black rounded disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
@@ -198,7 +197,7 @@ export default function Blogs() {
                 <button
                   onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
                   disabled={page === totalPages}
-                  className="px-4 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-gray-700 text-black rounded disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>

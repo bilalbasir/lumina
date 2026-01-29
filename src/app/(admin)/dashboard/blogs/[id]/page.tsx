@@ -3,17 +3,20 @@ import { HorizontalLine } from '@/components/horizontalLine/HorizontalLine'
 import InputField from '@/components/inputField/InputField'
 import LayoutHeader from '@/components/pages/adminSide/LayoutHeader'
 import { useForm } from 'react-hook-form'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextArea from '@/components/inputField/TextArea'
 import TipTapEditor from '@/components/inputField/TipTapEditor'
 import UrlSlugField from '@/components/inputField/UrlSlugField'
 import UploadFile from '@/components/uploadFile/UploadFile'
 import UploadMultiFile from '@/components/uploadFile/UploadMultiFile'
 import PrimaryButton from '@/components/button/PrimaryButton'
-import { Link } from 'lucide-react'
 import AddIcon from '@/components/icons/addIcon/AddIcon'
 import EmptyContentOverview from '@/components/inputField/EmptyContentOverview'
-import TextEditor from '@/components/inputField/TextEditor'
+import blogApi from '@/app/apiServices/blogApi/BlogApi'
+import toast from 'react-hot-toast'
+import { useParams, useRouter } from 'next/navigation'
+import { slugify } from '@/utils/slugify'
+import { imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl'
 
 type FormValues = {
     blogTitle: string;
@@ -25,28 +28,77 @@ type FormValues = {
     seoTitle: string;
     seoDescription: string;
     authorName: string;
-    contentTitle: string;
     featuredImage: FileList;
 }
 
 const Page = () => {
+    const router = useRouter();
+    const params = useParams();
+    const id = params?.id as string;
 
-    const { register, formState: { errors }, control } = useForm<FormValues>({
-        defaultValues: {
-            blogTitle: "Dummy Blog Title",
-            blogDescription: "This is a dummy blog short description just for testing.",
-            blogSlug: "dummy-blog-slug",
-            seoTitle: "Dummy SEO Meta Title",
-            seoDescription: "This is a dummy SEO description for testing purposes only.",
-            authorName: "John Doe",
-            contentTitle: "Permotional Text",
-            content: "This blog is informational blog in which we discuss study in germany"
-        }
-    })
+    const { register, formState: { errors }, handleSubmit, control, reset, setValue, watch } = useForm<FormValues>()
+    const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
 
-    // tags state with dummy values
-    const [tags, setTags] = useState<string[]>(["React", "Next.js", "SEO"])
+    // tags state
+    const [tags, setTags] = useState<string[]>([])
     const [tagInput, setTagInput] = useState("")
+
+    // Content Overview state
+    const [contentOverviewItems, setContentOverviewItems] = useState<string[]>([])
+    const [overviewInput, setOverviewInput] = useState("")
+
+    // Watch blog title to auto-generate slug (optional in edit mode, usually we keep existing unless changed)
+    const watchedTitle = watch("blogTitle");
+    const watchedSlug = watch("blogSlug");
+
+    // Fetch initial data
+    useEffect(() => {
+        if (id) {
+            fetchBlogDetails();
+        }
+    }, [id]);
+
+    const fetchBlogDetails = async () => {
+        try {
+            setFetching(true);
+            const res = await blogApi.getBlogId(id);
+            if (res.success && res.data) {
+                const blog = res.data;
+                reset({
+                    blogTitle: blog.title,
+                    blogDescription: blog.shortDescription,
+                    blogSlug: blog.slugUrl,
+                    seoTitle: blog.seoTitle,
+                    seoDescription: blog.metaDescription,
+                    authorName: blog.authorName,
+                    content: blog.blogContent,
+                });
+
+                // Populate Tags
+                if (blog.tags) setTags(blog.tags);
+
+                // Populate Content Overview (Sidebar items)
+                // Assuming backend returns it as an array of strings in 'blogContextTable'
+                if (blog.blogContextTable) setContentOverviewItems(blog.blogContextTable);
+            }
+        } catch (error) {
+            console.error("Error fetching blog details:", error);
+            toast.error("Failed to load blog details");
+        } finally {
+            setFetching(false);
+        }
+    }
+
+    // Auto-slug logic can be tricky in edit mode. 
+    // We might want to only auto-generate if the slug is empty, OR if user explicitly types in title and slug was not manually edited?
+    // For simplicity, we keep the add logic: valid slug enforcement on type.
+    useEffect(() => {
+        if (watchedTitle && (!watchedSlug || watchedSlug.trim() === "")) {
+            setValue("blogSlug", slugify(watchedTitle));
+        }
+    }, [watchedTitle, setValue, watchedSlug]);
+
 
     const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
@@ -63,13 +115,77 @@ const Page = () => {
         setTags(tags.filter(t => t !== tag))
     }
 
+    const handleAddOverviewItem = () => {
+        if (overviewInput.trim() === "") return
+        if (!contentOverviewItems.includes(overviewInput.trim())) {
+            setContentOverviewItems([...contentOverviewItems, overviewInput.trim()])
+        }
+        setOverviewInput("")
+    }
+
+    const removeOverviewItem = (index: number) => {
+        setContentOverviewItems(contentOverviewItems.filter((_, i) => i !== index))
+    }
+
+    const updateBlogFun = async (data: FormValues) => {
+        setLoading(true);
+        try {
+            const formData = new FormData();
+
+            // Text fields
+            formData.append("blogTitle", data.blogTitle);
+            formData.append("blogDescription", data.blogDescription);
+            formData.append("blogSlug", slugify(data.blogSlug)); // Enforce slugify
+            formData.append("seoTitle", data.seoTitle || "");
+            formData.append("seoDescription", data.seoDescription || "");
+            formData.append("authorName", data.authorName);
+            formData.append("content", data.content);
+
+            // Complex fields
+            formData.append("tags", JSON.stringify(tags));
+            formData.append("blogContextTable", JSON.stringify(contentOverviewItems));
+
+            // Files - Only append if new file selected
+            if (data.bannerImage?.[0]) {
+                formData.append("bannerImage", data.bannerImage[0]);
+            }
+            if (data.featuredImage?.[0]) {
+                formData.append("featuredImage", data.featuredImage[0]);
+            }
+            if (data.additionalImages) {
+                Array.from(data.additionalImages).forEach((file) => {
+                    formData.append("additionalImages", file);
+                });
+            }
+
+            const res = await blogApi.updateBlog(id, formData);
+            if (res.success) {
+                toast.success("Blog updated successfully!");
+                router.push("/dashboard/blogs");
+            }
+        } catch (error) {
+            console.error("Error updating blog:", error);
+            // toast.error handled in api service usually, but double check
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    if (fetching) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primaryColor"></div>
+            </div>
+        )
+    }
+
     return (
         <>
             <LayoutHeader heading='Edit blog' />
             <HorizontalLine />
             <div className="flex flex-col lg:flex-row gap-6 mt-6">
                 <div className="w-[100%] lg:w-[60%]">
-                    <form action="" className='flex flex-col items-start gap-y-8'>
+                    <form id="edit-blog-form" className='flex flex-col items-start gap-y-8' onSubmit={handleSubmit(updateBlogFun)}>
                         {/* Blog info */}
                         <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
                             <InputField
@@ -84,7 +200,7 @@ const Page = () => {
                                 label="Short Description"
                                 name="blogDescription"
                                 required
-                                placeholder="Provide a detailed description of the role..."
+                                placeholder="Provide a detailed description..."
                                 control={control}
                                 error={errors.blogDescription}
                             />
@@ -100,7 +216,7 @@ const Page = () => {
                             <UploadFile
                                 label="Banner Image"
                                 name="bannerImage"
-                                required
+                                // Not required in Edit mode typically, unless we force replace
                                 accept=".png,.jpg"
                                 placeholder="Upload Service Banner Image"
                                 register={register}
@@ -114,19 +230,10 @@ const Page = () => {
                             <UploadFile
                                 label="Upload featured image for blog banner"
                                 name="featuredImage"
-                                required
                                 accept=".png,.jpg"
                                 placeholder="Upload featured blog image"
                                 register={register}
                                 error={errors.featuredImage}
-                            />
-                            <TipTapEditor
-                                label="Short Description"
-                                name="blogDescription"
-                                required
-                                placeholder="Provide a detailed description..."
-                                control={control}
-                                error={errors.blogDescription}
                             />
 
                             <div className="w-[100%]">
@@ -138,8 +245,6 @@ const Page = () => {
                                     error={errors.content}
                                     required
                                 />
-
-
                             </div>
                         </div>
 
@@ -161,24 +266,23 @@ const Page = () => {
                             <InputField
                                 label="Meta Title"
                                 name="seoTitle"
-                                placeholder="SEO optimized title (60 characters recommended)"
+                                placeholder="SEO optimized title"
                                 register={register}
                                 error={errors.seoTitle}
-                                required
                             />
-                            <TextArea
+                            <TipTapEditor
                                 label="Meta Description"
                                 name="seoDescription"
-                                required
-                                placeholder="Brief description for search engines (160 characters recommended)"
-                                register={register}
+                                placeholder="Brief description for search engines"
+                                control={control}
                                 error={errors.seoDescription}
                             />
                         </div>
                     </form>
                 </div>
 
-                <div className="">
+                <div className="w-[100%] lg:w-[40%] flex flex-col gap-6">
+                    {/* Author Section */}
                     <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
                         <InputField
                             label="Author"
@@ -199,7 +303,7 @@ const Page = () => {
                                     style={{
                                         fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                                     }}>Tags</label>
-                                <div className="flex flex-wrap gap-2 border border-[#E6E6E6] rounded px-2 py-2">
+                                <div className="flex flex-wrap gap-2 border border-[#E6E6E6] rounded px-2 py-2 bg-white">
                                     <input
                                         value={tagInput}
                                         onChange={(e) => setTagInput(e.target.value)}
@@ -236,29 +340,68 @@ const Page = () => {
 
                     </div>
 
+                    {/* Content Overview Section */}
                     <div className="flex flex-col p-2 md:p-4 w-full gap-y-8 bg-[#F9FAFB]">
                         <div className="w-[100%]">
                             <LayoutHeader heading='Content Overview' />
-                            <p className='__className_667262 text-[#676767]  hidden sm:block sm:text-[16px]'>Create sidebar navigation links to your blog content</p>
-                            <div className="w-[100%] flex items-center gap-2">
-                                <InputField
-                                    label=""
-                                    name="authorName"
-                                    placeholder="e.g. Guide to future work"
-                                    register={register}
-                                    error={errors.authorName}
-                                />
-                                <div className='mt-2' ><PrimaryButton text='' py="py-2" px="px-2" bgColor='bg-[#00624F]' textColor='text-white' icon={<AddIcon color='white' width="20" height="20" />} /></div>
+                            <p className='text-[#676767] hidden sm:block sm:text-[14px]'>Create sidebar navigation links to your blog content</p>
+                            <div className="w-[100%] flex items-center gap-2 mt-2">
+                                <div className="w-full">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Overview Item
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={overviewInput}
+                                        onChange={(e) => setOverviewInput(e.target.value)}
+                                        placeholder="e.g. Introduction"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primaryColor focus:border-primaryColor outline-none transition-all"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                handleAddOverviewItem();
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className='mt-6'>
+                                    <PrimaryButton
+                                        text=''
+                                        py="py-2"
+                                        px="px-2"
+                                        bgColor='bg-[#00624F]'
+                                        textColor='text-white'
+                                        icon={<AddIcon color='white' width="20" height="20" />}
+                                        onClick={handleAddOverviewItem}
+                                        type="button"
+                                    />
+                                </div>
                             </div>
-
-
                         </div>
-                        <div className="w-[100%]">
-                            <EmptyContentOverview />
+
+                        {/* List of Overview Items */}
+                        <div className="w-[100%] flex flex-col gap-2">
+                            {contentOverviewItems.length > 0 ? (
+                                contentOverviewItems.map((item, idx) => (
+                                    <div key={idx} className="flex justify-between items-center bg-white p-3 rounded border border-gray-200">
+                                        <span className="text-sm text-[#131313] font-medium">{item}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeOverviewItem(idx)}
+                                            className="text-red-500 hover:text-red-700 font-bold"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                ))
+                            ) : (
+                                <EmptyContentOverview />
+                            )}
                         </div>
+
                         <div className='w-[100%] flex flex-col items-center justify-center gap-y-3'>
-                            <PrimaryButton className='w-full' text='Edit Blog' bgColor='bg-primaryColor' textColor='text-white' py="py-2" />
-                            <PrimaryButton className='w-full' text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" borderColor="border-[#CCCCCC]" />
+                            <PrimaryButton form="edit-blog-form" type='submit' className='w-full' text={loading ? 'Updating...' : 'Update Blog'} bgColor='bg-primaryColor' textColor='text-white' py="py-2" />
+                            <PrimaryButton className='w-full' text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" borderColor="border-[#CCCCCC]" onClick={() => router.back()} />
                         </div>
                     </div>
                 </div>

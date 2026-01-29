@@ -85,15 +85,13 @@ const page = () => {
         navigate.push(`/dashboard/blogs/view-blog/${id}`)
     };
     const handleDeleteClick = (id: string) => {
-        console.log("View clicked, ID:", id);
-        dispatch(isDeleteBlogmodalOpenReducer())
-
-        // 👇 ab id apke pass hai, yahan navigate / state update / modal open kar skte ho
+        console.log("Delete clicked, ID:", id);
+        dispatch(isDeleteBlogmodalOpenReducer(id))
     };
     return (
         <>
             {isDeleteBlogmodal &&
-                <DeleteBlogModal />
+                <DeleteBlogModal onSuccess={fetchBlogs} />
             }
             <LayoutHeader heading='Blogs '
                 button={

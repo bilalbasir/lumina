@@ -11,7 +11,6 @@ interface UrlSlugFieldProps {
     error?: FieldError
     required?: boolean
 }
-
 const UrlSlugField: React.FC<UrlSlugFieldProps> = ({
     label,
     name,
