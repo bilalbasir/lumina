@@ -55,7 +55,7 @@ const InputField: React.FC<InputFieldProps> = ({
                     {...register(name, { required, min, max })}
                     className={`flex h-11 px-4 py-3 items-center gap-2 w-full rounded border-[1.5px] 
           ${error ? "border-red-500" : "border-[#E6E6E6]"} 
-          bg-white text-[#686868] text-sm font-medium leading-[150%] outline-none 
+          bg-white text-[#131313] text-sm font-medium leading-[150%] outline-none 
           focus:border-[#00634F]`}
                     style={{
                         fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",

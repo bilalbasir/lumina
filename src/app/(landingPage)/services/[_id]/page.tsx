@@ -6,7 +6,9 @@ import CirclePlusIcon from '@/components/icons/circlePlusIcon/CirclePlusIcon';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import serviceApi from '@/app/apiServices/servicesApi/ServiceApi';
-import { imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl';
+import defaultServiceBanner from '../../../../../public/assets/services/slugServiceHeroImg.png'
+import { cloudinaryBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl';
+import Image from 'next/image';
 
 
 
@@ -47,7 +49,7 @@ export default function ServiceDetailPage() {
   }
 
 
-  console.log("id>>>>>>>>>>>>", id);
+  console.log("id>>>>>>>>>>>>", serviceData);
 
   return (
     <div>
@@ -56,12 +58,25 @@ export default function ServiceDetailPage() {
         {/* Background Elements */}
         <div className="absolute inset-0">
 
-          <img
-            src={`${imageBaseUrl}/${serviceData.bannerImage}`}
-            alt="Hero Background"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+          {
+            serviceData.bannerImage && (
+              // <img
+              //   src={`${imageBaseUrl}/${serviceData.bannerImage2}`}
+              //   alt="Hero Background"
+              //   width={1920}
+              //   height={1080}
+              //   className="absolute inset-0 w-full h-full object-cover"
+              // />
 
+              <Image
+                src={serviceData.bannerImage ? `${cloudinaryBaseUrl}/${serviceData.bannerImage}` : defaultServiceBanner}
+                width={1920}
+                height={1080}
+                alt="Hero Background"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            )
+          }
           {/* Gradient Overlay */}
           <HeroImgSvg />
 
@@ -91,7 +106,7 @@ export default function ServiceDetailPage() {
 
         {/* Service Content */}
         <div className="relative z-10 flex items-center justify-center h-full px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-10 max-w-4xl text-center">
+          <div className="flex flex-col items-center gap-10 max-w-4xl text-center ">
             {/* Service Title */}
             <div className="flex flex-col items-center gap-0.5">
               <h1
@@ -119,12 +134,12 @@ export default function ServiceDetailPage() {
 
       {/* Strategic Talent Solutions Section */}
       <section className="w-full py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
-          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-16">
+        <div className="max-w-7xl mx-auto px-4  sm:px-6 lg:px-20">
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-16 h-[414px]">
             {/* Left Content */}
-            <div className="flex-1 flex flex-col gap-8">
+            <div className="flex-1 flex flex-col gap-8 h-[414px]">
               {/* Main Content */}
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-6 h-[414px]">
                 {/* Title */}
                 <h2
                   className="text-3xl  md:text-4xl lg:text-[48px] font-bold text-[#1D1D1D] leading-[43.3px] md:leading-[63.2px] lg:leading-[83.2px] xl:leading-[120%]"
@@ -135,20 +150,10 @@ export default function ServiceDetailPage() {
 
                 {/* Description */}
                 <div
-                  className="text-base text-[#686868] leading-[43.3px] md:leading-[63.2px] lg:leading-[83.2px] xl:leading-[150%] space-y-4"
+                  className="text-base text-[#686868] leading-[43.3px] md:leading-[63.2px] lg:leading-[83.2px] xl:leading-[150%] space-y-4 rich-text-content tiptap-content"
                   style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
-                >
-                  {/* <p>
-                    Our comprehensive talent acquisition services help organizations identify, attract, and secure top-tier professionals who align with your company culture and strategic objectives.
-                  </p>
-                  <p>
-                    We leverage advanced sourcing methodologies, extensive industry networks, and data-driven insights to deliver exceptional candidates that make an immediate impact on your business success.
-                  </p>
-                  <p>
-                    From executive leadership roles to specialized technical positions, our expert team ensures a seamless recruitment experience that saves time while maximizing quality outcomes.
-                  </p> */}
-                  {serviceData.description}
-                </div>
+                  dangerouslySetInnerHTML={{ __html: serviceData.description || "" }}
+                />
               </div>
 
               {/* Tags */}
@@ -182,12 +187,14 @@ export default function ServiceDetailPage() {
             </div>
 
             {/* Right Image Container */}
-            <div className="flex-1 relative md:max-w-[557px]  w-full">
+            <div className="flex-1 relative md:max-w-[557px] h-[414px]  w-full">
               <div className="relative w-full h-[394px]">
                 {/* Main Image */}
-                <img
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/6e2d8f9761c4337dc69cc2923a5cfadc24136532?width=1046"
+                <Image
+                  src={serviceData.secondaryImage ? `${cloudinaryBaseUrl}/${serviceData.secondaryImage}` : "https://api.builder.io/api/v1/image/assets/TEMP/6e2d8f9761c4337dc69cc2923a5cfadc24136532?width=1046"}
                   alt="Team meeting discussing strategic talent solutions"
+                  width={523}
+                  height={358}
                   className="md:absolute md:left-[34px] md:top-0 w-full xl:w-[523px] h-[358px] object-cover rounded-[15.298px] shadow-lg"
                 />
 
@@ -204,7 +211,7 @@ export default function ServiceDetailPage() {
                   </div>
                   <div className="flex items-center">
                     <span
-                      className="text-sm text-white leading-[150%]"
+                      className="text-sm  leading-[150%]"
                       style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
                     >
                       Success Rate
@@ -235,18 +242,6 @@ export default function ServiceDetailPage() {
               Comprehensive talent solutions designed to meet your unique recruitment challenges and business objectives
             </p>
           </div>
-
-
-
-
-
-
-
-
-
-
-
-
           {/* Service Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {serviceData?.features?.map((feature: any, index: number) => {
@@ -297,16 +292,14 @@ export default function ServiceDetailPage() {
                       >
                         {feature.title || "Candidate Sourcing"}
                       </h3>
-                      <p
-                        className="text-sm text-[#4E4E4E] leading-[150%]"
+                      <div
+                        className="text-sm text-[#4E4E4E] leading-[150%] rich-text-content tiptap-content"
                         style={{
                           fontFamily:
                             "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
-                      >
-                        {feature.description ||
-                          "Comprehensive talent pipeline development using advanced sourcing techniques and industry networks to identify qualified candidates."}
-                      </p>
+                        dangerouslySetInnerHTML={{ __html: feature.description || "Comprehensive talent pipeline development using advanced sourcing techniques and industry networks to identify qualified candidates." }}
+                      />
                     </div>
                   </div>
                 </div>

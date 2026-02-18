@@ -21,6 +21,7 @@ type FormValues = {
     name: string,
     category: string,
     bannerImage: FileList;
+    secondaryImage: FileList;
     status: string;
     serviceSuccessRate: string
     description: string
@@ -139,6 +140,11 @@ const Page = () => {
             formData.append("bannerImage", data.bannerImage[0]);
         }
 
+        // secondary image (content image)
+        if (data.secondaryImage && data.secondaryImage.length > 0) {
+            formData.append("secondaryImage", data.secondaryImage[0]);
+        }
+
 
         tags.forEach(tag => formData.append("tags[]", tag));
         features.forEach(feature => {
@@ -209,16 +215,29 @@ const Page = () => {
                         />
                     </div>
                 </div>
-                <div className='w-[100%]'>
-                    <UploadFile
-                        label="Banner Image"
-                        name="bannerImage"
-                        required
-                        accept=".png,.jpg"
-                        placeholder="Upload Service Banner Image."
-                        register={register}
-                        error={errors.bannerImage}
-                    />
+                <div className='flex items-center justify-between w-full'>
+                    <div className='w-[100%] md:w-[49%]'>
+                        <UploadFile
+                            label="Banner Image"
+                            name="bannerImage"
+                            required
+                            accept=".png,.jpg"
+                            placeholder="Upload Service Banner Image."
+                            register={register}
+                            error={errors.bannerImage}
+                        />
+                    </div>
+                    <div className='w-[100%] md:w-[49%]'>
+                        <UploadFile
+                            label="Content Image"
+                            name="secondaryImage"
+                            required
+                            accept=".png,.jpg"
+                            placeholder="Upload Service Content Image."
+                            register={register}
+                            error={errors.secondaryImage}
+                        />
+                    </div>
                 </div>
 
                 <div className='w-[100%]'>
@@ -261,20 +280,27 @@ const Page = () => {
                     </div>
                 </div>
                 <div className='w-[100%] mt-4'>
-                    <label className="block text-sm font-medium mb-1">Features *</label>
+                    <label
+                        className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2"
+                        style={{
+                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
+                    >
+                        Features *
+                    </label>
 
                     {features.map((feature, index) => (
                         <div key={index} className='w-[100%] flex flex-col md:flex-row items-center justify-between gap-2 mb-3'>
                             <input
                                 value={feature.title}
                                 onChange={(e) => handleFeatureChange(index, "title", e.target.value)}
-                                className={`w-full md:w-[48%] border px-4 py-3 rounded ${featureErrors[index].title ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-full md:w-[48%] border-gray-400 border px-4 py-3 rounded text-[#131313] ${featureErrors[index].title ? "border-red-500" : ""}`}
                                 placeholder={`Feature Title ${index + 1}`}
                             />
                             <input
                                 value={feature.description}
                                 onChange={(e) => handleFeatureChange(index, "description", e.target.value)}
-                                className={`w-full md:w-[48%] border px-4 py-3 rounded ${featureErrors[index].description ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-full md:w-[48%] border-gray-400 border px-4 py-3 rounded text-[#131313] ${featureErrors[index].description ? "border-red-500" : ""}`}
                                 placeholder={`Feature Description ${index + 1}`}
                             />
                             <div className='cursor-pointer ml-2' onClick={() => deleteFeature(index)}>
@@ -284,7 +310,7 @@ const Page = () => {
                     ))}
 
                     <div
-                        className='border-[2px] mt-2 cursor-pointer border-dashed text-center border-[#E6E6E6] px-4 py-3 rounded'
+                        className='border-[2px] mt-2 cursor-pointer border-dashed text-center border-gray-400 px-4 py-3 rounded'
                         onClick={addNewFeatureFun}
                     >
                         Add more feature
@@ -292,14 +318,21 @@ const Page = () => {
                 </div>
 
                 <div className="w-full mt-4">
-                    <label className="block text-sm font-medium mb-1">Tags *</label>
-                    <div className="flex flex-wrap gap-2 border border-[#E6E6E6] rounded px-2 py-2">
+                    <label
+                        className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2"
+                        style={{
+                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
+                    >
+                        Tags *
+                    </label>
+                    <div className="flex flex-wrap gap-2 border border-gray-400 rounded px-2 py-2">
 
                         <input
                             value={tagInput}
                             onChange={(e) => setTagInput(e.target.value)}
                             onKeyDown={handleTagKeyDown}
-                            className="flex-1 min-w-[120px] border-none focus:ring-0 outline-none text-sm"
+                            className="flex-1 min-w-[120px] border-none focus:ring-0 outline-none text-sm text-[#131313]"
                             placeholder="Type and press Enter"
                         />
                     </div>

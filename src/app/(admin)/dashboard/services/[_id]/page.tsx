@@ -270,8 +270,10 @@ const Page = () => {
                         name="description"
                         required
                         placeholder="Write description"
+
                         control={control}
                         error={errors.description}
+                        maxLength={500}
                     />
                 </div>
 

@@ -351,7 +351,7 @@ const Page = () => {
                             <input
                                 value={req}
                                 onChange={(e) => handleRequirementChange(index, e.target.value)}
-                                className={`w-[97%] border px-4 py-3 rounded ${requirementErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-[97%] border-gray-400 border px-4 py-3 rounded ${requirementErrors[index] ? "border-red-500" : ""}`}
                                 placeholder={`Enter requirement ${index + 1}`}
                             />
                             <div className="w-[2%] cursor-pointer" onClick={() => deleteRequirement(index)}>
@@ -360,7 +360,7 @@ const Page = () => {
                         </div>
                     ))}
 
-                    <div className='border-[2px]  mt-4 cursor-pointer agBodyMediumGrey900  border-dashed text-center border-[#E6E6E6] px-4 py-3 rounded'
+                    <div className='border-[2px]  mt-4 cursor-pointer agBodyMediumGrey900  border-dashed text-center border-gray-400 px-4 py-3 rounded'
                         onClick={addNewRequirementFun}>
                         Add more Requirement *
                     </div>
@@ -380,7 +380,7 @@ const Page = () => {
                             <input
                                 value={resp}
                                 onChange={(e) => handleResponsibilitiesChange(index, e.target.value)}
-                                className={`w-[97%] border px-4 py-3 rounded ${responsibilitiesErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-[97%] border-gray-400 border px-4 py-3 rounded ${responsibilitiesErrors[index] ? "border-red-500" : ""}`}
                                 placeholder={`Enter responsibilities ${index + 1}`}
                             />
                             <div className="w-[2%] cursor-pointer" onClick={() => deleteResponsibilities(index)}>
@@ -389,7 +389,7 @@ const Page = () => {
                         </div>
                     ))}
 
-                    <div className='border-[2px]  mt-4 cursor-pointer agBodyMediumGrey900  border-dashed text-center border-[#E6E6E6] px-4 py-3 rounded'
+                    <div className='border-[2px]  mt-4 cursor-pointer agBodyMediumGrey900  border-dashed text-center border-gray-400 px-4 py-3 rounded'
                         onClick={addNewResponsibilitiesFun}>
                         Add more Responsibility
                     </div>
@@ -409,7 +409,7 @@ const Page = () => {
                             <input
                                 value={perk}
                                 onChange={(e) => handleBenifitsPerksChange(index, e.target.value)}
-                                className={`w-[97%] border px-4 py-3 rounded ${benifitsPerksErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-[97%] border-gray-400 border px-4 py-3 rounded ${benifitsPerksErrors[index] ? "border-red-500" : ""}`}
                                 placeholder={`Enter Benifits and Perks ${index + 1}`}
                             />
                             <div className="w-[2%] cursor-pointer" onClick={() => deleteBenifitsPerks(index)}>
@@ -418,7 +418,7 @@ const Page = () => {
                         </div>
                     ))}
 
-                    <div className='border-[2px]  mt-4 cursor-pointer agBodyMediumGrey900  border-dashed text-center border-[#E6E6E6] px-4 py-3 rounded'
+                    <div className='border-[2px]  mt-4 cursor-pointer agBodyMediumGrey900  border-dashed text-center border-gray-400 px-4 py-3 rounded'
                         onClick={addBenifitsPerksFun}>
                         Add more Benifits and Perks
                     </div>
@@ -427,7 +427,7 @@ const Page = () => {
 
                 <div className='w-[100%] flex items-center justify-end gap-x-3'>
                     <PrimaryButton text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" borderColor="border-[#CCCCCC]" onClick={() => navigate.push("/dashboard/careers")} />
-                    <PrimaryButton text='Add Service' bgColor='bg-primaryColor' textColor='text-white' py="py-2" onClick={handleSubmit(addCareerFun)} />
+                    <PrimaryButton text='List Job' bgColor='bg-primaryColor' textColor='text-white' py="py-2" onClick={handleSubmit(addCareerFun)} />
                 </div>
             </form>
         </>)

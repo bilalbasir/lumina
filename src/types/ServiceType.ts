@@ -5,6 +5,7 @@ export interface ServiceType {
     name: string;
     category?: string;
     bannerImage?: string;
+    secondaryImage?: string;
     description?: string;
     serviceSuccessRate?: string;
     status: ServiceStatus;
