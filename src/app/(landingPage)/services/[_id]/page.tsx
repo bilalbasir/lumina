@@ -27,10 +27,21 @@ export default function ServiceDetailPage() {
 
     const fetchService = async () => {
       try {
-        const res = await serviceApi.getServiceId(id); // 👈 API hit
-        console.log("RES", res);
+        setLoading(true);
+        // Try fetching by slug first
+        try {
+          const res = await serviceApi.getServiceBySlug(id);
+          if (res?.data) {
+            setServiceData(res.data);
+            return;
+          }
+        } catch (err) {
+          console.log("No slug found, trying ID...");
+        }
 
-        setServiceData(res.data); // API response
+        // Fallback to fetching by ID
+        const resId = await serviceApi.getServiceId(id);
+        setServiceData(resId.data);
       } catch (err) {
         console.error("❌ Error fetching service:", err);
       } finally {

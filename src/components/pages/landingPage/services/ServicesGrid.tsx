@@ -42,6 +42,7 @@ const ServicesGrid = () => {
                 image={
                   service?.bannerImage
                 }
+                slug={service?.slug}
               />
               </div>
 

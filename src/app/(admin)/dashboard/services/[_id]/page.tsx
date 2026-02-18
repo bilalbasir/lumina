@@ -15,6 +15,7 @@ import { useRouter, useParams } from "next/navigation";
 import serviceApi from "@/app/apiServices/servicesApi/ServiceApi";
 import Loader from "@/components/loader/Loader";
 import toast from "react-hot-toast";
+import { cloudinaryBaseUrl } from "@/app/apiServices/baseUrl/BaseUrl";
 
 type FormValues = {
     name: string;
@@ -23,8 +24,9 @@ type FormValues = {
     status: string;
     serviceSuccessRate: string;
     description: string;
-    serviceOverView: string
-    subTitle: string
+    serviceOverView: string;
+    subTitle: string;
+    secondaryImage: FileList;
 };
 
 const categories = [
@@ -46,6 +48,8 @@ const Page = () => {
 
     const [tagInput, setTagInput] = useState<string>("");
     const [loading, setLoading] = useState(true);
+    const [existingBanner, setExistingBanner] = useState<string | null>(null);
+    const [existingSecondary, setExistingSecondary] = useState<string | null>(null);
 
     const router = useRouter();
     const params = useParams();
@@ -67,23 +71,38 @@ const Page = () => {
         const fetchService = async () => {
             try {
                 const res = await serviceApi.getServiceId(id);
-                const data = res.data;
+                console.log("✅ Fetched Service Data:", res.data);
+                const serviceData = res.data;
+
+                if (!serviceData) {
+                    console.error("❌ No service data found in response");
+                    return;
+                }
 
                 reset({
-                    name: data.name,
-                    category: data.category,
-                    status: data.status,
-                    serviceSuccessRate: data.serviceSuccessRate,
-                    description: data.description,
-                    serviceOverView: data.serviceOverView,
-                    subTitle: data.subTitle,
+                    name: serviceData.name,
+                    category: serviceData.category,
+                    status: serviceData.status,
+                    serviceSuccessRate: serviceData.serviceSuccessRate,
+                    description: serviceData.description,
+                    serviceOverView: serviceData.serviceOverView,
+                    subTitle: serviceData.subTitle,
+                    secondaryImage: undefined as any, // Not used for initial value
+                    bannerImage: undefined as any,    // Not used for initial value
                 });
 
-                setTags(data.tags || []);
-                setFeatures(data.features && data.features.length > 0 ? data.features : [""]);
+                setTags(serviceData.tags || []);
+                setFeatures(serviceData.features && serviceData.features.length > 0 ? serviceData.features : [{ title: "", description: "" }]);
                 setFeatureErrors(
-                    new Array(data.features?.length || 1).fill(false)
+                    new Array(serviceData.features?.length || 1).fill({ title: false, description: false })
                 );
+
+                if (serviceData.bannerImage) {
+                    setExistingBanner(`${cloudinaryBaseUrl}/${serviceData.bannerImage}`);
+                }
+                if (serviceData.secondaryImage) {
+                    setExistingSecondary(`${cloudinaryBaseUrl}/${serviceData.secondaryImage}`);
+                }
             } catch (err) {
                 console.error("❌ Error fetching service:", err);
             } finally {
@@ -122,12 +141,15 @@ const Page = () => {
             if (data.bannerImage?.[0]) {
                 formData.append("bannerImage", data.bannerImage[0]);
             }
+            if (data.secondaryImage?.[0]) {
+                formData.append("secondaryImage", data.secondaryImage[0]);
+            }
 
             features.forEach((f) => {
                 formData.append("features[]", JSON.stringify(f));
             });
-            tags.forEach((t, idx) => {
-                formData.append(`tags[${idx}]`, t);
+            tags.forEach((t) => {
+                formData.append("tags[]", t);
             });
 
             const res = await serviceApi.updateService(id, formData);
@@ -252,16 +274,31 @@ const Page = () => {
                         />
                     </div>
                 </div>
-                <div className="w-[100%]">
-                    <UploadFile
-                        label="Banner Image"
-                        name="bannerImage"
-                        required={false}
-                        accept=".png,.jpg"
-                        placeholder="Upload Service Banner Image."
-                        register={register}
-                        error={errors.bannerImage}
-                    />
+                <div className="flex items-center justify-between w-full">
+                    <div className="w-[100%] md:w-[49%]">
+                        <UploadFile
+                            label="Banner Image"
+                            name="bannerImage"
+                            required={false}
+                            accept=".png,.jpg"
+                            placeholder="Upload Service Banner Image."
+                            register={register}
+                            error={errors.bannerImage}
+                            defaultValue={existingBanner || ""}
+                        />
+                    </div>
+                    <div className="w-[100%] md:w-[49%]">
+                        <UploadFile
+                            label="Content Image"
+                            name="secondaryImage"
+                            required={false}
+                            accept=".png,.jpg"
+                            placeholder="Upload Service Content Image."
+                            register={register}
+                            error={errors.secondaryImage}
+                            defaultValue={existingSecondary || ""}
+                        />
+                    </div>
                 </div>
 
                 <div className="w-[100%]">
@@ -273,7 +310,6 @@ const Page = () => {
 
                         control={control}
                         error={errors.description}
-                        maxLength={500}
                     />
                 </div>
 
@@ -302,7 +338,14 @@ const Page = () => {
 
                 {/* Features Section */}
                 <div className="w-[100%] mt-4">
-                    <label className="block text-sm font-medium mb-1">Features *</label>
+                    <label
+                        className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2"
+                        style={{
+                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
+                    >
+                        Features *
+                    </label>
 
                     {features.map((feature, index) => (
                         <div key={index} className="flex gap-2 mb-2">
@@ -310,13 +353,13 @@ const Page = () => {
                                 value={feature.title}
                                 onChange={(e) => handleFeatureChange(index, "title", e.target.value)}
                                 placeholder="Feature Title"
-                                className={`w-1/2 border px-4 py-2 rounded ${featureErrors[index]?.title ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-1/2 border px-4 py-2 rounded text-[#131313] ${featureErrors[index]?.title ? "border-red-500" : "border-gray-400"}`}
                             />
                             <input
                                 value={feature.description}
                                 onChange={(e) => handleFeatureChange(index, "description", e.target.value)}
                                 placeholder="Feature Description"
-                                className={`w-1/2 border px-4 py-2 rounded ${featureErrors[index]?.description ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-1/2 border px-4 py-2 rounded text-[#131313] ${featureErrors[index]?.description ? "border-red-500" : "border-gray-400"}`}
                             />
                             <div className="cursor-pointer" onClick={() => deleteFeature(index)}>
                                 <DeleteIcon width="18.5" height="19.5" />
@@ -324,7 +367,7 @@ const Page = () => {
                         </div>
                     ))}
                     <div
-                        className="border-[2px] mt-4 cursor-pointer border-dashed text-center border-[#E6E6E6] px-4 py-2 rounded"
+                        className="border-[2px] mt-4 cursor-pointer border-dashed text-center border-gray-400 text-[#131313] px-4 py-2 rounded"
                         onClick={addNewFeatureFun}
                     >
                         Add more feature
@@ -334,13 +377,20 @@ const Page = () => {
 
                 {/* Tags Section */}
                 <div className="w-full mt-4">
-                    <label className="block text-sm font-medium mb-1">Tags *</label>
-                    <div className="flex flex-wrap gap-2 border border-[#E6E6E6] rounded px-2 py-2">
+                    <label
+                        className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2"
+                        style={{
+                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
+                    >
+                        Tags *
+                    </label>
+                    <div className="flex flex-wrap gap-2 border border-gray-400 rounded px-2 py-2">
                         <input
                             value={tagInput}
                             onChange={(e) => setTagInput(e.target.value)}
                             onKeyDown={handleTagKeyDown}
-                            className="flex-1 min-w-[120px] border-none focus:ring-0 outline-none text-sm"
+                            className="flex-1 min-w-[120px] border-none focus:ring-0 outline-none text-sm text-[#131313]"
                             placeholder="Type and press Enter"
                         />
                     </div>
@@ -378,7 +428,7 @@ const Page = () => {
                         bgColor="bg-primaryColor"
                         textColor="text-white"
                         py="py-2"
-                    // type="submit"
+                        type="submit"
                     />
                 </div>
             </form>

@@ -310,7 +310,7 @@ const Page = () => {
                     ))}
 
                     <div
-                        className='border-[2px] mt-2 cursor-pointer border-dashed text-center border-gray-400 px-4 py-3 rounded'
+                        className='border-[2px] mt-2 cursor-pointer border-dashed text-center text-[#131313 ] border-gray-400 px-4 py-3 rounded'
                         onClick={addNewFeatureFun}
                     >
                         Add more feature

@@ -43,6 +43,15 @@ class BlogApi {
             throw error;
         }
     }
+    async getAllBlogsWoPagination() {
+        try {
+            const response = await this.api.get("/get-all-blogs-wo-pagination");
+            return response.data;
+        } catch (error: unknown) {
+            console.error("error", error);
+            throw error;
+        }
+    }
 
     async getBlogId(id: string) {
         try {

@@ -85,6 +85,16 @@ class ServiceApi {
 
         }
     }
+
+    async getServiceBySlug(slug: string) {
+        try {
+            const response = await this.api.get(`/get-service-slug/${slug}`);
+            return response.data;
+        } catch (error: unknown) {
+            console.error("error", error);
+            throw error || "Fetch service by slug failed";
+        }
+    }
     async deleteService(id: string) {
         try {
             const response = await this.api.delete(`/delete-service/${id}`);

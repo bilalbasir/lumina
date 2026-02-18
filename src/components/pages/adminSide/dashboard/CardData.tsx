@@ -10,6 +10,7 @@ import Loader from '@/components/loader/Loader'
 import { useGetAllCareers, useGetAllCareersWoPagination } from '@/hooks/use-career-hook'
 import { useGetAllLeads, useGetAllLeadsWoPagination } from '@/hooks/use-lead-hook'
 import { useGetAllServices, useGetAllServicesWoPagination } from '@/hooks/use-service-hook'
+import { useGetAllBlogsWoPagination } from '@/hooks/use-blog-hook'
 import { isCurrentMonth } from '@/utils/currentMonthFun'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -18,11 +19,13 @@ const CardData = () => {
     const { data: servicesRes, isLoading: serviceLoad } = useGetAllServicesWoPagination()
     const { data: careersRes, isLoading: careerLoad } = useGetAllCareersWoPagination()
     const { data: leadsRes, isLoading: leadLoad } = useGetAllLeadsWoPagination()
+    const { data: blogsRes, isLoading: blogLoad } = useGetAllBlogsWoPagination()
 
     // derive directly instead of using state
     const totalCareers = careersRes?.data?.careers?.length || 0
     const totalServices = servicesRes?.data?.data?.length || 0
     const totalContactLeads = leadsRes?.data?.data?.length || 0
+    const totalBlogs = blogsRes?.data?.blogs?.length || 0
     // helper
     const isCurrentMonth = (dateStr?: string) => {
         if (!dateStr) return false;
@@ -47,11 +50,18 @@ const CardData = () => {
         (l: any) => isCurrentMonth(l.createdAt)
     ).length;
 
+    // blogs
+    const allBlogs = blogsRes?.data?.blogs || [];
+    const newBlogsThisMonth = allBlogs.filter(
+        (b: any) => isCurrentMonth(b.createdAt)
+    ).length;
+
     return (
         <div>
             {(serviceLoad ||
                 careerLoad ||
-                leadLoad) && <Loader />}
+                leadLoad ||
+                blogLoad) && <Loader />}
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                 <Card heading='Total Services' hover="hover:bg-[#E5F8FF]">
                     <div className='flex flex-col items-center justify-center w-full gap-y-3 group '>
@@ -91,9 +101,9 @@ const CardData = () => {
                         <div className='h-[48px] w-[48px] rounded-full border-[7px] border-solid border-[#FAEDFF] bg-[#ECB2FF] flex items-center justify-center'>
                             <BlogIcon color='#9512C1' />
                         </div>
-                        <p className={`font-bold text-[36px] ${montserrat.className}`}>30</p>
+                        <p className={`font-bold text-[36px] ${montserrat.className}`}>{totalBlogs}</p>
                         <p className={`agBold ${montserrat.className}`}>Blogs</p>
-                        <p className={`agBodyMediumGrey ${montserrat.className}`}>5 new blogs this month</p>
+                        <p className={`agBodyMediumGrey ${montserrat.className}`}>{newBlogsThisMonth} new blogs this month</p>
                         <Link href="/dashboard/blogs" className='text-[#00624F] flex items-center gap-x-4 opacity-0 group-hover:opacity-100 duration-500 transition-all cursor-pointer'>
                             <p>Manage Blogs</p>
                             <ForwardIcon color='#00624F' />

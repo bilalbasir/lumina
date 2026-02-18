@@ -11,6 +11,7 @@ type UploadFileProps = {
     placeholder?: string;
     register: any; // react-hook-form register
     error?: any;
+    defaultValue?: string;
 };
 
 const UploadFile: React.FC<UploadFileProps> = ({
@@ -21,8 +22,9 @@ const UploadFile: React.FC<UploadFileProps> = ({
     placeholder = "Upload your file",
     register,
     error,
+    defaultValue,
 }) => {
-    const [preview, setPreview] = useState<string | null>(null);
+    const [preview, setPreview] = useState<string | null>(defaultValue || null);
     const [fileName, setFileName] = useState<string | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +39,13 @@ const UploadFile: React.FC<UploadFileProps> = ({
             }
         }
     };
+
+    // Update preview if defaultValue changes (e.g. after fetch)
+    React.useEffect(() => {
+        if (defaultValue) {
+            setPreview(defaultValue);
+        }
+    }, [defaultValue]);
 
     return (
         <div className="flex flex-col items-start gap-2 w-full">

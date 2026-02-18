@@ -48,14 +48,14 @@ const Page = () => {
             <div className="mt-6 flex flex-col items-start gap-y-8">
                 <div className="flex items-center justify-between w-full">
                     <div className="w-[100%] md:w-[49%]">
-                        <label className="w-full text-sm font-medium leading-[150%]">
+                        <label className="w-full text-sm text-[#131313] font-medium leading-[150%]">
                             Service Name
                         </label>
                         <p className="text-base text-gray-700">{serviceData.name}</p>
                     </div>
 
                     <div className="w-[100%] md:w-[49%]">
-                        <label className="w-full text-sm font-medium leading-[150%]">
+                        <label className="w-full text-sm font-medium  text-[#131313] leading-[150%]">
                             Category
                         </label>
                         <p className="text-base text-gray-700">{serviceData.category}</p>
@@ -63,7 +63,7 @@ const Page = () => {
                 </div>
 
                 <div className="w-[100%]">
-                    <label className="w-full text-sm font-medium leading-[150%]">
+                    <label className="w-full text-sm font-medium  text-[#131313] leading-[150%]">
                         Banner Image
                     </label>
                     <img
@@ -74,7 +74,7 @@ const Page = () => {
                 </div>
 
                 <div className="w-[100%]">
-                    <label className="w-full text-sm font-medium leading-[150%]">
+                    <label className="w-full text-sm text-[#131313] font-medium leading-[150%]">
                         Description
                     </label>
 
@@ -84,7 +84,7 @@ const Page = () => {
 
                 <div className="flex items-center justify-between w-full">
                     <div className="w-[100%] md:w-[49%]">
-                        <label className="w-full text-sm font-medium leading-[150%]">
+                        <label className="w-full text-sm text-[#131313] font-medium leading-[150%]">
                             Service Success Rate
                         </label>
                         <p className="text-base text-gray-700">
@@ -93,7 +93,7 @@ const Page = () => {
                     </div>
 
                     <div className="w-[100%] md:w-[49%]">
-                        <label className="w-full text-sm font-medium leading-[150%]">
+                        <label className="w-full text-sm text-[#131313] font-medium leading-[150%]">
                             Status
                         </label>
                         <p className="text-base text-gray-700">{serviceData.status}</p>
@@ -102,7 +102,7 @@ const Page = () => {
 
                 {/* Features Section */}
                 <div className="w-[100%]">
-                    <label className="w-full text-sm font-medium leading-[150%]">
+                    <label className="w-full text-sm font-medium text-[#131313] leading-[150%]">
                         Features
                     </label>
                     <ul className="list-disc pl-6 text-gray-700">
