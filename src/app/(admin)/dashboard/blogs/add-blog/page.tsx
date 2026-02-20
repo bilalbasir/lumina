@@ -33,15 +33,67 @@ const Page = () => {
     const { register, formState: { errors }, handleSubmit, control, watch, setValue } = useForm<FormValues>()
     const [loading, setLoading] = useState(false);
 
-    // Watch blog title to auto-generate slug
-    const watchedTitle = watch("blogTitle");
-    const watchedSlug = watch("blogSlug");
+    // Content Overview state
+    const [contentOverviewItems, setContentOverviewItems] = useState<string[]>([])
+    const [overviewInput, setOverviewInput] = useState("")
 
+    const handleAddOverviewItem = () => {
+        if (overviewInput.trim() === "") return
+        if (!contentOverviewItems.includes(overviewInput.trim())) {
+            setContentOverviewItems([...contentOverviewItems, overviewInput.trim()])
+        }
+        setOverviewInput("")
+    }
+
+    const removeOverviewItem = (index: number) => {
+        setContentOverviewItems(contentOverviewItems.filter((_, i) => i !== index))
+    }
+
+    // Watch blog title and content to auto-generate slug and overview
+    const watchedTitle = watch("blogTitle");
+    const watchedContent = watch("content");
+
+    // 1. Fixed Slug Generation: Auto-generate slug from title
     React.useEffect(() => {
-        if (watchedTitle && (!watchedSlug || watchedSlug.trim() === "")) {
-            setValue("blogSlug", slugify(watchedTitle));
+        if (watchedTitle) {
+            setValue("blogSlug", slugify(watchedTitle), { shouldValidate: true });
         }
     }, [watchedTitle, setValue]);
+
+    // 2. Heading Extraction: Automagically scrape headings from TipTap editor
+    React.useEffect(() => {
+        if (watchedContent) {
+            const headingRegex = /<(h[1-3])\b[^>]*>([\s\S]*?)<\/h\1>/gi;
+            const matches: string[] = [];
+            let match;
+
+            while ((match = headingRegex.exec(watchedContent)) !== null) {
+                const headingText = match[2]
+                    .replace(/<\/?[^>]+(>|$)/g, "")
+                    .replace(/&nbsp;/g, " ")
+                    .trim();
+
+                if (headingText && headingText !== "") {
+                    matches.push(headingText);
+                }
+            }
+
+            // Update content overview if headings changed
+            setContentOverviewItems(prev => {
+                // Keep manual items that are not in the current set of scraped headings
+                // but we also want to avoid duplicates if a manual item IS a heading.
+                if (JSON.stringify(matches) !== JSON.stringify(prev)) {
+                    // For simplicity, we'll just set it to matches for now to ensure automatic sync
+                    // User can still manually add items via the input field
+                    return matches;
+                }
+                return prev;
+            });
+        } else {
+            // If content cleared, don't necessarily clear manual items, 
+            // but current implementation wipes everything. Let's be safer.
+        }
+    }, [watchedContent]);
 
     // tags state
     const [tags, setTags] = useState<string[]>([])
@@ -60,22 +112,6 @@ const Page = () => {
 
     const removeTag = (tag: string) => {
         setTags(tags.filter(t => t !== tag))
-    }
-
-    // Content Overview state
-    const [contentOverviewItems, setContentOverviewItems] = useState<string[]>([])
-    const [overviewInput, setOverviewInput] = useState("")
-
-    const handleAddOverviewItem = () => {
-        if (overviewInput.trim() === "") return
-        if (!contentOverviewItems.includes(overviewInput.trim())) {
-            setContentOverviewItems([...contentOverviewItems, overviewInput.trim()])
-        }
-        setOverviewInput("")
-    }
-
-    const removeOverviewItem = (index: number) => {
-        setContentOverviewItems(contentOverviewItems.filter((_, i) => i !== index))
     }
 
     const addBlogFun = async (data: FormValues) => {
@@ -150,6 +186,7 @@ const Page = () => {
                                     placeholder="Provide a detailed description..."
                                     control={control}
                                     error={errors.blogDescription}
+                                    maxLength={30}
                                 />
                             </div>
 
@@ -213,6 +250,7 @@ const Page = () => {
                                     placeholder="Upload additional images"
                                     register={register}
                                     error={errors.additionalImages}
+                                    setValue={setValue}
                                 />
                             </div>
                         </div>
@@ -235,6 +273,7 @@ const Page = () => {
                                     name="seoDescription"
                                     placeholder="Brief description for search engines"
                                     control={control}
+                                    maxLength={70}
                                     error={errors.seoDescription}
                                 />
                             </div>
@@ -272,7 +311,7 @@ const Page = () => {
                                         value={tagInput}
                                         onChange={(e) => setTagInput(e.target.value)}
                                         onKeyDown={handleTagKeyDown}
-                                        className="flex-1 min-w-[120px] border-none focus:ring-0 outline-none text-sm"
+                                        className="flex-1 min-w-[120px] text-black border-none focus:ring-0 outline-none text-sm"
                                         placeholder="Type and press Enter"
                                     />
                                 </div>
@@ -318,7 +357,7 @@ const Page = () => {
                                         value={overviewInput}
                                         onChange={(e) => setOverviewInput(e.target.value)}
                                         placeholder="e.g. Introduction"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primaryColor focus:border-primaryColor outline-none transition-all"
+                                        className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-primaryColor focus:border-primaryColor outline-none transition-all"
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();

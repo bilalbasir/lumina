@@ -74,7 +74,7 @@ const Page = () => {
                 <div className='mt-4   flex flex-col gap-y-3 md:gap-y-2 md:flex-row items-center flex-wrap w-[100%] justify-between'>
                     <div className='flex flex-col gap-y-1 w-[100%] md:w-[33%] '>
                         <p className='text-[#131313] font-semibold'>Sallary Range</p>
-                        <p className='text-[14px] text-[#686868]'>${careerData?.minSalary} - ${careerData?.maxSalary}</p>
+                        <p className='text-[14px] text-[#686868]'>{careerData?.salary} </p>
                     </div>
                     <div className='flex flex-col gap-y-1 w-[100%] md:w-[33%]'>
                         <p className='text-[#131313] font-semibold'>Employement Type</p>

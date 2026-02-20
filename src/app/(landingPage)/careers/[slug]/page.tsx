@@ -39,7 +39,7 @@ export default function JobApplicationPage() {
   ])
 
   return (
-    <div>
+    <div className='bg-white'>
       {/* Apply Form Hero Section */}
       <ApplyFormHeroSection jobTitle={jobTitle} />
 

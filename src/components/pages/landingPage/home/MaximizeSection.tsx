@@ -1,5 +1,14 @@
+'use client';
+
+import React, { useState } from 'react';
+
 const MaximizeSection = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoId = "1fY1swx0GycFiUDDptBBMEn0qApi6yFAS";
+
+  const handlePlay = () => {
+    setIsPlaying(true);
+  };
 
   return (
     <section className="bg-[#053328] py-2 md:py-12 px-4 sm:px-6 lg:px-20">
@@ -16,7 +25,7 @@ const MaximizeSection = () => {
 
           {/* Main Title */}
           <h2
-            className="text-4xl md:text-6xl lg:text-[90px] font-bold text-center leading-[57.2px]"
+            className="text-4xl md:text-6xl lg:text-[90px] font-bold text-center leading-[120%]"
             style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
           >
             <span className="text-[#F3F3F3]">we're here to </span>
@@ -39,7 +48,7 @@ const MaximizeSection = () => {
           <div className="flex flex-col items-center text-center">
             <div className="w-20 h-20 bg-[#D6EFD8] rounded-full flex items-center justify-center mb-6">
               <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M13.1312 21.875H14.4062V15.625H16.9062V21.875H18.1813C18.2646 21.1583 18.4979 20.4583 18.8813 19.775C19.2146 19.1583 19.7063 18.4917 20.3562 17.775L20.7063 17.4C21.1896 16.9 21.4563 16.625 21.5063 16.575C22.0396 15.9083 22.4479 15.175 22.7313 14.375C23.0146 13.575 23.1562 12.7417 23.1562 11.875C23.1562 10.525 22.8146 9.26667 22.1313 8.1C21.4646 6.96667 20.5646 6.06667 19.4313 5.4C18.2646 4.71667 17.0063 4.375 15.6562 4.375C14.3063 4.375 13.0479 4.71667 11.8812 5.4C10.7479 6.06667 9.84792 6.96667 9.18125 8.1C8.49792 9.26667 8.15625 10.525 8.15625 11.875C8.15625 12.7417 8.29792 13.575 8.58125 14.375C8.86458 15.175 9.27292 15.9 9.80625 16.55C9.85625 16.6167 10.1229 16.9 10.6063 17.4L10.9563 17.775C11.6063 18.4917 12.0979 19.1583 12.4313 19.775C12.8146 20.4583 13.0479 21.1583 13.1312 21.875ZM13.1562 24.375V25.625H18.1562V24.375H13.1562ZM7.85625 18.125C7.15625 17.2583 6.61458 16.3 6.23125 15.25C5.84792 14.1667 5.65625 13.0417 5.65625 11.875C5.65625 10.0583 6.11458 8.375 7.03125 6.825C7.91458 5.325 9.10625 4.13333 10.6063 3.25C12.1562 2.33333 13.8396 1.875 15.6562 1.875C17.4729 1.875 19.1562 2.33333 20.7063 3.25C22.2063 4.13333 23.3979 5.325 24.2812 6.825C25.1979 8.375 25.6562 10.0583 25.6562 11.875C25.6562 13.0417 25.4646 14.1667 25.0813 15.25C24.6979 16.3 24.1562 17.2583 23.4563 18.125C23.3396 18.275 23.1063 18.525 22.7563 18.875C22.1063 19.5583 21.6479 20.1 21.3813 20.5C20.8979 21.2 20.6562 21.8667 20.6562 22.5V25.625C20.6562 26.075 20.5437 26.4917 20.3188 26.875C20.0938 27.2583 19.7896 27.5625 19.4062 27.7875C19.0229 28.0125 18.6062 28.125 18.1562 28.125H13.1562C12.7063 28.125 12.2896 28.0125 11.9062 27.7875C11.5229 27.5625 11.2188 27.2583 10.9938 26.875C10.7688 26.4917 10.6562 26.075 10.6562 25.625V22.5C10.6562 21.8667 10.4146 21.2 9.93125 20.5C9.66458 20.1 9.20625 19.5583 8.55625 18.875C8.20625 18.525 7.97292 18.275 7.85625 18.125Z" fill="#00624F" />
+                <path d="M13.1312 21.875H14.4062V15.625H16.9062V21.875H18.1813C18.2646 21.1583 18.4979 20.4583 18.8813 19.775C19.2146 19.1583 19.7063 18.4917 20.3562 17.775L20.7063 17.4C21.1896 16.9 21.4563 16.625 21.5063 16.575C22.0396 15.9083 22.4479 15.175 22.7313 14.375C23.0146 13.575 23.1562 12.7417 23.1562 11.875C23.1562 10.525 22.8146 9.26667 22.1313 8.1C21.4646 6.96667 20.5646 6.06667 19.4313 5.4C18.2646 4.71667 17.0063 4.375 15.6562 4.375C14.3063 4.375 13.0479 4.71667 11.8812 5.4C10.7479 6.06667 9.84792 6.96667 9.18125 8.1C8.49792 9.26667 8.15625 10.525 8.15625 11.875C8.15625 12.7417 8.29792 13.575 8.58125 14.375C8.86458 15.175 9.27292 15.175 9.80625 16.55C9.85625 16.6167 10.1229 16.90 10.6063 17.4L10.9563 17.775C11.6063 18.4917 12.0979 19.1583 12.4313 19.775C12.8146 20.4583 13.0479 21.1583 13.1312 21.875ZM13.1562 24.375V25.625H18.1562V24.375H13.1562ZM7.85625 18.125C7.15625 17.2583 6.61458 16.3 6.23125 15.25C5.84792 14.1667 5.65625 13.0417 5.65625 11.875C5.65625 10.0583 6.11458 8.375 7.03125 6.825C7.91458 5.325 9.10625 4.13333 10.6063 3.25C12.1562 2.33333 13.8396 1.875 15.6562 1.875C17.4729 1.875 19.1562 2.33333 20.7063 3.25C22.2063 4.13333 23.3979 5.325 24.2812 6.825C25.1979 8.375 25.6562 10.0583 25.6562 11.875C25.6562 13.0417 25.4646 14.1667 25.0813 15.25C24.6979 16.3 24.1562 17.2583 23.4563 18.125C23.3396 18.275 23.1063 18.525 22.7563 18.875C22.1063 19.5583 21.6479 20.1 21.3813 20.5C20.8979 21.2 20.6562 21.8667 20.6562 22.5V25.625C20.6562 26.075 20.5437 26.4917 20.3188 26.875C20.0938 27.2583 19.7896 27.5625 19.4062 27.7875C19.0229 28.0125 18.6062 28.125 18.1562 28.125H13.1562C12.7063 28.125 12.2896 28.0125 11.9062 27.7875C11.5229 27.5625 11.2188 27.2583 10.9938 26.875C10.7688 26.4917 10.6562 26.075 10.6562 25.625V22.5C10.6562 21.8667 10.4146 21.2 9.93125 20.5C9.66458 20.1 9.20625 19.5583 8.55625 18.875C8.20625 18.525 7.97292 18.275 7.85625 18.125Z" fill="#00624F" />
               </svg>
             </div>
             <h3
@@ -81,21 +90,60 @@ const MaximizeSection = () => {
           </div>
         </div>
 
-        {/* Video/Image Section */}
+        {/* VideoSection */}
         <div className="w-full">
-          <div className="relative h-[200px] sm:h-[250px] md:h-[500px] lg:h-[665px] rounded-2xl overflow-hidden">
-            <iframe
-              src={`https://drive.google.com/file/d/${videoId}/preview`}
-              title="Lumina Talent Advisory Video"
-              width="100%"
-              height="100%"
-              allow="autoplay; fullscreen; encrypted-media"
-              allowFullScreen
-              className="w-full h-full border-0"
-            />
+          <div className="relative h-[200px] sm:h-[250px] md:h-[500px] lg:h-[665px] rounded-2xl overflow-hidden group">
+            {!isPlaying ? (
+              <div
+                className="absolute inset-0 cursor-pointer z-20 overflow-hidden"
+                onClick={handlePlay}
+                onTouchStart={handlePlay}
+              >
+                <img
+                  src="https://api.builder.io/api/v1/image/assets/TEMP/a5952939ffe1e87a950082a3c88c1f3111d2f009?width=2560"
+                  alt="Lumina Talent Advisory Video Thumbnail"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+
+                {/* Background Overlay */}
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
+
+                {/* Play Button */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center shadow-2xl scale-90 md:scale-100 group-hover:scale-110 group-active:scale-95 transition-all duration-300">
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="ml-1 text-[#053328]"
+                    >
+                      <path
+                        d="M8 5V19L19 12L8 5Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Click to play helper */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 text-sm font-medium tracking-wide">
+                  Click to watch video
+                </div>
+              </div>
+            ) : (
+              <iframe
+                src={`https://drive.google.com/file/d/${videoId}/preview?autoplay=1`}
+                title="Lumina Talent Advisory Video"
+                width="100%"
+                height="100%"
+                allow="autoplay; fullscreen; encrypted-media"
+                allowFullScreen
+                className="w-full h-full border-0 z-10"
+              />
+            )}
           </div>
         </div>
-
 
       </div>
     </section>

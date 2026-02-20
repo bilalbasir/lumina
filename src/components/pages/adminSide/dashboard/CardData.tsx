@@ -69,7 +69,7 @@ const CardData = () => {
                         <div className='h-[48px] w-[48px] rounded-full border-[7px] border-solid border-[#E5F8FF] bg-[#B2EBFF] flex items-center justify-center'>
                             <ServiceIcon color='#087589' />
                         </div>
-                        <p className={`font-bold text-[36px] ${montserrat.className}`}>{totalServices}</p>
+                        <p className={`font-bold text-black text-[36px] ${montserrat.className}`}>{totalServices}</p>
                         <p className={`agBold ${montserrat.className}`}>Total Services</p>
                         <p className={`agBodyMediumGrey ${montserrat.className}`}>{newServicesThisMonth} new services this month</p>
                         <Link href="/dashboard/services" className='text-[#00624F] flex items-center gap-x-4 opacity-0 group-hover:opacity-100 duration-500 transition-all cursor-pointer'>
@@ -86,7 +86,7 @@ const CardData = () => {
                         <div className='h-[48px] w-[48px] rounded-full border-[7px] border-solid border-[#E0FFD8] bg-[#B9FFA8] flex items-center justify-center'>
                             <CareerIcon color='#015524' />
                         </div>
-                        <p className={`font-bold text-[36px] ${montserrat.className}`}>{totalCareers}</p>
+                        <p className={`font-bold text-black text-[36px] ${montserrat.className}`}>{totalCareers}</p>
                         <p className={`agBold ${montserrat.className}`}>Active Jobs</p>
                         <p className={`agBodyMediumGrey ${montserrat.className}`}>{activeJobs} positions currently open</p>
                         <Link href="/dashboard/careers" className='text-[#00624F] flex items-center gap-x-4 opacity-0 group-hover:opacity-100 duration-500 transition-all cursor-pointer'>
@@ -101,7 +101,7 @@ const CardData = () => {
                         <div className='h-[48px] w-[48px] rounded-full border-[7px] border-solid border-[#FAEDFF] bg-[#ECB2FF] flex items-center justify-center'>
                             <BlogIcon color='#9512C1' />
                         </div>
-                        <p className={`font-bold text-[36px] ${montserrat.className}`}>{totalBlogs}</p>
+                        <p className={`font-bold text-black text-[36px] ${montserrat.className}`}>{totalBlogs}</p>
                         <p className={`agBold ${montserrat.className}`}>Blogs</p>
                         <p className={`agBodyMediumGrey ${montserrat.className}`}>{newBlogsThisMonth} new blogs this month</p>
                         <Link href="/dashboard/blogs" className='text-[#00624F] flex items-center gap-x-4 opacity-0 group-hover:opacity-100 duration-500 transition-all cursor-pointer'>
@@ -116,7 +116,7 @@ const CardData = () => {
                         <div className='h-[48px] w-[48px] rounded-full border-[7px] border-solid border-[#FFF2D5] bg-[#FFD165] flex items-center justify-center'>
                             <ContactLeadIcon color='#7D5903' />
                         </div>
-                        <p className={`font-bold text-[36px] ${montserrat.className}`}>{totalContactLeads}</p>
+                        <p className={`font-bold text-black text-[36px] ${montserrat.className}`}>{totalContactLeads}</p>
                         <p className={`agBold ${montserrat.className}`}>Recent Leads</p>
                         <p className={`agBodyMediumGrey ${montserrat.className}`}>{newLeadsThisMonth} leads this week</p>
                         <Link href="/dashboard/contact-leads" className='text-[#00624F] flex items-center gap-x-4 opacity-0 group-hover:opacity-100 duration-500 transition-all cursor-pointer'>

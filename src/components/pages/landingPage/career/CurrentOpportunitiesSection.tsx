@@ -269,16 +269,14 @@ const CurrentOpportunitiesSection = () => {
                             {careers.jobTitle || "Job post"}
                           </h3>
                         </div>
-                        <div className="pb-3">
-                          <p
-                            className="text-gray-600 text-base leading-6"
+                        <div className="pb-3 text-gray-600 text-base leading-6">
+                          <div
                             style={{
                               fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                               color: "#4B5563",
                             }}
-                          >
-                            {careers.shortDescription || "Job Description"}
-                          </p>
+                            dangerouslySetInnerHTML={{ __html: careers.shortDescription || "Job Description" }}
+                          />
                         </div>
                       </div>
                     </div>

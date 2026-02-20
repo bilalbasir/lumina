@@ -17,6 +17,7 @@ interface TipTapEditorProps {
     required?: boolean
     placeholder?: string
     maxLength?: number
+    height?: string
 }
 
 const MenuBar = ({ editor }: { editor: any }) => {
@@ -74,7 +75,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 }
 
 // Sub-component to manage editor state independently
-const EditorInner = ({ value, onChange, onBlur, placeholder, error, maxLength }: any) => {
+const EditorInner = ({ value, onChange, onBlur, placeholder, error, maxLength, height }: any) => {
     const editor = useEditor({
         immediatelyRender: false,
         extensions: [
@@ -83,7 +84,7 @@ const EditorInner = ({ value, onChange, onBlur, placeholder, error, maxLength }:
             Typography,
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
             CharacterCount.configure({
-                limit: maxLength,
+                // limit: maxLength, // Removed hard limit to allow loading existing data
             }),
         ],
         content: value || '',
@@ -101,8 +102,8 @@ const EditorInner = ({ value, onChange, onBlur, placeholder, error, maxLength }:
         },
         editorProps: {
             attributes: {
-                class: 'prose focus:outline-none min-h-[150px] p-4 max-w-none text-sm leading-[150%] text-[#131313]',
-                style: 'font-family: Onest, -apple-system, Roboto, Helvetica, sans-serif;',
+                class: `prose focus:outline-none ${height ? `h-[${height}]` : 'min-h-[150px]'} overflow-y-auto p-4 max-w-none text-sm leading-[150%] text-[#131313]`,
+                style: `font-family: Onest, -apple-system, Roboto, Helvetica, sans-serif; ${height ? `height: ${height};` : ''}`,
                 'data-placeholder': placeholder,
             },
         },
@@ -146,7 +147,8 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
     error,
     required = false,
     placeholder = 'Write description...',
-    maxLength
+    maxLength,
+    height
 }) => {
     return (
         <div className="flex flex-col items-start gap-2 flex-1 w-full">
@@ -185,6 +187,7 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
                         placeholder={placeholder}
                         error={error}
                         maxLength={maxLength}
+                        height={height}
                     />
                 )}
             />
@@ -203,9 +206,9 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
                     pointer-events: none;
                     height: 0;
                 }
-                .ProseMirror {
+                /* .ProseMirror {
                     min-height: 150px;
-                }
+                } */
                 .ProseMirror h1 {
                     font-size: 1.5rem;
                     font-weight: 700;

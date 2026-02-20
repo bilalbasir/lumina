@@ -39,6 +39,7 @@ const Page = () => {
     const { register, formState: { errors }, handleSubmit, control, reset, setValue, watch } = useForm<FormValues>()
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
+    const [blogData, setBlogData] = useState<any>(null);
 
     // tags state
     const [tags, setTags] = useState<string[]>([])
@@ -48,9 +49,9 @@ const Page = () => {
     const [contentOverviewItems, setContentOverviewItems] = useState<string[]>([])
     const [overviewInput, setOverviewInput] = useState("")
 
-    // Watch blog title to auto-generate slug (optional in edit mode, usually we keep existing unless changed)
+    // Watch blog title and content to auto-generate slug and overview
     const watchedTitle = watch("blogTitle");
-    const watchedSlug = watch("blogSlug");
+    const watchedContent = watch("content");
 
     // Fetch initial data
     useEffect(() => {
@@ -73,7 +74,11 @@ const Page = () => {
                     seoDescription: blog.metaDescription,
                     authorName: blog.authorName,
                     content: blog.blogContent,
+                    bannerImage: blog.bannerImage,
+                    featuredImage: blog.featuredImage,
+                    additionalImages: blog.additionalImages,
                 });
+                setBlogData(blog);
 
                 // Populate Tags
                 if (blog.tags) setTags(blog.tags);
@@ -90,14 +95,39 @@ const Page = () => {
         }
     }
 
-    // Auto-slug logic can be tricky in edit mode. 
-    // We might want to only auto-generate if the slug is empty, OR if user explicitly types in title and slug was not manually edited?
-    // For simplicity, we keep the add logic: valid slug enforcement on type.
-    useEffect(() => {
-        if (watchedTitle && (!watchedSlug || watchedSlug.trim() === "")) {
-            setValue("blogSlug", slugify(watchedTitle));
+    // 1. Fixed Slug Generation: Auto-generate slug from title
+    React.useEffect(() => {
+        if (watchedTitle) {
+            setValue("blogSlug", slugify(watchedTitle), { shouldValidate: true });
         }
-    }, [watchedTitle, setValue, watchedSlug]);
+    }, [watchedTitle, setValue]);
+
+    // 2. Heading Extraction: Automagically scrape headings from TipTap editor
+    React.useEffect(() => {
+        if (watchedContent) {
+            const headingRegex = /<(h[1-3])\b[^>]*>([\s\S]*?)<\/h\1>/gi;
+            const matches: string[] = [];
+            let match;
+
+            while ((match = headingRegex.exec(watchedContent)) !== null) {
+                const headingText = match[2]
+                    .replace(/<\/?[^>]+(>|$)/g, "")
+                    .replace(/&nbsp;/g, " ")
+                    .trim();
+
+                if (headingText && headingText !== "") {
+                    matches.push(headingText);
+                }
+            }
+
+            setContentOverviewItems(prev => {
+                if (JSON.stringify(matches) !== JSON.stringify(prev)) {
+                    return matches;
+                }
+                return prev;
+            });
+        }
+    }, [watchedContent]);
 
 
     const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -221,6 +251,7 @@ const Page = () => {
                                 placeholder="Upload Service Banner Image"
                                 register={register}
                                 error={errors.bannerImage}
+                                defaultValue={blogData?.bannerImage || ""}
                             />
                         </div>
 
@@ -234,6 +265,7 @@ const Page = () => {
                                 placeholder="Upload featured blog image"
                                 register={register}
                                 error={errors.featuredImage}
+                                defaultValue={blogData?.featuredImage || ""}
                             />
 
                             <div className="w-[100%]">
@@ -257,6 +289,8 @@ const Page = () => {
                                 placeholder="Upload additional images for your blog content"
                                 register={register}
                                 error={errors.additionalImages}
+                                setValue={setValue}
+                                defaultImages={blogData?.additionalImages || []}
                             />
                         </div>
 
@@ -308,7 +342,7 @@ const Page = () => {
                                         value={tagInput}
                                         onChange={(e) => setTagInput(e.target.value)}
                                         onKeyDown={handleTagKeyDown}
-                                        className="flex-1 min-w-[120px] border-none focus:ring-0 outline-none text-sm"
+                                        className="flex-1 min-w-[120px] text-black border-none focus:ring-0 outline-none text-sm"
                                         placeholder="Type and press Enter"
                                     />
                                 </div>
@@ -355,7 +389,7 @@ const Page = () => {
                                         value={overviewInput}
                                         onChange={(e) => setOverviewInput(e.target.value)}
                                         placeholder="e.g. Introduction"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primaryColor focus:border-primaryColor outline-none transition-all"
+                                        className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-primaryColor focus:border-primaryColor outline-none transition-all"
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();

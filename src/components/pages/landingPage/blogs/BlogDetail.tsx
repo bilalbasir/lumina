@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react'
 interface BlogDetailProps {
     data: {
         overView: string
-        data: { heading: string; data: string; img?: string }[]
+        data: { heading: string; data: string; additionalImages?: string[] }[]
         featuredImage?: string
     }
     selectedContent: string
@@ -70,7 +70,7 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ data, selectedContent }) => {
 
             </div>
             {data?.data?.map(data =>
-                <div className='mt-6' ref={(el) => {
+                <div className='mt-6 scroll-mt-24' ref={(el) => {
                     sectionRefs.current[data.heading] = el; // assign kar do
                     // return nothing
                 }}>
@@ -79,9 +79,9 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ data, selectedContent }) => {
                         ref={(el) => { if (data?.data && el) contentRef.current = el }}
                         className={`
                             mt-3 leading-[24px] text-[14px] text-[#1D1D1D]
-                            [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mt-8 [&>h1]:mb-4
-                            [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mt-6 [&>h2]:mb-3
-                            [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mt-5 [&>h3]:mb-2
+                            [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mt-8 [&>h1]:mb-4 [&>h1]:scroll-mt-24
+                            [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mt-6 [&>h2]:mb-3 [&>h2]:scroll-mt-24
+                            [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mt-5 [&>h3]:mb-2 [&>h3]:scroll-mt-24
                             [&>p]:mb-4
                             [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-4
                             [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-4
@@ -89,13 +89,18 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ data, selectedContent }) => {
                         dangerouslySetInnerHTML={{ __html: data?.data || '' }}
                     />
 
-                    {data?.img !== "" &&
-                        <img
-                            src={data?.img}
-                            alt="Hero Background"
-                            className=" w-full h-full mt-3 object-cover rounded-[12px]"
-                        />
-                    }
+                    {data?.additionalImages && data.additionalImages.length > 0 && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                            {data.additionalImages.map((imgUrl, idx) => (
+                                <img
+                                    key={idx}
+                                    src={imgUrl}
+                                    alt={`Additional Image ${idx + 1}`}
+                                    className="w-full h-full object-cover rounded-[12px]"
+                                />
+                            ))}
+                        </div>
+                    )}
 
                 </div>
             )}

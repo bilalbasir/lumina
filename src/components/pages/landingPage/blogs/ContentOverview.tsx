@@ -64,7 +64,7 @@ const ContentOverview: React.FC<ContentOverviewProps> = ({ contentOverview, onSe
 
 
             </div>
-            <div className={`flex flex-col gap-y-3 items-start transition-all duration-500 ${isContentClose ? "h-[500px]" : 'h-0'}  overflow-y-scroll`}>
+            <div className={`flex flex-col gap-y-3 items-start transition-all duration-500 ${isContentClose ? "h-0" : 'h-[500px]'}  overflow-y-scroll`}>
                 {contentOverview?.map(data =>
 
                     <p onClick={() => {

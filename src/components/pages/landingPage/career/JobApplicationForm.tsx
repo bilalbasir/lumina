@@ -29,7 +29,7 @@ interface JobApplicationFormProps {
 
 const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm<FormValues>()
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm<FormValues>()
   const [loading, setLoading] = useState(false)
   const [department, setDepartment] = useState("")
   const dispatch = useDispatch()
@@ -85,6 +85,10 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
 
       // ✅ show success toast
       toast.success(" Application submitted successfully!");
+
+      // clear form 
+      reset();
+      setFormData({ resume: null });
 
       console.log("✅ API response:", res);
     } catch (err: any) {
@@ -159,7 +163,7 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
   return (
     <>{loading &&
       <Loader />}
-      <section className="flex flex-col justify-center items-center gap-10 w-full px-4 sm:px-6 lg:px-20 py-16">
+      <section className="flex flex-col justify-center items-center !bg-white gap-10 w-full px-4 sm:px-6 lg:px-20 py-16">
 
         {/* Back to Careers Link */}
         <Link
@@ -280,7 +284,7 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
             <TextArea
               label="Cover Letter"
               name="coverLetter"
-              placeholder="Enter your phone number"
+              placeholder="Write  cover letter"
               register={register}
               error={errors.coverLetter}
               required

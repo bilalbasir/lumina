@@ -41,8 +41,9 @@ const ViewApplicationModal: React.FC<ViewApplicationModalProps> = (id) => {
     const handleDownload = () => {
         if (!applicantData?.resume) return;
 
-        // `fl_attachment` ko `fl_inline` me convert karo
-        const previewUrl = `${imageBaseUrl}/${applicantData.resume}`;
+        // Check if the resume is already a full URL (Cloudinary)
+        const resume = applicantData.resume;
+        const previewUrl = resume.startsWith('http') ? resume : `${imageBaseUrl}/${resume}`;
 
         window.open(previewUrl, "_blank"); // 👈 ab browser me open hoga
     };
@@ -52,7 +53,7 @@ const ViewApplicationModal: React.FC<ViewApplicationModalProps> = (id) => {
         <ModalLayout>
             <div className='w-full'>
                 <div className='mb-4'>
-                    <p className='w-full sm:w-[70%] md:w-[80%] font-semibold'>{applicantData?.firstName} {applicantData?.lastName}</p>
+                    <p className='w-full sm:w-[70%]  text-black md:w-[80%] font-semibold'>{applicantData?.firstName} {applicantData?.lastName}</p>
 
 
                 </div>

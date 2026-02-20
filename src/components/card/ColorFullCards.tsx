@@ -15,7 +15,7 @@ const ColorFullCards: React.FC<ColorFullCardsProps> = (props) => {
                 {props.icon}
             </div>
             <p className='font-semibold text-[#131313] text-[18px]'>{props.heading}</p>
-            <p className='text-[14px] text-[#4E4E4] text-center'>{props.paragraph}</p>
+            <p className='text-[14px]  text-center text-[#131313]'>{props.paragraph}</p>
         </div>
     )
 }

@@ -80,8 +80,8 @@ const JobDetailModal: React.FC<jobDescriptionProps> = (id) => {
 
                 <div className='mt-4   flex flex-col gap-y-3 md:gap-y-0 md:flex-row items-center justify-between'>
                     <div className='flex flex-col gap-y-1 w-[100%] md:w-[33%] '>
-                        <p className='text-[#131313] font-semibold'>Sallary Range</p>
-                        <p className='text-[14px] text-[#686868]'>{jobDetailData?.minSalary} - {jobDetailData?.maxSalary}</p>
+                        <p className='text-[#131313] font-semibold'>Salary</p>
+                        <p className='text-[14px] text-[#686868]'>{jobDetailData?.salary}</p>
                     </div>
                     <div className='flex flex-col gap-y-1 w-[100%] md:w-[33%]'>
                         <p className='text-[#131313] font-semibold'>Employement Type</p>
@@ -95,7 +95,10 @@ const JobDetailModal: React.FC<jobDescriptionProps> = (id) => {
 
                 <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Job Description</p>
-                    <p className='text-[14px] text-[#686868]'>{jobDetailData?.jobDescription}</p>
+                    <div
+                        className='text-[14px] text-[#686868]'
+                        dangerouslySetInnerHTML={{ __html: jobDetailData?.jobDescription || "" }}
+                    />
                 </div>
                 <div className='flex flex-col gap-y-2s mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Key Responsibilities</p>

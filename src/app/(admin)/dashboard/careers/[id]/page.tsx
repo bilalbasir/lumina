@@ -9,6 +9,7 @@ import DeleteIcon from "../../../../../components/icons/deleteIcon/DeleteIcon";
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import TextArea from '@/components/inputField/TextArea'
+import TipTapEditor from '@/components/inputField/TipTapEditor'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import { useParams, useRouter } from 'next/navigation'
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
@@ -24,8 +25,7 @@ type FormValues = {
     shortDescription: string;
     jobType: string;
     department: string;
-    maxSalary: string;
-    minSalary: string;
+    salary: string;
     status: string;
 }
 const categories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
@@ -182,8 +182,7 @@ const Page = () => {
                     jobDescription: data.jobDescription,
                     status: data.status,
                     shortDescription: data.shortDescription,
-                    minSalary: data.minSalary,
-                    maxSalary: data.maxSalary,
+                    salary: data.salary,
                     location: data?.location,
                     jobType: data?.jobType,
                     department: data?.department,
@@ -265,6 +264,30 @@ const Page = () => {
                         />
                     </div>
                 </div>
+                <div className='w-[100%]'>
+                    <TipTapEditor
+                        label="Job description"
+                        name="jobDescription"
+                        required
+                        placeholder="Write description"
+                        control={control}
+                        error={errors.jobDescription}
+                        maxLength={300}
+                        height="150px"
+                    />
+                </div>
+                <div className='w-[100%]'>
+                    <TipTapEditor
+                        label="Job Short description"
+                        name="shortDescription"
+                        required
+                        placeholder="Write short job description"
+                        control={control}
+                        error={errors.shortDescription}
+                        maxLength={150}
+                        height="150px"
+                    />
+                </div>
 
                 <div className='flex items-center justify-between w-full'>
 
@@ -296,36 +319,14 @@ const Page = () => {
                     </div>
                 </div>
                 <div className='w-[100%]'>
-
-                    <div className='flex items-center justify-between w-full'>
-
-                        <div className='w-[100%] md:w-[49%]'>
-
-                            <InputField
-                                label='Min Sallary'
-                                required
-                                name="minSalary"
-                                placeholder="Enter min sallary"
-                                register={register}
-                                error={errors.minSalary}
-
-                            />
-                        </div>
-                        <div className='w-[100%] md:w-[49%]'>
-
-                            <InputField
-                                label='Max Sallary'
-
-                                required
-                                name="maxSalary"
-                                placeholder="Enter max sallary"
-                                register={register}
-                                error={errors.maxSalary}
-
-                            />
-                        </div>
-                    </div>
-
+                    <InputField
+                        label='Salary'
+                        required
+                        name="salary"
+                        placeholder="Enter salary"
+                        register={register}
+                        error={errors.salary}
+                    />
                 </div>
                 <div className='w-[100%]'>
 
@@ -354,7 +355,7 @@ const Page = () => {
                             <input
                                 value={req}
                                 onChange={(e) => handleRequirementChange(index, e.target.value)}
-                                className={`w-[97%] border px-4 py-3 rounded ${requirementErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-[97%] border px-4 text-black py-3 rounded ${requirementErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
                                 placeholder={`Enter requirement ${index + 1}`}
                             />
                             <div className="w-[2%] cursor-pointer" onClick={() => deleteRequirement(index)}>
@@ -383,7 +384,7 @@ const Page = () => {
                             <input
                                 value={resp}
                                 onChange={(e) => handleResponsibilitiesChange(index, e.target.value)}
-                                className={`w-[97%] border px-4 py-3 rounded ${responsibilitiesErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-[97%] border px-4 text-black py-3 rounded ${responsibilitiesErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
                                 placeholder={`Enter responsibilities ${index + 1}`}
                             />
                             <div className="w-[2%] cursor-pointer" onClick={() => deleteResponsibilities(index)}>
@@ -412,7 +413,7 @@ const Page = () => {
                             <input
                                 value={perk}
                                 onChange={(e) => handleBenifitsPerksChange(index, e.target.value)}
-                                className={`w-[97%] border px-4 py-3 rounded ${benifitsPerksErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
+                                className={`w-[97%] border px-4 text-black py-3 rounded ${benifitsPerksErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
                                 placeholder={`Enter Benifits and Perks ${index + 1}`}
                             />
                             <div className="w-[2%] cursor-pointer" onClick={() => deleteBenifitsPerks(index)}>

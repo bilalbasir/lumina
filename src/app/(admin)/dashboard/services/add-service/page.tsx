@@ -1,4 +1,3 @@
-
 'use client'
 import DropdownField from '@/components/dropdown/DropDown'
 import { HorizontalLine } from '@/components/horizontalLine/HorizontalLine'
@@ -7,16 +6,18 @@ import LayoutHeader from '@/components/pages/adminSide/LayoutHeader'
 import UploadFile from '@/components/uploadFile/UploadFile'
 import DeleteIcon from "../../../../../components/icons/deleteIcon/DeleteIcon";
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import TextArea from '@/components/inputField/TextArea'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import TipTapEditor from '@/components/inputField/TipTapEditor'
 import { useMutation } from '@tanstack/react-query'
 import serviceApi from '@/app/apiServices/servicesApi/ServiceApi'
+import categoryApi from '@/app/apiServices/categoryApi/CategoryApi'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import Loader from '@/components/loader/Loader'
+
 type FormValues = {
     name: string,
     category: string,
@@ -28,8 +29,9 @@ type FormValues = {
     serviceOverView: string
     subTitle: string
 }
-const categories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
-const serviceRate = Array.from({ length: 100 }, (_, i) => (i + 1).toString())
+
+const defaultCategories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
+
 const Page = () => {
     const [tags, setTags] = useState<string[]>([])
     const [features, setFeatures] = useState<{ title: string; description: string }[]>([
@@ -42,6 +44,39 @@ const Page = () => {
     const navigate = useRouter()
     const { register, handleSubmit, formState: { errors }, control } = useForm<FormValues>()
     const [loading, setLoading] = useState(false)
+
+    // Category Logic
+    const [categoriesList, setCategoriesList] = useState<string[]>(defaultCategories)
+    const [isAddingCategory, setIsAddingCategory] = useState(false)
+    const [newCategoryName, setNewCategoryName] = useState("")
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await categoryApi.getAllCategories()
+                const fetchedCategories = res.data.map((c: any) => c.name)
+                // Merge with default categories
+                setCategoriesList(Array.from(new Set([...defaultCategories, ...fetchedCategories])))
+            } catch (error) {
+                console.error("Error fetching categories:", error)
+            }
+        }
+        fetchCategories()
+    }, [])
+
+    const handleAddCategory = async () => {
+        if (!newCategoryName.trim()) return
+        try {
+            const res = await categoryApi.createCategory(newCategoryName.trim())
+            setCategoriesList(prev => [...prev, res.data.name])
+            setNewCategoryName("")
+            setIsAddingCategory(false)
+            toast.success("Category added successfully")
+        } catch (error: any) {
+            toast.error(error || "Failed to add category")
+        }
+    }
+
     const addNewFeatureFun = () => {
         const lastIndex = features.length - 1;
         const lastFeature = features[lastIndex];
@@ -175,17 +210,58 @@ const Page = () => {
                         />
                     </div>
                     <div className='w-[100%] md:w-[49%]'>
+                        {!isAddingCategory ? (
+                            <div className="flex items-center gap-2">
+                                <DropdownField
+                                    label="Category"
+                                    name="category"
+                                    options={categoriesList}
+                                    control={control}
+                                    error={errors.category}
+                                    required
+                                />
+                                <div className='flex  items-center justify-center border border-[#E6E6E6] rounded-md w-11 h-11 mt-[30px] hover:bg-primaryColor/10 cursor-pointer'>
 
-                        <DropdownField
-                            label="Category"
-                            name="category"
-                            options={categories}
-                            control={control}
-                            error={errors.category}
-                            required
-
-
-                        />
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsAddingCategory(true)}
+                                        className="text-primaryColor text-2xl font-bold cursor-pointer"
+                                        title="Add New Category"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-2 w-full">
+                                <label className="text-sm font-medium text-[#131313]">New Category</label>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        className="flex-1 h-11 px-4 py-3 rounded border-[1.5px] border-[#E6E6E6] outline-none focus:border-[#00634F] text-sm text-[#131313]"
+                                        placeholder="Enter category name"
+                                        value={newCategoryName}
+                                        onChange={(e) => setNewCategoryName(e.target.value)}
+                                        style={{
+                                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleAddCategory}
+                                        className="bg-primaryColor text-white px-4 py-2 rounded text-sm h-11"
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsAddingCategory(false)}
+                                        className="bg-gray-200 text-gray-700 px-4 py-2 rounded text-sm h-11"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className='flex items-center justify-between w-full'>
@@ -205,7 +281,7 @@ const Page = () => {
                     <div className='w-[100%] md:w-[49%]'>
 
                         <InputField
-                            label="Service Over view"
+                            label="Service Card Discription"
 
                             name="serviceOverView"
                             placeholder="Enter service overview"
@@ -254,15 +330,16 @@ const Page = () => {
 
                     <div className='w-[100%] md:w-[49%]'>
 
-                        <DropdownField
-                            label="service Success Rate"
+                        <InputField
+                            label="Service Success Rate"
                             name="serviceSuccessRate"
-                            options={serviceRate}
-                            control={control}
+                            type="number"
+                            placeholder="0 - 100"
+                            register={register}
                             error={errors.serviceSuccessRate}
                             required
-
-
+                            min={0}
+                            max={100}
                         />
                     </div>
                     <div className='w-[100%] md:w-[49%]'>
@@ -310,7 +387,7 @@ const Page = () => {
                     ))}
 
                     <div
-                        className='border-[2px] mt-2 cursor-pointer border-dashed text-center text-[#131313 ] border-gray-400 px-4 py-3 rounded'
+                        className='border-[2px] mt-2 cursor-pointer border-dashed text-center text-[#131313] border-gray-400 px-4 py-3 rounded'
                         onClick={addNewFeatureFun}
                     >
                         Add more feature

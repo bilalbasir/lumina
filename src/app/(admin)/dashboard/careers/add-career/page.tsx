@@ -22,8 +22,7 @@ type FormValues = {
     jobDescription: string;
     jobType: string;
     department: string;
-    maxSalary: string;
-    minSalary: string;
+    salary: string;
     status: string;
 
 
@@ -240,6 +239,8 @@ const Page = () => {
                         placeholder="Write description"
                         control={control}
                         error={errors.jobDescription}
+                        maxLength={300}
+                        height="150px"
                     />
                 </div>
                 <div className='w-[100%]'>
@@ -250,6 +251,8 @@ const Page = () => {
                         placeholder="Write short job description"
                         control={control}
                         error={errors.shortDescription}
+                        maxLength={150}
+                        height="150px"
                     />
                 </div>
                 {/* <div className='w-[100%]'>
@@ -293,36 +296,14 @@ const Page = () => {
                     </div>
                 </div>
                 <div className='w-[100%]'>
-
-                    <div className='flex items-center justify-between w-full'>
-
-                        <div className='w-[100%] md:w-[49%]'>
-
-                            <InputField
-                                label='Min Sallary'
-                                required
-                                name="minSalary"
-                                placeholder="Enter min sallary"
-                                register={register}
-                                error={errors.minSalary}
-
-                            />
-                        </div>
-                        <div className='w-[100%] md:w-[49%]'>
-
-                            <InputField
-                                label='Max Sallary'
-
-                                required
-                                name="maxSalary"
-                                placeholder="Enter max sallary"
-                                register={register}
-                                error={errors.maxSalary}
-
-                            />
-                        </div>
-                    </div>
-
+                    <InputField
+                        label='Salary'
+                        required
+                        name="salary"
+                        placeholder="Enter salary"
+                        register={register}
+                        error={errors.salary}
+                    />
                 </div>
                 <div className='w-[100%]'>
 
@@ -351,7 +332,7 @@ const Page = () => {
                             <input
                                 value={req}
                                 onChange={(e) => handleRequirementChange(index, e.target.value)}
-                                className={`w-[97%] border-gray-400 border px-4 py-3 rounded ${requirementErrors[index] ? "border-red-500" : ""}`}
+                                className={`w-[97%] border-gray-400 border px-4 py-3  text-black rounded ${requirementErrors[index] ? "border-red-500" : ""}`}
                                 placeholder={`Enter requirement ${index + 1}`}
                             />
                             <div className="w-[2%] cursor-pointer" onClick={() => deleteRequirement(index)}>
@@ -380,7 +361,7 @@ const Page = () => {
                             <input
                                 value={resp}
                                 onChange={(e) => handleResponsibilitiesChange(index, e.target.value)}
-                                className={`w-[97%] border-gray-400 border px-4 py-3 rounded ${responsibilitiesErrors[index] ? "border-red-500" : ""}`}
+                                className={`w-[97%] border-gray-400 border px-4 py-3 text-black rounded ${responsibilitiesErrors[index] ? "border-red-500" : ""}`}
                                 placeholder={`Enter responsibilities ${index + 1}`}
                             />
                             <div className="w-[2%] cursor-pointer" onClick={() => deleteResponsibilities(index)}>
@@ -409,7 +390,7 @@ const Page = () => {
                             <input
                                 value={perk}
                                 onChange={(e) => handleBenifitsPerksChange(index, e.target.value)}
-                                className={`w-[97%] border-gray-400 border px-4 py-3 rounded ${benifitsPerksErrors[index] ? "border-red-500" : ""}`}
+                                className={`w-[97%] border-gray-400 border px-4 py-3 text-black rounded ${benifitsPerksErrors[index] ? "border-red-500" : ""}`}
                                 placeholder={`Enter Benifits and Perks ${index + 1}`}
                             />
                             <div className="w-[2%] cursor-pointer" onClick={() => deleteBenifitsPerks(index)}>

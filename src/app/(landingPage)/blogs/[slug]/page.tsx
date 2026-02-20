@@ -66,23 +66,22 @@ const Page = () => {
     const transformBlogData = (blog: BlogData) => {
         // 1. Prepare Main Content for Rendering (Single Block)
         const mainContentData = [{
-            heading: blog.title, // Or use a generic title, or leave empty if the HTML has the title
+            heading: blog.title,
             data: blog.blogContent || "",
-            img: blog.additionalImages && blog.additionalImages[0]
-                ? getImageUrl(blog.additionalImages[0]) : ""
+            // Map all additional images instead of just the first one
+            additionalImages: blog.additionalImages ? blog.additionalImages.map(img => getImageUrl(img)) : []
         }];
 
         // 2. Prepare Sidebar Items (Table of Contents)
-        // Ensure we have at least one valid item or fallback to empty
         const sidebarItems = blog.blogContextTable && blog.blogContextTable.length > 0
             ? blog.blogContextTable.map(heading => ({ heading }))
-            : [{ heading: "Overview" }]; // Default if empty
+            : [{ heading: "Overview" }];
 
         return {
             overView: blog.shortDescription || "",
             featuredImage: getImageUrl(blog.featuredImage),
-            data: mainContentData, // Only one block for rendering
-            sidebarItems: sidebarItems // Separate list for the sidebar
+            data: mainContentData,
+            sidebarItems: sidebarItems
         }
     }
 
@@ -113,11 +112,13 @@ const Page = () => {
                 <img
                     src={blogData.bannerImage ? getImageUrl(blogData.bannerImage) : "/assets/blog/blogImg1.png"}
                     alt={blogData.title}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover z-0"
                 />
 
                 {/* Gradient Overlay */}
-                <HeroImgSvg />
+                <div className="absolute inset-0 z-5">
+                    <HeroImgSvg />
+                </div>
 
                 {/* Hero Content */}
                 <div className="relative z-10 flex items-center justify-center h-full px-4 sm:px-6 lg:px-8">

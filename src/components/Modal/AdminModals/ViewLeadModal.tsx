@@ -91,12 +91,12 @@ const ViewLeadModal: React.FC<Props> = ({ id }) => {
         <ModalLayout>
             <div className="w-full">
                 <div className="mb-4">
-                    <p className="w-full sm:w-[70%] md:w-[80%] font-semibold">Lead Details</p>
+                    <p className="w-full sm:w-[70%] md:w-[80%] text-[#131313] font-semibold">Lead Details</p>
                 </div>
 
                 <GreyLine />
                 <div className="flex items-center gap-x-2 mt-6">
-                    <p className="font-semibold">{lead.firstName} {lead.lastName}</p>
+                    <p className="font-semibold text-[#131313]">{lead.firstName} {lead.lastName}</p>
                     <Tags text={lead.status} bgColor="bg-[#DBEAFE]" color="text-[#1E40AF]" />
                 </div>
 
