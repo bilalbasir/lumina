@@ -14,6 +14,7 @@ import PrimaryButton from '@/components/button/PrimaryButton'
 import { useParams, useRouter } from 'next/navigation'
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
 import departmentApi from '@/app/apiServices/departmentApi/DepartmentApi'
+import jobTypeApi from '@/app/apiServices/jobTypeApi/JobTypeApi'
 import toast from 'react-hot-toast'
 
 type FormValues = {
@@ -27,8 +28,7 @@ type FormValues = {
     status: string;
 }
 
-const categories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
-const defaultDepartments = ["HR", "Developer", "UI/UX", "Sales"]
+
 
 const Page = () => {
     const [requirements, setRequirements] = useState<string[]>([""])
@@ -47,10 +47,16 @@ const Page = () => {
     const router = useRouter()
 
     // Department Logic
-    const [departmentsList, setDepartmentsList] = useState<string[]>(defaultDepartments)
+    const [departmentsList, setDepartmentsList] = useState<string[]>([])
     const [departmentsData, setDepartmentsData] = useState<any[]>([])
     const [isAddingDepartment, setIsAddingDepartment] = useState(false)
     const [newDepartmentName, setNewDepartmentName] = useState("")
+
+    // Job Type Logic
+    const [jobTypesList, setJobTypesList] = useState<string[]>([])
+    const [jobTypesData, setJobTypesData] = useState<any[]>([])
+    const [isAddingJobType, setIsAddingJobType] = useState(false)
+    const [newJobTypeName, setNewJobTypeName] = useState("")
 
     useEffect(() => {
         const fetchDepartments = async () => {
@@ -59,12 +65,24 @@ const Page = () => {
                 const fetchedDepartments = res.data || []
                 setDepartmentsData(fetchedDepartments)
                 const fetchedNames = fetchedDepartments.map((d: any) => d.name)
-                setDepartmentsList(Array.from(new Set([...defaultDepartments, ...fetchedNames])))
+                setDepartmentsList(fetchedNames)
             } catch (error) {
                 console.error("Error fetching departments:", error)
             }
         }
+        const fetchJobTypes = async () => {
+            try {
+                const res = await jobTypeApi.getAllJobTypes()
+                const fetchedJobTypes = res.data || []
+                setJobTypesData(fetchedJobTypes)
+                const fetchedNames = fetchedJobTypes.map((j: any) => j.name)
+                setJobTypesList(fetchedNames)
+            } catch (error) {
+                console.error("Error fetching job types:", error)
+            }
+        }
         fetchDepartments()
+        fetchJobTypes()
     }, [])
 
     const handleAddDepartment = async () => {
@@ -94,6 +112,36 @@ const Page = () => {
             toast.success("Department deleted successfully")
         } catch (error: any) {
             toast.error(error || "Failed to delete department")
+        }
+    }
+
+    const handleAddJobType = async () => {
+        if (!newJobTypeName.trim()) return
+        try {
+            const res = await jobTypeApi.createJobType(newJobTypeName.trim())
+            setJobTypesList(prev => [...prev, res.data.name])
+            setJobTypesData(prev => [...prev, res.data])
+            setNewJobTypeName("")
+            setIsAddingJobType(false)
+            toast.success("Job Type added successfully")
+        } catch (error: any) {
+            toast.error(error || "Failed to add job type")
+        }
+    }
+
+    const handleDeleteJobType = async (optionName: string) => {
+        const jt = jobTypesData.find((j: any) => j.name === optionName)
+        if (!jt) {
+            toast.error("Cannot delete default job type")
+            return
+        }
+        try {
+            await jobTypeApi.deleteJobType(jt._id)
+            setJobTypesList(prev => prev.filter(j => j !== optionName))
+            setJobTypesData(prev => prev.filter((j: any) => j._id !== jt._id))
+            toast.success("Job Type deleted successfully")
+        } catch (error: any) {
+            toast.error(error || "Failed to delete job type")
         }
     }
 
@@ -345,17 +393,60 @@ const Page = () => {
                 <div className='flex items-center justify-between w-full'>
 
                     <div className='w-[100%] md:w-[49%]'>
-
-                        <DropdownField
-                            label="Job Type"
-                            name="jobType"
-                            options={categories}
-                            control={control}
-                            error={errors.jobType}
-                            required
-
-
-                        />
+                        {!isAddingJobType ? (
+                            <div className="flex items-center gap-2">
+                                <DropdownField
+                                    label="Job Type"
+                                    name="jobType"
+                                    options={jobTypesList}
+                                    control={control}
+                                    error={errors.jobType}
+                                    required
+                                    onDelete={handleDeleteJobType}
+                                    deletableOptions={jobTypesData.map((j: any) => j.name)}
+                                    placeholder="Add Job Type"
+                                />
+                                <div className='flex items-center justify-center border border-[#E6E6E6] rounded-md w-11 h-11 mt-[30px] hover:bg-primaryColor/10 cursor-pointer'>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsAddingJobType(true)}
+                                        className="text-primaryColor text-2xl font-bold cursor-pointer"
+                                        title="Add New Job Type"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-2 w-full">
+                                <label className="text-sm font-medium text-[#131313]">New Job Type</label>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        className="flex-1 h-11 px-4 py-3 rounded border-[1.5px] border-[#E6E6E6] outline-none focus:border-[#00634F] text-sm text-[#131313]"
+                                        placeholder="Enter job type name"
+                                        value={newJobTypeName}
+                                        onChange={(e) => setNewJobTypeName(e.target.value)}
+                                        style={{
+                                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleAddJobType}
+                                        className="bg-primaryColor text-white px-4 py-2 rounded text-sm h-11"
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsAddingJobType(false)}
+                                        className="bg-gray-200 text-gray-700 px-4 py-2 rounded text-sm h-11"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className='w-[100%] md:w-[49%]'>
                         {!isAddingDepartment ? (
@@ -369,6 +460,7 @@ const Page = () => {
                                     required
                                     onDelete={handleDeleteDepartment}
                                     deletableOptions={departmentsData.map((d: any) => d.name)}
+                                    placeholder="Add Department"
                                 />
                                 <div className='flex items-center justify-center border border-[#E6E6E6] rounded-md w-11 h-11 mt-[30px] hover:bg-primaryColor/10 cursor-pointer'>
                                     <button

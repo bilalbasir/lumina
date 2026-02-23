@@ -101,7 +101,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
                                         {onDelete && deletableOptions?.includes(option) && (
                                             <button
                                                 type="button"
-                                                className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-red-600 hover:text-red-500 ml-2 p-1"
+                                                className="transition-opacity cursor-pointer text-red-600 hover:text-red-500 ml-2 p-1"
                                                 title={`Delete ${option}`}
                                                 onClick={(e) => {
                                                     e.stopPropagation();

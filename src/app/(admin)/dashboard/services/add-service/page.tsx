@@ -30,7 +30,7 @@ type FormValues = {
     subTitle: string
 }
 
-const defaultCategories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
+
 
 const Page = () => {
     const [tags, setTags] = useState<string[]>([])
@@ -46,7 +46,7 @@ const Page = () => {
     const [loading, setLoading] = useState(false)
 
     // Category Logic
-    const [categoriesList, setCategoriesList] = useState<string[]>(defaultCategories)
+    const [categoriesList, setCategoriesList] = useState<string[]>([])
     const [categoriesData, setCategoriesData] = useState<any[]>([])
     const [isAddingCategory, setIsAddingCategory] = useState(false)
     const [newCategoryName, setNewCategoryName] = useState("")
@@ -58,8 +58,10 @@ const Page = () => {
                 const fetchedCategories = res.data || []
                 setCategoriesData(fetchedCategories)
                 const fetchedNames = fetchedCategories.map((c: any) => c.name)
-                // Merge with default categories
-                setCategoriesList(Array.from(new Set([...defaultCategories, ...fetchedNames])))
+                setCategoriesList(fetchedNames)
+                if (fetchedNames.length === 0) {
+                    setIsAddingCategory(true)
+                }
             } catch (error) {
                 console.error("Error fetching categories:", error)
             }
@@ -89,8 +91,13 @@ const Page = () => {
         }
         try {
             await categoryApi.deleteCategory(category._id)
-            setCategoriesList(prev => prev.filter(c => c !== optionName))
+            const updatedList = categoriesList.filter(c => c !== optionName);
+            setCategoriesList(updatedList)
             setCategoriesData(prev => prev.filter((c: any) => c._id !== category._id))
+
+            if (updatedList.length === 0) {
+                setIsAddingCategory(true)
+            }
             toast.success("Category deleted successfully")
         } catch (error: any) {
             toast.error(error || "Failed to delete category")
@@ -230,7 +237,7 @@ const Page = () => {
                         />
                     </div>
                     <div className='w-[100%] md:w-[49%]'>
-                        {!isAddingCategory ? (
+                        {categoriesList.length > 0 && !isAddingCategory ? (
                             <div className="flex items-center gap-2">
                                 <DropdownField
                                     label="Category"
@@ -241,9 +248,9 @@ const Page = () => {
                                     required
                                     onDelete={handleDeleteCategory}
                                     deletableOptions={categoriesData.map((c: any) => c.name)}
+                                    placeholder="Add Category"
                                 />
                                 <div className='flex  items-center justify-center border border-[#E6E6E6] rounded-md w-11 h-11 mt-[30px] hover:bg-primaryColor/10 cursor-pointer'>
-
                                     <button
                                         type="button"
                                         onClick={() => setIsAddingCategory(true)}
@@ -274,13 +281,15 @@ const Page = () => {
                                     >
                                         Save
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsAddingCategory(false)}
-                                        className="bg-gray-200 text-gray-700 px-4 py-2 rounded text-sm h-11"
-                                    >
-                                        Cancel
-                                    </button>
+                                    {categoriesList.length > 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsAddingCategory(false)}
+                                            className="bg-gray-200 text-gray-700 px-4 py-2 rounded text-sm h-11"
+                                        >
+                                            Cancel
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         )}

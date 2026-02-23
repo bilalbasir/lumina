@@ -30,13 +30,7 @@ type FormValues = {
     secondaryImage: FileList;
 };
 
-const defaultCategories = [
-    "Executive Training",
-    "Design Services",
-    "Analytics",
-    "IT Services",
-    "Marketing",
-];
+
 
 const Page = () => {
     const [tags, setTags] = useState<string[]>([]);
@@ -53,7 +47,7 @@ const Page = () => {
     const [existingSecondary, setExistingSecondary] = useState<string | null>(null);
 
     // Category Logic
-    const [categoriesList, setCategoriesList] = useState<string[]>(defaultCategories);
+    const [categoriesList, setCategoriesList] = useState<string[]>([]);
     const [categoriesData, setCategoriesData] = useState<any[]>([]);
     const [isAddingCategory, setIsAddingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
@@ -61,7 +55,6 @@ const Page = () => {
     const router = useRouter();
     const params = useParams();
     const id = params?._id as string;
-    console.log("ID", id);
 
     const {
         register,
@@ -79,7 +72,7 @@ const Page = () => {
                 const fetchedCategories = res.data || []
                 setCategoriesData(fetchedCategories)
                 const fetchedNames = fetchedCategories.map((c: any) => c.name);
-                setCategoriesList(Array.from(new Set([...defaultCategories, ...fetchedNames])));
+                setCategoriesList(fetchedNames);
             } catch (error) {
                 console.error("Error fetching categories:", error);
             }
@@ -301,6 +294,7 @@ const Page = () => {
                                     required
                                     onDelete={handleDeleteCategory}
                                     deletableOptions={categoriesData.map((c: any) => c.name)}
+                                    placeholder="Add Category"
                                 />
                                 <div className='flex  items-center justify-center border border-[#E6E6E6] rounded-md w-11 h-11  mt-[30px]  hover:bg-primaryColor/10 cursor-pointer'>
 
