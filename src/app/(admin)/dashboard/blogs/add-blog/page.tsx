@@ -186,7 +186,7 @@ const Page = () => {
                                     placeholder="Provide a detailed description..."
                                     control={control}
                                     error={errors.blogDescription}
-                                    maxLength={30}
+                                    maxLength={200}
                                 />
                             </div>
 
@@ -273,7 +273,7 @@ const Page = () => {
                                     name="seoDescription"
                                     placeholder="Brief description for search engines"
                                     control={control}
-                                    maxLength={70}
+                                    maxLength={155}
                                     error={errors.seoDescription}
                                 />
                             </div>

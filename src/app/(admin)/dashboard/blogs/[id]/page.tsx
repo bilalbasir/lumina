@@ -232,6 +232,7 @@ const Page = () => {
                                 required
                                 placeholder="Provide a detailed description..."
                                 control={control}
+                                maxLength={200}
                                 error={errors.blogDescription}
                             />
                             <UrlSlugField
@@ -310,6 +311,7 @@ const Page = () => {
                                 placeholder="Brief description for search engines"
                                 control={control}
                                 error={errors.seoDescription}
+                                maxLength={155}
                             />
                         </div>
                     </form>
