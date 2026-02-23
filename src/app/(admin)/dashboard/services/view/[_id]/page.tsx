@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation"; // 👈 params lene k liye
 import serviceApi from "@/app/apiServices/servicesApi/ServiceApi"; // 👈 aapka API service
 import CheckIcon from "@/components/icons/checkIcon/CheckIcon";
-import { cloudinaryBaseUrl } from "@/app/apiServices/baseUrl/BaseUrl";
+import { cloudinaryBaseUrl, getCloudinaryUrl } from "@/app/apiServices/baseUrl/BaseUrl";
 import { FeatureType, ServiceType } from "@/types/ServiceType";
 
 const Page = () => {
@@ -67,7 +67,7 @@ const Page = () => {
                         Banner Image
                     </label>
                     <img
-                        src={`${cloudinaryBaseUrl}/${serviceData.bannerImage}`}
+                        src={getCloudinaryUrl(serviceData.bannerImage)}
                         alt="Banner"
                         className="w-full h-auto object-cover rounded-md mt-2"
                     />

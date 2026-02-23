@@ -13,10 +13,8 @@ import TipTapEditor from '@/components/inputField/TipTapEditor'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import { useParams, useRouter } from 'next/navigation'
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
+import departmentApi from '@/app/apiServices/departmentApi/DepartmentApi'
 import toast from 'react-hot-toast'
-
-
-
 
 type FormValues = {
     jobTitle: string,
@@ -28,7 +26,10 @@ type FormValues = {
     salary: string;
     status: string;
 }
+
 const categories = ["Executive Training", "Design Services", "Analytics", "IT Services", "Marketing"]
+const defaultDepartments = ["HR", "Developer", "UI/UX", "Sales"]
+
 const Page = () => {
     const [requirements, setRequirements] = useState<string[]>([""])
     const [requirementErrors, setRequirementErrors] = useState<boolean[]>([false])
@@ -44,6 +45,58 @@ const Page = () => {
     const id = params?.id as string;
     console.log("ID", id);
     const router = useRouter()
+
+    // Department Logic
+    const [departmentsList, setDepartmentsList] = useState<string[]>(defaultDepartments)
+    const [departmentsData, setDepartmentsData] = useState<any[]>([])
+    const [isAddingDepartment, setIsAddingDepartment] = useState(false)
+    const [newDepartmentName, setNewDepartmentName] = useState("")
+
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                const res = await departmentApi.getAllDepartments()
+                const fetchedDepartments = res.data || []
+                setDepartmentsData(fetchedDepartments)
+                const fetchedNames = fetchedDepartments.map((d: any) => d.name)
+                setDepartmentsList(Array.from(new Set([...defaultDepartments, ...fetchedNames])))
+            } catch (error) {
+                console.error("Error fetching departments:", error)
+            }
+        }
+        fetchDepartments()
+    }, [])
+
+    const handleAddDepartment = async () => {
+        if (!newDepartmentName.trim()) return
+        try {
+            const res = await departmentApi.createDepartment(newDepartmentName.trim())
+            setDepartmentsList(prev => [...prev, res.data.name])
+            setDepartmentsData(prev => [...prev, res.data])
+            setNewDepartmentName("")
+            setIsAddingDepartment(false)
+            toast.success("Department added successfully")
+        } catch (error: any) {
+            toast.error(error || "Failed to add department")
+        }
+    }
+
+    const handleDeleteDepartment = async (optionName: string) => {
+        const dept = departmentsData.find((d: any) => d.name === optionName)
+        if (!dept) {
+            toast.error("Cannot delete default department")
+            return
+        }
+        try {
+            await departmentApi.deleteDepartment(dept._id)
+            setDepartmentsList(prev => prev.filter(d => d !== optionName))
+            setDepartmentsData(prev => prev.filter((d: any) => d._id !== dept._id))
+            toast.success("Department deleted successfully")
+        } catch (error: any) {
+            toast.error(error || "Failed to delete department")
+        }
+    }
+
     // --- Requirements Logic Starts ---
 
     const addNewRequirementFun = () => {
@@ -305,17 +358,59 @@ const Page = () => {
                         />
                     </div>
                     <div className='w-[100%] md:w-[49%]'>
-
-                        <DropdownField
-                            label="department"
-                            name="department"
-                            options={["HR", "Developer", "UI/UX", "Sales"]}
-                            control={control}
-                            error={errors.department}
-                            required
-
-
-                        />
+                        {!isAddingDepartment ? (
+                            <div className="flex items-center gap-2">
+                                <DropdownField
+                                    label="Department"
+                                    name="department"
+                                    options={departmentsList}
+                                    control={control}
+                                    error={errors.department}
+                                    required
+                                    onDelete={handleDeleteDepartment}
+                                    deletableOptions={departmentsData.map((d: any) => d.name)}
+                                />
+                                <div className='flex items-center justify-center border border-[#E6E6E6] rounded-md w-11 h-11 mt-[30px] hover:bg-primaryColor/10 cursor-pointer'>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsAddingDepartment(true)}
+                                        className="text-primaryColor text-2xl font-bold cursor-pointer"
+                                        title="Add New Department"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-2 w-full">
+                                <label className="text-sm font-medium text-[#131313]">New Department</label>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        className="flex-1 h-11 px-4 py-3 rounded border-[1.5px] border-[#E6E6E6] outline-none focus:border-[#00634F] text-sm text-[#131313]"
+                                        placeholder="Enter department name"
+                                        value={newDepartmentName}
+                                        onChange={(e) => setNewDepartmentName(e.target.value)}
+                                        style={{
+                                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleAddDepartment}
+                                        className="bg-primaryColor text-white px-4 py-2 rounded text-sm h-11"
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsAddingDepartment(false)}
+                                        className="bg-gray-200 text-gray-700 px-4 py-2 rounded text-sm h-11"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className='w-[100%]'>

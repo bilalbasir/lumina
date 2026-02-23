@@ -60,6 +60,7 @@ export default function AboutUs() {
               src="/assets/aboutUs/whoWeAre.png"
               alt="Who we are?"
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover"
             />
           </div>
@@ -86,6 +87,7 @@ export default function AboutUs() {
               src={"/assets/aboutUs/ourMission.png"}
               alt='Our Mission?'
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className='rounded-2xl'
             />
           </div>
@@ -100,6 +102,7 @@ export default function AboutUs() {
               src={"/assets/aboutUs/ourVision.png"}
               alt='Our Vision?'
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className='rounded-2xl'
             />
           </div>

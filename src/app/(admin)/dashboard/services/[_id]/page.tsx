@@ -16,7 +16,7 @@ import serviceApi from "@/app/apiServices/servicesApi/ServiceApi";
 import categoryApi from "@/app/apiServices/categoryApi/CategoryApi";
 import Loader from "@/components/loader/Loader";
 import toast from "react-hot-toast";
-import { cloudinaryBaseUrl } from "@/app/apiServices/baseUrl/BaseUrl";
+import { cloudinaryBaseUrl, getCloudinaryUrl } from "@/app/apiServices/baseUrl/BaseUrl";
 
 type FormValues = {
     name: string;
@@ -54,6 +54,7 @@ const Page = () => {
 
     // Category Logic
     const [categoriesList, setCategoriesList] = useState<string[]>(defaultCategories);
+    const [categoriesData, setCategoriesData] = useState<any[]>([]);
     const [isAddingCategory, setIsAddingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
 
@@ -75,8 +76,10 @@ const Page = () => {
         const fetchCategories = async () => {
             try {
                 const res = await categoryApi.getAllCategories();
-                const fetchedCategories = res.data.map((c: any) => c.name);
-                setCategoriesList(Array.from(new Set([...defaultCategories, ...fetchedCategories])));
+                const fetchedCategories = res.data || []
+                setCategoriesData(fetchedCategories)
+                const fetchedNames = fetchedCategories.map((c: any) => c.name);
+                setCategoriesList(Array.from(new Set([...defaultCategories, ...fetchedNames])));
             } catch (error) {
                 console.error("Error fetching categories:", error);
             }
@@ -89,11 +92,28 @@ const Page = () => {
         try {
             const res = await categoryApi.createCategory(newCategoryName.trim());
             setCategoriesList((prev) => [...prev, res.data.name]);
+            setCategoriesData(prev => [...prev, res.data])
             setNewCategoryName("");
             setIsAddingCategory(false);
             toast.success("Category added successfully");
         } catch (error: any) {
             toast.error(error || "Failed to add category");
+        }
+    };
+
+    const handleDeleteCategory = async (optionName: string) => {
+        const category = categoriesData.find((c: any) => c.name === optionName)
+        if (!category) {
+            toast.error("Cannot delete default category")
+            return
+        }
+        try {
+            await categoryApi.deleteCategory(category._id)
+            setCategoriesList(prev => prev.filter(c => c !== optionName))
+            setCategoriesData(prev => prev.filter((c: any) => c._id !== category._id))
+            toast.success("Category deleted successfully")
+        } catch (error: any) {
+            toast.error(error || "Failed to delete category")
         }
     };
 
@@ -131,10 +151,10 @@ const Page = () => {
                 );
 
                 if (serviceData.bannerImage) {
-                    setExistingBanner(`${cloudinaryBaseUrl}/${serviceData.bannerImage}`);
+                    setExistingBanner(getCloudinaryUrl(serviceData.bannerImage));
                 }
                 if (serviceData.secondaryImage) {
-                    setExistingSecondary(`${cloudinaryBaseUrl}/${serviceData.secondaryImage}`);
+                    setExistingSecondary(getCloudinaryUrl(serviceData.secondaryImage));
                 }
             } catch (err) {
                 console.error("❌ Error fetching service:", err);
@@ -279,6 +299,8 @@ const Page = () => {
                                     control={control}
                                     error={errors.category}
                                     required
+                                    onDelete={handleDeleteCategory}
+                                    deletableOptions={categoriesData.map((c: any) => c.name)}
                                 />
                                 <div className='flex  items-center justify-center border border-[#E6E6E6] rounded-md w-11 h-11  mt-[30px]  hover:bg-primaryColor/10 cursor-pointer'>
 

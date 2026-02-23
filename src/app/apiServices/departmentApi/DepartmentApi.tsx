@@ -1,48 +1,48 @@
 import axios, { AxiosInstance } from "axios";
 import { baseUrl } from "../baseUrl/BaseUrl";
 
-class CategoryApi {
+class DepartmentApi {
     private api: AxiosInstance;
     constructor() {
         this.api = axios.create({
-            baseURL: `${baseUrl}/categories`,
+            baseURL: `${baseUrl}/departments`,
             headers: {
                 "Content-Type": "application/json",
             },
         });
     }
 
-    async createCategory(name: string) {
+    async createDepartment(name: string) {
         try {
             const response = await this.api.post("/", { name });
             return response.data;
         } catch (error: any) {
             console.error("error", error);
-            throw error.response?.data?.message || "Create category failed";
+            throw error.response?.data?.message || "Create department failed";
         }
     }
 
-    async getAllCategories() {
+    async getAllDepartments() {
         try {
             const response = await this.api.get("/");
             return response.data;
         } catch (error: any) {
             console.error("error", error);
-            throw error.response?.data?.message || "Fetch categories failed";
+            throw error.response?.data?.message || "Fetch departments failed";
         }
     }
 
-    async deleteCategory(id: string) {
+    async deleteDepartment(id: string) {
         try {
             const response = await this.api.delete(`/${id}`);
             return response.data;
         } catch (error: any) {
             console.error("error", error);
-            throw error.response?.data?.message || "Delete category failed";
+            throw error.response?.data?.message || "Delete department failed";
         }
     }
 }
 
 // Export a single instance
-const categoryApi = new CategoryApi();
-export default categoryApi;
+const departmentApi = new DepartmentApi();
+export default departmentApi;

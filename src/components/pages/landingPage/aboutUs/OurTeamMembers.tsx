@@ -29,6 +29,7 @@ const OurTeamMembers = () => {
                             alt='Team member'
                             className='rounded-2xl bg-fill object-cover'
                             fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 16vw"
                         />
                     </div>
                     <div className=' mt-4 flex flex-col items-center gap-y-1'>
@@ -52,6 +53,7 @@ const OurTeamMembers = () => {
                             alt='Team member'
                             className='rounded-2xl bg-fill object-cover'
                             fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 16vw"
                         />
                     </div>
                     <div className='text-center mt-4 flex flex-col items-center gap-y-1'>

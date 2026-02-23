@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import serviceApi from '@/app/apiServices/servicesApi/ServiceApi';
 import defaultServiceBanner from '../../../../../public/assets/services/slugServiceHeroImg.png'
-import { cloudinaryBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl';
+import { cloudinaryBaseUrl, getCloudinaryUrl } from '@/app/apiServices/baseUrl/BaseUrl';
 import Image from 'next/image';
 
 
@@ -80,10 +80,11 @@ export default function ServiceDetailPage() {
               // />
 
               <Image
-                src={serviceData.bannerImage ? `${cloudinaryBaseUrl}/${serviceData.bannerImage}` : defaultServiceBanner}
+                src={serviceData.bannerImage ? getCloudinaryUrl(serviceData.bannerImage) : defaultServiceBanner}
                 width={1920}
                 height={1080}
                 alt="Hero Background"
+                sizes="100vw"
                 className="absolute inset-0 w-full h-full object-cover"
               />
             )
@@ -202,10 +203,11 @@ export default function ServiceDetailPage() {
               <div className="relative w-full h-[394px]">
                 {/* Main Image */}
                 <Image
-                  src={serviceData.secondaryImage ? `${cloudinaryBaseUrl}/${serviceData.secondaryImage}` : "https://api.builder.io/api/v1/image/assets/TEMP/6e2d8f9761c4337dc69cc2923a5cfadc24136532?width=1046"}
+                  src={serviceData.secondaryImage ? getCloudinaryUrl(serviceData.secondaryImage) : "https://api.builder.io/api/v1/image/assets/TEMP/6e2d8f9761c4337dc69cc2923a5cfadc24136532?width=1046"}
                   alt="Team meeting discussing strategic talent solutions"
                   width={523}
                   height={358}
+                  sizes="(max-width: 768px) 100vw, 523px"
                   className="md:absolute md:left-[34px] md:top-0 w-full xl:w-[523px] h-[358px] object-cover rounded-[15.298px] shadow-lg"
                 />
 

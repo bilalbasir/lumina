@@ -16,7 +16,7 @@ import blogApi from '@/app/apiServices/blogApi/BlogApi'
 import toast from 'react-hot-toast'
 import { useParams, useRouter } from 'next/navigation'
 import { slugify } from '@/utils/slugify'
-import { imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl'
+import { imageBaseUrl, getCloudinaryUrl } from '@/app/apiServices/baseUrl/BaseUrl'
 
 type FormValues = {
     blogTitle: string;
@@ -251,7 +251,7 @@ const Page = () => {
                                 placeholder="Upload Service Banner Image"
                                 register={register}
                                 error={errors.bannerImage}
-                                defaultValue={blogData?.bannerImage || ""}
+                                defaultValue={getCloudinaryUrl(blogData?.bannerImage) || ""}
                             />
                         </div>
 
@@ -265,7 +265,7 @@ const Page = () => {
                                 placeholder="Upload featured blog image"
                                 register={register}
                                 error={errors.featuredImage}
-                                defaultValue={blogData?.featuredImage || ""}
+                                defaultValue={getCloudinaryUrl(blogData?.featuredImage) || ""}
                             />
 
                             <div className="w-[100%]">

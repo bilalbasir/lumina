@@ -1,5 +1,5 @@
 'use client'
-import { cloudinaryBaseUrl, imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl'
+import { cloudinaryBaseUrl, imageBaseUrl, getCloudinaryUrl } from '@/app/apiServices/baseUrl/BaseUrl'
 import ForwardIcon from '@/components/icons/forwardIcon/ForwardIcon'
 import Loader from '@/components/loader/Loader'
 import { slugify } from '@/utils/slugify'
@@ -35,7 +35,7 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
             >
                 {/* Background Image */}
                 <img
-                    src={`${cloudinaryBaseUrl}/${props.image}`}
+                    src={getCloudinaryUrl(props.image)}
                     alt={props.cardHeading}
                     className="absolute inset-0 w-full h-full object-cover"
                 />

@@ -6,7 +6,7 @@ import HeroImgSvg from '@/components/svgDesign/heroImgSvg'
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react'
 import blogApi from '@/app/apiServices/blogApi/BlogApi';
-import { imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl';
+import { imageBaseUrl, getCloudinaryUrl, getImageUrl } from '@/app/apiServices/baseUrl/BaseUrl';
 
 interface BlogData {
   _id: string;
@@ -58,11 +58,7 @@ const Page = () => {
     }
   }
 
-  const getImageUrl = (imageUrl: string) => {
-    if (!imageUrl) return "";
-    if (imageUrl.startsWith('http')) return imageUrl;
-    return `${imageBaseUrl}/${imageUrl}`;
-  };
+
 
   const transformBlogData = (blog: BlogData) => {
     return {

@@ -27,10 +27,13 @@ export default function DashboardLayout({
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {
-      return pathname === "/dashboard"; // ✅ only exact match
+      return pathname === "/dashboard"; // ✅ only exact match for dashboard home
     }
-    return pathname.startsWith(href); // ✅ allow sub-routes
+    // Check if the current pathname starts with the link href
+    // and ensuring it's followed by either nothing or a "/" to avoid partial matches
+    return pathname === href || pathname.startsWith(`${href}/`);
   };
+
   const getLinkClasses = (href: string) =>
     `px-3 py-2 rounded-[12px] flex cursor-pointer items-center gap-x-3 transition ${isActive(href)
       ? "bg-primaryColor text-white"
@@ -38,9 +41,9 @@ export default function DashboardLayout({
     }`;
 
   const getIconColor = (href: string) => {
-    if (pathname === href) return "#fff"; // ✅ active
-    if (hovered === href) return "#131313"; // ✅ hover
-    return "#686868"; // ✅ default
+    if (isActive(href)) return "#fff"; // ✅ use isActive instead of exact match
+    if (hovered === href) return "#131313";
+    return "#686868";
   };
 
 
