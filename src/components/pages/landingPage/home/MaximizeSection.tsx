@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 
 const MaximizeSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const videoId = "1fY1swx0GycFiUDDptBBMEn0qApi6yFAS";
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -90,58 +89,57 @@ const MaximizeSection = () => {
           </div>
         </div>
 
-        {/* VideoSection */}
         <div className="w-full">
-          <div className="relative h-[200px] sm:h-[250px] md:h-[500px] lg:h-[665px] rounded-2xl overflow-hidden group">
-            {!isPlaying ? (
-              <div
-                className="absolute inset-0 cursor-pointer z-20 overflow-hidden"
-                onClick={handlePlay}
-                onTouchStart={handlePlay}
-              >
-                <img
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/a5952939ffe1e87a950082a3c88c1f3111d2f009?width=2560"
-                  alt="Lumina Talent Advisory Video Thumbnail"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-
-                {/* Background Overlay */}
-                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
-
-                {/* Play Button */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center shadow-2xl scale-90 md:scale-100 group-hover:scale-110 group-active:scale-95 transition-all duration-300">
-                    <svg
-                      width="32"
-                      height="32"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="ml-1 text-[#053328]"
-                    >
-                      <path
-                        d="M8 5V19L19 12L8 5Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Click to play helper */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 text-sm font-medium tracking-wide">
-                  Click to watch video
-                </div>
-              </div>
-            ) : (
+          <div className="relative aspect-video w-full rounded-2xl overflow-hidden group bg-black">
+            {/* Video Iframe */}
+            {isPlaying && (
               <iframe
-                src={`https://drive.google.com/file/d/${videoId}/preview?autoplay=1`}
+                src="https://player.vimeo.com/video/1167978752?autoplay=1&badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0"
                 title="Lumina Talent Advisory Video"
                 width="100%"
                 height="100%"
-                allow="autoplay; fullscreen; encrypted-media"
+                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
                 allowFullScreen
                 className="w-full h-full border-0 z-10"
               />
             )}
+
+            {/* Thumbnail Overlay */}
+            <div
+              className={`absolute inset-0 cursor-pointer z-20 overflow-hidden transition-opacity duration-700 ease-in-out ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                }`}
+              onClick={handlePlay}
+              onTouchStart={handlePlay}
+            >
+              <img
+                src="https://api.builder.io/api/v1/image/assets/TEMP/a5952939ffe1e87a950082a3c88c1f3111d2f009?width=2560"
+                alt="Lumina Talent Advisory Video Thumbnail"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+
+              {/* Background Overlay */}
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
+
+              {/* Play Button */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center shadow-2xl scale-90 md:scale-100 group-hover:scale-110 group-active:scale-95 transition-all duration-300">
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    className="ml-1 text-[#053328]"
+                  >
+                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Click to play helper */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 text-sm font-medium tracking-wide">
+                Click to watch video
+              </div>
+            </div>
           </div>
         </div>
 
