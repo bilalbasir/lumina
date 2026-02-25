@@ -95,7 +95,7 @@ const BlogPageClient = ({ blogData, slug }: BlogPageClientProps) => {
                 </section>
 
                 {/* content overview section */}
-                <section className='w-[100%] lg:w-[24%] sticky top-[68px] lg:top-20 self-start bg-white z-20'>
+                <section className='w-[100%] lg:w-[24%] lg:sticky lg:top-20 self-start bg-white z-20'>
                     <ContentOverview
                         contentOverview={transformedData?.sidebarItems}
                         onSelect={(heading) => setSelectedContent(heading)}

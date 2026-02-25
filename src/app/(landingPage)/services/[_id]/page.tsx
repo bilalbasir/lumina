@@ -65,7 +65,7 @@ export default function ServiceDetailPage() {
   return (
     <div>
       {/* Service Detail Hero Section */}
-      <section className="relative w-full h-[600px] overflow-hidden">
+      <section className="relative w-full min-h-[400px] md:h-[600px] overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0">
 
@@ -137,6 +137,7 @@ export default function ServiceDetailPage() {
                 style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
               >
                 {/* {service.subtitle} */}
+                {/* {service.subtitle} */}
                 {serviceData.subTitle || "Subtile Here"}
               </p>
             </div>
@@ -145,16 +146,16 @@ export default function ServiceDetailPage() {
       </section>
 
       {/* Strategic Talent Solutions Section */}
-      <section className="w-full py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4  sm:px-6 lg:px-20">
-          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-16 h-[414px]">
+      <section className="w-full py-16 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
             {/* Left Content */}
-            <div className="flex-1 flex flex-col gap-8 h-[414px]">
+            <div className="flex-1 flex flex-col gap-8">
               {/* Main Content */}
-              <div className="flex flex-col gap-6 h-[414px]">
+              <div className="flex flex-col gap-6">
                 {/* Title */}
                 <h2
-                  className="text-3xl  md:text-4xl lg:text-[48px] font-bold text-[#1D1D1D] leading-[43.3px] md:leading-[63.2px] lg:leading-[83.2px] xl:leading-[120%]"
+                  className="text-2xl md:text-4xl lg:text-[48px] font-bold text-[#1D1D1D] leading-tight md:leading-[1.2]"
                   style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
                   {serviceData.subTitle || "Strategic Talent Solutions"}
@@ -162,7 +163,7 @@ export default function ServiceDetailPage() {
 
                 {/* Description */}
                 <div
-                  className="text-base text-[#686868] leading-[43.3px] md:leading-[63.2px] lg:leading-[83.2px] xl:leading-[150%] space-y-4 rich-text-content tiptap-content"
+                  className="text-sm md:text-base text-[#686868] leading-relaxed space-y-4 rich-text-content tiptap-content"
                   style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
                   dangerouslySetInnerHTML={{ __html: serviceData.description || "" }}
                 />
@@ -199,36 +200,25 @@ export default function ServiceDetailPage() {
             </div>
 
             {/* Right Image Container */}
-            <div className="flex-1 relative md:max-w-[557px] h-[414px]  w-full">
-              <div className="relative w-full h-[394px]">
+            <div className="flex-1 relative w-full mt-10 lg:mt-0 flex justify-center lg:justify-end">
+              <div className="relative w-full max-w-[557px] aspect-[523/358]">
                 {/* Main Image */}
                 <Image
                   src={serviceData.secondaryImage ? getCloudinaryUrl(serviceData.secondaryImage) : "https://api.builder.io/api/v1/image/assets/TEMP/6e2d8f9761c4337dc69cc2923a5cfadc24136532?width=1046"}
                   alt="Team meeting discussing strategic talent solutions"
                   width={523}
                   height={358}
-                  sizes="(max-width: 768px) 100vw, 523px"
-                  className="md:absolute md:left-[34px] md:top-0 w-full xl:w-[523px] h-[358px] object-cover rounded-[15.298px] shadow-lg"
+                  sizes="(max-width: 1024px) 100vw, 523px"
+                  className="w-full h-full object-cover rounded-[15.298px] shadow-lg"
                 />
 
                 {/* Success Rate Card */}
-                <div className="absolute left-0 bottom-[10px]  md:left-0 md:bottom-0 w-full sm:w-[150px] md:w-[132px] md:h-[104px] bg-[#00634F] rounded-xl shadow-2xl
-                 p-3 md:p-6 flex gap-x-4 md:gap-x-0 md:flex-col justify-center">
-                  <div className="flex items-center mb-1">
-                    <span
-                      className="text-[28px] font-bold text-white leading-[150%]"
-                      style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
-                    >
-                      {serviceData.serviceSuccessRate || "95%"}
-                    </span>
+                <div className="absolute -left-4 -bottom-4 md:left-[-20px] md:bottom-[-20px] w-[130px] md:w-[150px] bg-[#00634F] rounded-xl shadow-2xl p-4 flex flex-col items-center justify-center z-20">
+                  <div className="text-2xl md:text-3xl font-bold text-white leading-tight">
+                    {serviceData.serviceSuccessRate || "95%"}
                   </div>
-                  <div className="flex items-center">
-                    <span
-                      className="text-sm  leading-[150%]"
-                      style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
-                    >
-                      Success Rate
-                    </span>
+                  <div className="text-[10px] md:text-xs text-white/90 uppercase tracking-wider text-center">
+                    Success Rate
                   </div>
                 </div>
               </div>

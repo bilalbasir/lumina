@@ -30,16 +30,22 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ data, selectedContent }) => {
                 }
             }
 
-            // If found in the main content block
-            if (foundElement) {
-                foundElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else if (sectionRefs.current[selectedContent]) {
-                // Fallback to the old logic (section containers) if applicable
-                sectionRefs.current[selectedContent]?.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                })
-            }
+            // Using timeout to allow the sidebar to collapse on mobile before scrolling
+            // This prevents the "jumping" effect as the layout shifts.
+            const timeoutId = setTimeout(() => {
+                // If found in the main content block
+                if (foundElement) {
+                    foundElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else if (sectionRefs.current[selectedContent]) {
+                    // Fallback to the old logic (section containers) if applicable
+                    sectionRefs.current[selectedContent]?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                    })
+                }
+            }, 300);
+
+            return () => clearTimeout(timeoutId);
         }
     }, [selectedContent])
 
@@ -70,7 +76,7 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ data, selectedContent }) => {
 
             </div>
             {data?.data?.map(data =>
-                <div className='mt-6 scroll-mt-24' ref={(el) => {
+                <div className='mt-6 scroll-mt-36 md:scroll-mt-24' ref={(el) => {
                     sectionRefs.current[data.heading] = el; // assign kar do
                     // return nothing
                 }}>
@@ -79,9 +85,9 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ data, selectedContent }) => {
                         ref={(el) => { if (data?.data && el) contentRef.current = el }}
                         className={`
                             mt-3 leading-[24px] text-[14px] text-[#1D1D1D]
-                            [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mt-8 [&>h1]:mb-4 [&>h1]:scroll-mt-24
-                            [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mt-6 [&>h2]:mb-3 [&>h2]:scroll-mt-24
-                            [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mt-5 [&>h3]:mb-2 [&>h3]:scroll-mt-24
+                            [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mt-8 [&>h1]:mb-4 [&>h1]:scroll-mt-36 md:[&>h1]:scroll-mt-24
+                            [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mt-6 [&>h2]:mb-3 [&>h2]:scroll-mt-36 md:[&>h2]:scroll-mt-24
+                            [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mt-5 [&>h3]:mb-2 [&>h3]:scroll-mt-36 md:[&>h3]:scroll-mt-24
                             [&>p]:mb-4
                             [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-4
                             [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-4

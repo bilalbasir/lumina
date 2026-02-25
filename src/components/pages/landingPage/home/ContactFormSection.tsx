@@ -25,6 +25,7 @@ const ContactFormSection = () => {
   const {
     register,
     handleSubmit, control,
+    reset,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -59,6 +60,7 @@ const ContactFormSection = () => {
       await leadsApi.addContactLead(data);
 
       toast.success("Message sent successfully!");
+      reset();
 
 
     } catch (error) {

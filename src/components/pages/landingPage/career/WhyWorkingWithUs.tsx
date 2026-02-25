@@ -19,11 +19,11 @@ const WhyWorkingWithUs = () => {
                 >
                     Why Work With Us
                 </h2>
-                <p className='text-[#686868] text-[20px] w-[65%] text-center'>
+                <p className='text-[#686868] text-base md:text-lg lg:text-[20px] w-full max-w-2xl text-center'>
                     Join a team that's passionate about making a difference in the talent industry while building rewarding careers</p>
             </div>
-            <div className='flex items-center justify-between mt-12'>
-                <div className='w-[23%]'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12'>
+                <div className='w-full'>
 
                     <ColorFullCards
                         iconBgColor='bg-[#E0FFD8]'
@@ -33,7 +33,7 @@ const WhyWorkingWithUs = () => {
                         paragraph='Accelerate your professional development with mentorship programs and clear advancement paths.' />
                 </div>
 
-                <div className='w-[23%]'>
+                <div className='w-full'>
 
                     <ColorFullCards
                         iconBgColor='bg-[#FAEDFF]'
@@ -42,7 +42,7 @@ const WhyWorkingWithUs = () => {
                         heading='Inclusive Culture'
                         paragraph='Join a diverse and collaborative team that values different perspectives and backgrounds.' />
                 </div>
-                <div className='w-[23%]'>
+                <div className='w-full'>
 
                     <ColorFullCards
                         iconBgColor='bg-[#E5F8FF]'
@@ -51,7 +51,7 @@ const WhyWorkingWithUs = () => {
                         heading='Continuous Learning'
                         paragraph='Access to industry training, certifications, and professional development opportunities.' />
                 </div>
-                <div className='w-[23%]'>
+                <div className='w-full'>
 
                     <ColorFullCards
                         iconBgColor='bg-[#FFF2D5]'

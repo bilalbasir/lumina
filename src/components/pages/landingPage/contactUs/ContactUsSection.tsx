@@ -25,6 +25,7 @@ const ContactUsSection = () => {
   const {
     register,
     handleSubmit, control,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -61,6 +62,7 @@ const ContactUsSection = () => {
       await leadsApi.addContactLead(data);
 
       toast.success("Message sent successfully!");
+      reset();
 
     } catch (error: any) {
       console.error("Error while adding lead:", error);

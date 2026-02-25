@@ -15,16 +15,24 @@ interface ContentOverviewProps {
 }
 
 const ContentOverview: React.FC<ContentOverviewProps> = ({ contentOverview, onSelect, authorName = "Management", date = "July 14, 2025" }) => {
+    const [isContentClose, setIsContentClose] = useState(false);
 
-    const [isContentClose, setIsContentClose] = useState(true)
     // 👇 Effect to update state on screen resize
     useEffect(() => {
+        let lastWidth = window.innerWidth;
         const handleResize = () => {
-            if (window.innerWidth < 1022) {
-                setIsContentClose(false)
-            } else {
-                setIsContentClose(true)
+            const currentWidth = window.innerWidth;
+            const wasMobile = lastWidth < 1022;
+            const isNowMobile = currentWidth < 1022;
+
+            if (wasMobile !== isNowMobile) {
+                if (isNowMobile) {
+                    setIsContentClose(true) // Switch to closed on mobile
+                } else {
+                    setIsContentClose(false) // Switch to open on desktop
+                }
             }
+            lastWidth = currentWidth;
         }
 
         handleResize() // run on mount
@@ -64,15 +72,17 @@ const ContentOverview: React.FC<ContentOverviewProps> = ({ contentOverview, onSe
 
 
             </div>
-            <div className={`flex flex-col gap-y-3 items-start transition-all duration-500 ${isContentClose ? "h-0" : 'h-[500px]'}  overflow-y-scroll`}>
-                {contentOverview?.map(data =>
+            <div className={`flex flex-col gap-y-3 items-start transition-all duration-500 overflow-y-auto ${isContentClose ? "max-h-0 opacity-0" : 'max-h-[500px] opacity-100 mt-4'}`}>
+                {contentOverview?.map((data, index) =>
 
-                    <p onClick={() => {
-                        onSelect(data.heading || "")
-                        if (window.innerWidth < 1022) {
-                            setIsContentClose(false)   // 👈 collapse jab screen chhoti ho
-                        }
-                    }} className='hover:bg-[#ebeaea] transition-all duration-500 cursor-pointer bg-[#f5f5f5] px-3 text-[14px] text-[#131313] font-medium py-3 rounded-[12px]'>{data?.heading}</p>
+                    <p
+                        key={index}
+                        onClick={() => {
+                            onSelect(data.heading || "")
+                            if (window.innerWidth < 1022) {
+                                setIsContentClose(true)   // 👈 collapse jab screen chhoti ho
+                            }
+                        }} className='w-full hover:bg-[#ebeaea] transition-all duration-300 cursor-pointer bg-[#f5f5f5] px-4 text-[14px] text-[#131313] font-medium py-3 rounded-[12px]'>{data?.heading}</p>
                 )}
 
             </div>
