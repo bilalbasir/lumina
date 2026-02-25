@@ -51,7 +51,7 @@ const Navbar = () => {
         ${isScrolled ? 'bg-[#00624F]/60' : 'bg-transparent'}
       `}
     >
-      <div className="flex justify-between items-center w-full px-2 py-4 md:px-20  md:py-4">
+      <div className="flex justify-between items-center w-full px-2 py-2 md:px-20  md:py-4">
         {/* Logo */}
         <div className="hidden md:block">
           <Link href="/" className="flex items-center gap-2">
@@ -120,7 +120,7 @@ const Navbar = () => {
           </button>
           <div className='relative w-[45%] h-[28px] sm:h-[36px] sm:w-[28%]' onClick={() => router.push("/")}>
 
-            <Image fill alt='logo' src={"/assets/logo.png"} className='object-cover' />
+            <Image fill alt='logo' src={"/assets/logo.png"} className='object-contain' />
           </div>
           <Link
             href="/contactus"

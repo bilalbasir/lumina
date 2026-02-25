@@ -301,7 +301,6 @@ const Page = () => {
 
                         <InputField
                             label="Service Sub Title"
-
                             name="subTitle"
                             placeholder="Enter service sub title"
                             register={register}
@@ -312,8 +311,7 @@ const Page = () => {
                     <div className='w-[100%] md:w-[49%]'>
 
                         <InputField
-                            label="Service Card Discription"
-
+                            label="Content Title"
                             name="serviceOverView"
                             placeholder="Enter service overview"
                             register={register}

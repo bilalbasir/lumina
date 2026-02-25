@@ -3,7 +3,7 @@ import Image from 'next/image'
 import React from 'react'
 const Navbar = () => {
     return (
-        <div className='px-5 pt-5 pb-0 flex items-center justify-between w-[100%]'>
+        <div className='px-5  pb-0 flex items-center justify-between w-[100%]'>
             <div>
                 <p className={`${montserrat.className} text-[20px] sm:text-[24px] font-medium text-black`}>Hi, Super admin</p>
                 <p className={`${montserrat.className} text-[#676767]  hidden sm:block sm:text-[16px]`}>
@@ -13,12 +13,12 @@ const Navbar = () => {
                 {/* <div className='w-[400px]'>
                     <SearchBar placeholder="Seacrh here ..." isBorder={false} bgColor='bg-[#F3F3F3]' />
                 </div> */}
-                <div className='w-[54px] h-[54px] relative'>
-
+                <div className='w-[54px] h-[54px] mt-0.5 relative rounded-full overflow-hidden bg-black border border-greyscale300'>
                     <Image src="/assets/logo_1.png"
                         alt="user"
                         fill
-                        className='absolute bg-black top-0 left-0 rounded-full bg-cover border-solid border-greyscale300'
+
+                        className='object-cover'
                     />
                 </div>
             </div>

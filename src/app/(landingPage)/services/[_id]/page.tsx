@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import serviceApi from '@/app/apiServices/servicesApi/ServiceApi';
 import defaultServiceBanner from '../../../../../public/assets/services/slugServiceHeroImg.png'
-import { cloudinaryBaseUrl, getCloudinaryUrl } from '@/app/apiServices/baseUrl/BaseUrl';
+import { getCloudinaryUrl } from '@/app/apiServices/baseUrl/BaseUrl';
 import Image from 'next/image';
 
 
@@ -116,13 +116,13 @@ export default function ServiceDetailPage() {
           </div>
         </div>
 
-        {/* Service Content */}
-        <div className="relative z-10 flex items-center justify-center h-full px-4 sm:px-6 lg:px-8">
+        Service Content
+        <div className="relative z-10 flex items-center justify-center h-full px-4 sm:px-6 lg:px-8 pt-20 sm:pt-0">
           <div className="flex flex-col items-center gap-10 max-w-4xl text-center ">
             {/* Service Title */}
             <div className="flex flex-col items-center gap-0.5">
               <h1
-                className="text-4xl md:text-5xl lg:text-[64px] font-bold leading-[43.3px] md:leading-[63.2px] lg:leading-[83.2px] xl:leading-[103.2px]"
+                className="text-4xl md:text-5xl lg:text-[64px] font-bold leading-[43.3px] md:leading-[63.2px] lg:leading-[83.2px]  xl:leading-[103.2px] "
                 style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
               >
                 {/* <span className="text-[#2CC294]">{service.title.split(' ')[0]} </span>
@@ -158,7 +158,7 @@ export default function ServiceDetailPage() {
                   className="text-2xl md:text-4xl lg:text-[48px] font-bold text-[#1D1D1D] leading-tight md:leading-[1.2]"
                   style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
-                  {serviceData.subTitle || "Strategic Talent Solutions"}
+                  {serviceData.serviceOverView || serviceData.subTitle || "Strategic Talent Solutions"}
                 </h2>
 
                 {/* Description */}

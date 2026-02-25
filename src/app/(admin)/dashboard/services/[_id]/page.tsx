@@ -357,7 +357,7 @@ const Page = () => {
                     <div className='w-[100%] md:w-[49%]'>
 
                         <InputField
-                            label="Service Card Discription"
+                            label="Content Title"
 
                             name="serviceOverView"
                             placeholder="Enter service overview"
@@ -393,6 +393,7 @@ const Page = () => {
                         />
                     </div>
                 </div>
+
 
                 <div className="w-[100%]">
                     <TipTapEditor
