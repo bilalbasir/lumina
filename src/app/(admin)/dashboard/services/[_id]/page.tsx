@@ -20,7 +20,6 @@ import { cloudinaryBaseUrl, getCloudinaryUrl } from "@/app/apiServices/baseUrl/B
 
 type FormValues = {
     name: string;
-    category: string;
     bannerImage: FileList;
     status: string;
     serviceSuccessRate: string;
@@ -46,11 +45,6 @@ const Page = () => {
     const [existingBanner, setExistingBanner] = useState<string | null>(null);
     const [existingSecondary, setExistingSecondary] = useState<string | null>(null);
 
-    // Category Logic
-    const [categoriesList, setCategoriesList] = useState<string[]>([]);
-    const [categoriesData, setCategoriesData] = useState<any[]>([]);
-    const [isAddingCategory, setIsAddingCategory] = useState(false);
-    const [newCategoryName, setNewCategoryName] = useState("");
 
     const router = useRouter();
     const params = useParams();
@@ -64,51 +58,7 @@ const Page = () => {
         reset,
     } = useForm<FormValues>();
 
-    // ✅ Fetch Categories
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await categoryApi.getAllCategories();
-                const fetchedCategories = res.data || []
-                setCategoriesData(fetchedCategories)
-                const fetchedNames = fetchedCategories.map((c: any) => c.name);
-                setCategoriesList(fetchedNames);
-            } catch (error) {
-                console.error("Error fetching categories:", error);
-            }
-        };
-        fetchCategories();
-    }, []);
 
-    const handleAddCategory = async () => {
-        if (!newCategoryName.trim()) return;
-        try {
-            const res = await categoryApi.createCategory(newCategoryName.trim());
-            setCategoriesList((prev) => [...prev, res.data.name]);
-            setCategoriesData(prev => [...prev, res.data])
-            setNewCategoryName("");
-            setIsAddingCategory(false);
-            toast.success("Category added successfully");
-        } catch (error: any) {
-            toast.error(error || "Failed to add category");
-        }
-    };
-
-    const handleDeleteCategory = async (optionName: string) => {
-        const category = categoriesData.find((c: any) => c.name === optionName)
-        if (!category) {
-            toast.error("Cannot delete default category")
-            return
-        }
-        try {
-            await categoryApi.deleteCategory(category._id)
-            setCategoriesList(prev => prev.filter(c => c !== optionName))
-            setCategoriesData(prev => prev.filter((c: any) => c._id !== category._id))
-            toast.success("Category deleted successfully")
-        } catch (error: any) {
-            toast.error(error || "Failed to delete category")
-        }
-    };
 
     // ✅ Fetch service by ID
     useEffect(() => {
@@ -127,7 +77,6 @@ const Page = () => {
 
                 reset({
                     name: serviceData.name,
-                    category: serviceData.category,
                     status: serviceData.status,
                     serviceSuccessRate: serviceData.serviceSuccessRate,
                     description: serviceData.description,
@@ -177,7 +126,6 @@ const Page = () => {
         try {
             const formData = new FormData();
             formData.append("name", data.name);
-            formData.append("category", data.category);
             formData.append("status", data.status);
             formData.append("serviceSuccessRate", data.serviceSuccessRate);
             formData.append("description", data.description);
@@ -271,74 +219,15 @@ const Page = () => {
                 onSubmit={handleSubmit(onSubmit)}
             >
                 {/* Form Fields */}
-                <div className="flex items-center justify-between w-full">
-                    <div className="w-[100%] md:w-[49%]">
-                        <InputField
-                            label="Service Name"
-                            name="name"
-                            placeholder="Enter your service name"
-                            register={register}
-                            error={errors.name}
-                            required
-                        />
-                    </div>
-                    <div className="w-[100%] md:w-[49%]">
-                        {!isAddingCategory ? (
-                            <div className="flex items-center justify-center  gap-2">
-                                <DropdownField
-                                    label="Category"
-                                    name="category"
-                                    options={categoriesList}
-                                    control={control}
-                                    error={errors.category}
-                                    required
-                                    onDelete={handleDeleteCategory}
-                                    deletableOptions={categoriesData.map((c: any) => c.name)}
-                                    placeholder="Add Category"
-                                />
-                                <div className='flex  items-center justify-center border border-[#E6E6E6] rounded-md w-11 h-11  mt-[30px]  hover:bg-primaryColor/10 cursor-pointer'>
-
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsAddingCategory(true)}
-                                        className="text-primaryColor text-2xl font-bold cursor-pointer"
-                                        title="Add New Category"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col gap-2 w-full">
-                                <label className="text-sm font-medium text-[#131313]">New Category</label>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        className="flex-1 h-11 px-4 py-3 rounded border-[1.5px] border-[#E6E6E6] outline-none focus:border-[#00634F] text-sm text-[#131313]"
-                                        placeholder="Enter category name"
-                                        value={newCategoryName}
-                                        onChange={(e) => setNewCategoryName(e.target.value)}
-                                        style={{
-                                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                                        }}
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={handleAddCategory}
-                                        className="bg-primaryColor text-white px-4 py-2 rounded text-sm h-11"
-                                    >
-                                        Save
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsAddingCategory(false)}
-                                        className="bg-gray-200 text-gray-700 px-4 py-2 rounded text-sm h-11"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                <div className="w-[100%]">
+                    <InputField
+                        label="Service Name"
+                        name="name"
+                        placeholder="Enter your service name"
+                        register={register}
+                        error={errors.name}
+                        required
+                    />
                 </div>
                 <div className='flex items-center justify-between w-full'>
 

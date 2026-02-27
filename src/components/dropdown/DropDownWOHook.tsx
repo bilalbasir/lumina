@@ -56,7 +56,7 @@ const DropDownWOHook: React.FC<DropDownWOHookProps> = (props) => {
                         {props.options.map((type) => (
                             <div
                                 key={type}
-                                className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                                className="px-4 py-2 hover:bg-gray-50  text-black cursor-pointer text-sm"
                                 onClick={() => {
                                     props.onClick(type)             // parent ko notify
                                     setIsDropdownOpen(false)        // close after select

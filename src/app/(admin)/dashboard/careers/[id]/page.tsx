@@ -617,7 +617,7 @@ const Page = () => {
 
 
                 <div className='w-[100%] flex items-center justify-end gap-x-3'>
-                    <PrimaryButton text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" borderColor="border-[#CCCCCC]" onClick={() => navigate.push("/dashboard/careers")} />
+                    <PrimaryButton type='button' text='No, Cancel' bgColor='bg-white' textColor='text-greyscale500' py="py-2" borderColor="border-[#CCCCCC]" onClick={() => navigate.push("/dashboard/careers")} />
                     <PrimaryButton text='Update Job' bgColor='bg-primaryColor' textColor='text-white' py="py-2" onClick={handleSubmit(updateCareerFun)} />
                 </div>
             </form>

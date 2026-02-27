@@ -21,7 +21,6 @@ import { ServiceType } from '@/types/ServiceType'
 const ServicesPage = () => {
     const columns = [
         { key: "name", label: "SERVICE NAME" },
-        { key: "category", label: "CATEGORY" },
         { key: "status", label: "STATUS" },
         { key: "date", label: "DATE CREATED" },
     ];

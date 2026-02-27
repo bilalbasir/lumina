@@ -46,7 +46,7 @@ const Page = () => {
             {loading &&
                 <Loader />
             }
-            <div className="flex w-full h-screen items-center justify-between md:p-2 lg:p-4">
+            <div className="flex w-full h-screen items-center justify-between md:p-2 lg:p-4 bg-white">
                 {/* Left Image */}
                 <div className="relative md:w-[49%] xl:w-[69%] h-full">
                     <Image
