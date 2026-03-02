@@ -27,6 +27,8 @@ type FormValues = {
     serviceOverView: string;
     subTitle: string;
     secondaryImage: FileList;
+    seoTitle: string;
+    seoDescription: string;
 };
 
 
@@ -82,6 +84,8 @@ const Page = () => {
                     description: serviceData.description,
                     serviceOverView: serviceData.serviceOverView,
                     subTitle: serviceData.subTitle,
+                    seoTitle: serviceData.seoTitle,
+                    seoDescription: serviceData.seoDescription,
                     secondaryImage: undefined as any, // Not used for initial value
                     bannerImage: undefined as any,    // Not used for initial value
                 });
@@ -131,6 +135,8 @@ const Page = () => {
             formData.append("description", data.description);
             formData.append("serviceOverView", data.serviceOverView);
             formData.append("subTitle", data.subTitle);
+            formData.append("seoTitle", data.seoTitle || "");
+            formData.append("seoDescription", data.seoDescription || "");
 
             if (data.bannerImage?.[0]) {
                 formData.append("bannerImage", data.bannerImage[0]);
@@ -358,6 +364,26 @@ const Page = () => {
                     >
                         Add more feature
                     </div>
+                </div>
+
+                {/* SEO Settings */}
+                <div className="flex flex-col w-full gap-y-8 mt-4">
+                    <LayoutHeader heading='SEO Settings' />
+                    <InputField
+                        label="Meta Title"
+                        name="seoTitle"
+                        placeholder="SEO optimized title"
+                        register={register}
+                        error={errors.seoTitle}
+                    />
+                    <TipTapEditor
+                        label="Meta Description"
+                        name="seoDescription"
+                        placeholder="Brief description for search engines"
+                        control={control}
+                        error={errors.seoDescription}
+                        maxLength={155}
+                    />
                 </div>
 
 

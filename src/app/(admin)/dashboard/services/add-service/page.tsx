@@ -27,6 +27,8 @@ type FormValues = {
     description: string
     serviceOverView: string
     subTitle: string
+    seoTitle: string
+    seoDescription: string
 }
 
 
@@ -137,6 +139,8 @@ const Page = () => {
         formData.append("status", data.status);
         formData.append("serviceSuccessRate", data.serviceSuccessRate);
         formData.append("description", data.description);
+        formData.append("seoTitle", data.seoTitle || "");
+        formData.append("seoDescription", data.seoDescription || "");
 
         // banner image
         if (data.bannerImage && data.bannerImage.length > 0) {
@@ -301,6 +305,26 @@ const Page = () => {
                     >
                         Add more feature
                     </div>
+                </div>
+
+                {/* SEO Settings */}
+                <div className="flex flex-col w-full gap-y-8 mt-4">
+                    <LayoutHeader heading='SEO Settings' />
+                    <InputField
+                        label="Meta Title"
+                        name="seoTitle"
+                        placeholder="SEO optimized title"
+                        register={register}
+                        error={errors.seoTitle}
+                    />
+                    <TipTapEditor
+                        label="Meta Description"
+                        name="seoDescription"
+                        placeholder="Brief description for search engines"
+                        control={control}
+                        error={errors.seoDescription}
+                        maxLength={155}
+                    />
                 </div>
 
                 <div className="w-full mt-4">

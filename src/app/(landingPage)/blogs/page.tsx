@@ -5,7 +5,7 @@ import { slugify } from '@/utils/slugify';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import blogApi from '@/app/apiServices/blogApi/BlogApi';
-import { imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl';
+import { getCloudinaryUrl, imageBaseUrl } from '@/app/apiServices/baseUrl/BaseUrl';
 
 interface Blog {
   _id: string;
@@ -147,7 +147,7 @@ export default function Blogs() {
                 <div key={blog._id} className="w-full max-w-[428px] m-auto">
                   <div className='relative group w-full h-full rounded-md overflow-hidden'>
                     <img
-                      src={blog.bannerImage ? (blog.bannerImage.startsWith('http') ? blog.bannerImage : `${imageBaseUrl}/${blog.bannerImage}`) : '/assets/blog/blogImg1.png'}
+                      src={getCloudinaryUrl(blog.bannerImage) || '/assets/blog/blogImg1.png'}
                       alt={blog.title}
                       className=" w-full h-[200px] object-cover rounded-md"
                     />

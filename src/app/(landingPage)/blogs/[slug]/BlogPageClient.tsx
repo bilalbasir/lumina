@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import BlogDetail from '@/components/pages/landingPage/blogs/BlogDetail';
 import ContentOverview from '@/components/pages/landingPage/blogs/ContentOverview';
 import HeroImgSvg from '@/components/svgDesign/heroImgSvg'
-import { getImageUrl } from '@/app/apiServices/baseUrl/BaseUrl';
+import { getCloudinaryUrl } from '@/app/apiServices/baseUrl/BaseUrl';
 
 interface BlogData {
     _id: string;
@@ -37,7 +37,7 @@ const BlogPageClient = ({ blogData, slug }: BlogPageClientProps) => {
             heading: blog.title,
             data: blog.blogContent || "",
             // Map all additional images instead of just the first one
-            additionalImages: blog.additionalImages ? blog.additionalImages.map(img => getImageUrl(img)) : []
+            additionalImages: blog.additionalImages ? blog.additionalImages.map(img => getCloudinaryUrl(img)) : []
         }];
 
         // 2. Prepare Sidebar Items (Table of Contents)
@@ -47,7 +47,7 @@ const BlogPageClient = ({ blogData, slug }: BlogPageClientProps) => {
 
         return {
             overView: blog.shortDescription || "",
-            featuredImage: getImageUrl(blog.featuredImage),
+            featuredImage: getCloudinaryUrl(blog.featuredImage),
             data: mainContentData,
             sidebarItems: sidebarItems
         }
@@ -61,7 +61,7 @@ const BlogPageClient = ({ blogData, slug }: BlogPageClientProps) => {
             <section className="relative w-full h-[400px] md:h-[600px] overflow-hidden">
                 {/* Background Image */}
                 <img
-                    src={blogData.bannerImage ? getImageUrl(blogData.bannerImage) : "/assets/blog/blogImg1.png"}
+                    src={blogData.bannerImage ? getCloudinaryUrl(blogData.bannerImage) : "/assets/blog/blogImg1.png"}
                     alt={blogData.title}
                     className="absolute inset-0 w-full h-full object-cover z-0"
                 />
