@@ -14,7 +14,7 @@ class JobTypeApi {
 
     async createJobType(name: string) {
         try {
-            const response = await this.api.post("/", { name });
+            const response = await this.api.post("", { name });
             return response.data;
         } catch (error: any) {
             console.error("error", error);
@@ -24,7 +24,7 @@ class JobTypeApi {
 
     async getAllJobTypes() {
         try {
-            const response = await this.api.get("/");
+            const response = await this.api.get("");
             return response.data;
         } catch (error: any) {
             console.error("error", error);

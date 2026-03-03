@@ -122,7 +122,7 @@ export default function ServicePageClient() {
                                 {/* <span className="text-[#2CC294]">{service.title.split(' ')[0]} </span>
                 <span className="text-[#D5EED7]">{service.title.split(' ').slice(1).join(' ')}</span> */}
                                 <span className="text-[#2CC294]">{serviceData?.name} </span>
-                            </h1>
+                                </h1>
 
                             {/* Service Subtitle */}
                             <p
