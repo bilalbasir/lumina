@@ -373,7 +373,7 @@ const Page = () => {
                         placeholder="Write description"
                         control={control}
                         error={errors.jobDescription}
-                        maxLength={300}
+                        maxLength={4000}
                         height="150px"
                     />
                 </div>
