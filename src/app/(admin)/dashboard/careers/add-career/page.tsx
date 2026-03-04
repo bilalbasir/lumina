@@ -289,31 +289,16 @@ const Page = () => {
         },
     });
     const addCareerFun = (data: FormValues) => {
-        const invalidRequirements = requirements.some(
-            (f) => f.trim() === ""
-        );
-        const invalidResponsiability = responsibilities.some(
-            (f) => f.trim() === ""
-        );
-        const invalidBenefits = benifitsPerks.some(
-            (f) => f.trim() === ""
-        );
+        const validRequirements = requirements.filter((f) => f.trim() !== "");
+        const validResponsibilities = responsibilities.filter((f) => f.trim() !== "");
+        const validBenefits = benifitsPerks.filter((f) => f.trim() !== "");
 
-
-
-        if (invalidRequirements) {
-            toast.error("Please add all requirements before submitting");
-            return;
+        const allData = {
+            ...data,
+            requirements: validRequirements,
+            responsibilities: validResponsibilities,
+            benefits: validBenefits
         }
-        if (invalidResponsiability) {
-            toast.error("Please add all responsiability before submitting");
-            return;
-        }
-        if (invalidBenefits) {
-            toast.error("Please add all benefits and perks before submitting");
-            return;
-        }
-        const allData = { ...data, requirements, responsibilities, benefits: benifitsPerks }
         mutation.mutate(allData);
 
     }
@@ -533,7 +518,7 @@ const Page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Requirements *
+                        Requirements
                     </label>
                     {requirements.map((req, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`req-${index}`}>
@@ -551,7 +536,7 @@ const Page = () => {
 
                     <div className='border-[2px]  mt-4 cursor-pointer agBodyMediumGrey900  border-dashed text-center border-gray-400 px-4 py-3 rounded'
                         onClick={addNewRequirementFun}>
-                        Add more Requirement *
+                        Add more Requirement
                     </div>
                 </div>
                 <div className='w-[100%]'>
@@ -562,7 +547,7 @@ const Page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Responsibilities *
+                        Responsibilities
                     </label>
                     {responsibilities.map((resp, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`resp-${index}`}>

@@ -289,11 +289,9 @@ const Page = () => {
                     department: data?.department,
                 });
 
-                setBenifitsPerks(data.benefits || []);
-                setRequirements(data.requirements || []);
-                setResponsibilities(
-                    data.responsibilities || []
-                );
+                setBenifitsPerks(data.benefits?.length ? data.benefits : [""]);
+                setRequirements(data.requirements?.length ? data.requirements : [""]);
+                setResponsibilities(data.responsibilities?.length ? data.responsibilities : [""]);
             } catch (err) {
                 console.error("❌ Error fetching career:", err);
             }
@@ -303,31 +301,16 @@ const Page = () => {
     }, [id, reset]);
 
     const updateCareerFun = async (data: FormValues) => {
-        const invalidRequirements = requirements.some(
-            (f) => f.trim() === ""
-        );
-        const invalidResponsiability = responsibilities.some(
-            (f) => f.trim() === ""
-        );
-        const invalidBenefits = benifitsPerks.some(
-            (f) => f.trim() === ""
-        );
+        const validRequirements = requirements.filter((f) => f.trim() !== "");
+        const validResponsibilities = responsibilities.filter((f) => f.trim() !== "");
+        const validBenefits = benifitsPerks.filter((f) => f.trim() !== "");
 
-
-
-        if (invalidRequirements) {
-            toast.error("Please add all requirements before submitting");
-            return;
+        const allData = {
+            ...data,
+            requirements: validRequirements,
+            responsibilities: validResponsibilities,
+            benefits: validBenefits
         }
-        if (invalidResponsiability) {
-            toast.error("Please add all responsiability before submitting");
-            return;
-        }
-        if (invalidBenefits) {
-            toast.error("Please add all benefits and perks before submitting");
-            return;
-        }
-        const allData = { ...data, requirements, responsibilities, benefits: benifitsPerks }
         await careerApi.updateCareer(id, allData);
         toast.success("Career has updated")
         router.push("/dashboard/careers");
@@ -535,7 +518,7 @@ const Page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Requirements *
+                        Requirements
                     </label>
                     {requirements.map((req, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`req-${index}`}>
@@ -564,7 +547,7 @@ const Page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Responsibilities *
+                        Responsibilities
                     </label>
                     {responsibilities.map((resp, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`resp-${index}`}>
@@ -593,7 +576,7 @@ const Page = () => {
                             fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
                     >
-                        Benifits & Perks *
+                        Benifits & Perks
                     </label>
                     {benifitsPerks.map((perk, index) => (
                         <div className="w-[100%] mb-2 flex items-center justify-between" key={`perk-${index}`}>
