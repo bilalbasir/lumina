@@ -2,7 +2,6 @@
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import GreyLine from '@/components/greyLine/GreyLine'
-import CheckIcon from '@/components/icons/checkIcon/CheckIcon'
 import ClockIcon from '@/components/icons/clockIcon/ClockIcon'
 import EyeIcon from '@/components/icons/eyeIcon/EyeIcon'
 import HealthIcon from '@/components/icons/healthIcon/HealthIcon'
@@ -52,7 +51,7 @@ const Page = () => {
             <div className='w-full p-5 border-[1px] border-solid border-[#E5E7EB] rounded-lg'>
                 <div className='flex flex-col gap-y-2 sm:gap-y-0 sm:flex-row items-center justify-between text-[#131313] text-[20px] md:text-[24px] md:leading-[28px]'>
                     <p className='w-full sm:w-[70%] md:w-[80%] font-semibold'>{careerData?.jobTitle}</p>
-                    <PrimaryButton text='Edit' bgColor='bg-[#00624F]' textColor='text-white' py="py-1" onClick={() => navigate.push(`/dashboard/careers/123`)} />
+                    <PrimaryButton text='Edit' bgColor='bg-[#00624F]' textColor='text-white' py="py-1" onClick={() => navigate.push(`/dashboard/careers/${careerData?._id}`)} />
                 </div>
                 <div className='text-[#686868] flex items-center gap-x-3 mt-4 md:mt-0'>
                     <div className='flex items-center gap-x-2'>
@@ -100,55 +99,37 @@ const Page = () => {
 
                 <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Job Overview</p>
-                    <div className='tiptap-content text-[14px] text-[#686868]' dangerouslySetInnerHTML={{ __html: careerData?.shortDescription }}></div>
+                    <div className='tiptap-content text-[14px] text-[#686868]' dangerouslySetInnerHTML={{ __html: careerData?.shortDescription || "" }}></div>
                 </div>
                 <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Job Description</p>
                     <div
                         className="tiptap-content text-[14px] text-[#686868]"
-                        dangerouslySetInnerHTML={{ __html: careerData?.jobDescription }}
+                        dangerouslySetInnerHTML={{ __html: careerData?.jobDescription || "" }}
                     />
                 </div>
-                <div className='flex flex-col gap-y-2s mt-4'>
+                <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Key Responsibilities</p>
-                    <div className='flex flex-col gap-y-2 mt-3 '>
-                        {careerData?.responsibilities?.map((data: string) => <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
-
-                            <div className='w-[20px]'>
-
-                                <CheckIcon color="#00624F" />
-                            </div>
-                            <p className='w-[100%]'>{data}</p>
-                        </p>)}
-
-
-                    </div>
+                    <ul className="list-disc pl-5 text-[14px] text-[#686868]">
+                        {careerData?.responsibilities?.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
                 </div>
-                <div className='flex flex-col gap-y-2s mt-4'>
+                <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Requirements</p>
-                    <div className='flex flex-col gap-y-2 mt-3 '>
-                        {careerData?.requirements?.map((data: string) => <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3' >
-
-                            <div className='w-[20px]'>
-
-                                <CheckIcon color="#00624F" />
-                            </div>
-                            <p className='w-[100%]'>{data}</p>
-                        </p>)}
-                    </div>
+                    <div
+                        className="tiptap-content text-[14px] text-[#686868]"
+                        dangerouslySetInnerHTML={{ __html: careerData?.requirements || "" }}
+                    />
                 </div>
-                <div className='flex flex-col gap-y-2s mt-4 mb-4'>
+                <div className='flex flex-col gap-y-2 mt-4 mb-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Benefits & Perks</p>
-                    <div className='flex flex-col gap-y-2 mt-3 '>
-                        {careerData?.benefits?.map((data: string) => <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
-
-                            <div className='w-[20px]'>
-
-                                <StarIcon color="#00624F" />
-                            </div>
-                            <p className='w-[100%]'>{data}</p>
-                        </p>)}
-                    </div>
+                    <ul className="list-disc pl-5 text-[14px] text-[#686868]">
+                        {careerData?.benefits?.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
                 </div>
 
 

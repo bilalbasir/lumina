@@ -1,5 +1,10 @@
 export type ServiceStatus = "Active" | "Inactive";
 
+export interface FeatureType {
+    title: string;
+    description: string;
+}
+
 export interface ServiceType {
     id: string;
     name: string;
@@ -9,12 +14,8 @@ export interface ServiceType {
     description?: string;
     serviceSuccessRate?: string;
     status: ServiceStatus;
-    features: FeatureType[]; tags?: string[];
+    features: FeatureType[];
+    tags?: string[];
     createdAt: string;
     updatedAt: string;
-}
-
-export interface FeatureType {
-    title: string,
-    description: string
 }

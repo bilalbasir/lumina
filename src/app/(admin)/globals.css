@@ -142,10 +142,22 @@ body {
   @apply text-xl font-semibold text-black mb-2;
 }
 
+.tiptap-content h3 {
+  @apply text-lg font-semibold text-black mb-1;
+}
+
 .tiptap-content p {
   @apply text-[14px] text-[#686868] mb-2;
 }
 
 .tiptap-content ul {
   @apply list-disc pl-6 mb-2;
+}
+
+.tiptap-content ol {
+  @apply list-decimal pl-6 mb-2;
+}
+
+.tiptap-content li {
+  @apply mb-1;
 }

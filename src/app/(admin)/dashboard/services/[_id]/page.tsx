@@ -35,13 +35,8 @@ type FormValues = {
 
 const Page = () => {
     const [tags, setTags] = useState<string[]>([]);
-    const [features, setFeatures] = useState<{ title: string; description: string }[]>([
-        { title: "", description: "" },
-    ]);
-    const [featureErrors, setFeatureErrors] = useState<{ title: boolean; description: boolean }[]>([
-        { title: false, description: false },
-    ]);
-
+    const [features, setFeatures] = useState<{ title: string, description: string }[]>([]);
+    const [featuresErrors, setFeaturesErrors] = useState<{ title: boolean, description: boolean }[]>([]);
     const [tagInput, setTagInput] = useState<string>("");
     const [loading, setLoading] = useState(true);
     const [existingBanner, setExistingBanner] = useState<string | null>(null);
@@ -90,11 +85,10 @@ const Page = () => {
                     bannerImage: undefined as any,    // Not used for initial value
                 });
 
+                setFeatures(serviceData.features || []);
+                setFeaturesErrors(new Array(serviceData.features?.length || 0).fill({ title: false, description: false }));
+
                 setTags(serviceData.tags || []);
-                setFeatures(serviceData.features && serviceData.features.length > 0 ? serviceData.features : [{ title: "", description: "" }]);
-                setFeatureErrors(
-                    new Array(serviceData.features?.length || 1).fill({ title: false, description: false })
-                );
 
                 if (serviceData.bannerImage) {
                     setExistingBanner(getCloudinaryUrl(serviceData.bannerImage));
@@ -114,14 +108,6 @@ const Page = () => {
 
     // ✅ Update Service
     const onSubmit = async (data: FormValues) => {
-        const invalidFeature = features.some(
-            (f) => f.title.trim() === "" || f.description.trim() === ""
-        );
-
-        if (invalidFeature) {
-            toast.error("Please add all features before submitting");
-            return;
-        }
         if (tags?.length === 0) {
             toast.error("Please add atleast one tag");
             return;
@@ -138,6 +124,11 @@ const Page = () => {
             formData.append("seoTitle", data.seoTitle || "");
             formData.append("seoDescription", data.seoDescription || "");
 
+            features.forEach((feature, idx) => {
+                formData.append(`features[${idx}][title]`, feature.title);
+                formData.append(`features[${idx}][description]`, feature.description);
+            });
+
             if (data.bannerImage?.[0]) {
                 formData.append("bannerImage", data.bannerImage[0]);
             }
@@ -145,9 +136,6 @@ const Page = () => {
                 formData.append("secondaryImage", data.secondaryImage[0]);
             }
 
-            features.forEach((f) => {
-                formData.append("features[]", JSON.stringify(f));
-            });
             tags.forEach((t) => {
                 formData.append("tags[]", t);
             });
@@ -163,40 +151,26 @@ const Page = () => {
         }
     };
 
-    // --- Feature Logic ---
-
-    const addNewFeatureFun = () => {
-        const last = features[features.length - 1];
-        if (!last.title.trim() || !last.description.trim()) {
-            const updatedErrors = [...featureErrors];
-            updatedErrors[features.length - 1] = {
-                title: !last.title.trim(),
-                description: !last.description.trim(),
-            };
-            setFeatureErrors(updatedErrors);
-            return;
-        }
+    // --- Feature logic ---
+    const addFeature = () => {
         setFeatures([...features, { title: "", description: "" }]);
-        setFeatureErrors([...featureErrors, { title: false, description: false }]);
+        setFeaturesErrors([...featuresErrors, { title: false, description: false }]);
     };
 
-    const deleteFeature = (index: number) => {
-        if (features.length === 1) return;
+    const removeFeature = (index: number) => {
         setFeatures(features.filter((_, i) => i !== index));
-        setFeatureErrors(featureErrors.filter((_, i) => i !== index));
+        setFeaturesErrors(featuresErrors.filter((_, i) => i !== index));
     };
 
-    const handleFeatureChange = (index: number, key: "title" | "description", value: string) => {
-        const updated = [...features];
-        updated[index][key] = value;
-        setFeatures(updated);
+    const handleFeatureChange = (index: number, field: 'title' | 'description', value: string) => {
+        const updatedFeatures = [...features];
+        updatedFeatures[index][field] = value;
+        setFeatures(updatedFeatures);
 
-        const updatedErrors = [...featureErrors];
-        updatedErrors[index][key] = value.trim() === "";
-        setFeatureErrors(updatedErrors);
+        const updatedErrors = [...featuresErrors];
+        updatedErrors[index][field] = value.trim() === "";
+        setFeaturesErrors(updatedErrors);
     };
-
-
 
     // --- Tags Logic ---
     const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -328,42 +302,41 @@ const Page = () => {
                     </div>
                 </div>
 
-                {/* Features Section */}
-                <div className="w-[100%] mt-4">
-                    <label
-                        className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2"
-                        style={{
-                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                        }}
-                    >
+                <div className="w-[100%] mt-4 text-black">
+                    <label className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2">
                         Features *
                     </label>
-
                     {features.map((feature, index) => (
-                        <div key={index} className="flex gap-2 mb-2">
-                            <input
-                                value={feature.title}
-                                onChange={(e) => handleFeatureChange(index, "title", e.target.value)}
-                                placeholder="Feature Title"
-                                className={`w-1/2 border px-4 py-2 rounded text-[#131313] ${featureErrors[index]?.title ? "border-red-500" : "border-gray-400"}`}
-                            />
-                            <input
-                                value={feature.description}
-                                onChange={(e) => handleFeatureChange(index, "description", e.target.value)}
-                                placeholder="Feature Description"
-                                className={`w-1/2 border px-4 py-2 rounded text-[#131313] ${featureErrors[index]?.description ? "border-red-500" : "border-gray-400"}`}
-                            />
-                            <div className="cursor-pointer" onClick={() => deleteFeature(index)}>
-                                <DeleteIcon width="18.5" height="19.5" />
+                        <div key={index} className="flex flex-col gap-2 mb-4 p-4 border border-gray-200 rounded">
+                            <div className="flex justify-between items-center">
+                                <span className="text-sm font-semibold">Feature {index + 1}</span>
+                                {features.length > 1 && (
+                                    <button type="button" onClick={() => removeFeature(index)}>
+                                        <DeleteIcon width="18" height="18" />
+                                    </button>
+                                )}
                             </div>
+                            <input
+                                className={`w-full border px-4 py-2 rounded text-sm ${featuresErrors[index]?.title ? 'border-red-500' : 'border-[#E6E6E6]'}`}
+                                placeholder="Feature Title"
+                                value={feature.title}
+                                onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
+                            />
+                            <textarea
+                                className={`w-full border px-4 py-2 rounded text-sm h-20 ${featuresErrors[index]?.description ? 'border-red-500' : 'border-[#E6E6E6]'}`}
+                                placeholder="Feature Description"
+                                value={feature.description}
+                                onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
+                            />
                         </div>
                     ))}
-                    <div
-                        className="border-[2px] mt-4 cursor-pointer border-dashed text-center border-gray-400 text-[#131313] px-4 py-2 rounded"
-                        onClick={addNewFeatureFun}
+                    <button
+                        type="button"
+                        onClick={addFeature}
+                        className="w-full border-2 border-dashed border-[#E6E6E6] py-3 rounded text-sm text-gray-500 hover:bg-gray-50"
                     >
-                        Add more feature
-                    </div>
+                        + Add More Feature
+                    </button>
                 </div>
 
                 {/* SEO Settings */}

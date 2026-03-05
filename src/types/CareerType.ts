@@ -9,7 +9,7 @@ export interface CareerType {
     department: string,
     salary: number | string,
     status: string,
-    requirements?: string[],
+    requirements?: string,
     totalApplications?: string | number,
     responsibilities?: string[],
     benefits?: string[],

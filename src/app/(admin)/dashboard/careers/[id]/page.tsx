@@ -13,6 +13,7 @@ import TipTapEditor from '@/components/inputField/TipTapEditor'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import { useParams, useRouter } from 'next/navigation'
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
+import { CareerType } from '@/types/CareerType'
 import departmentApi from '@/app/apiServices/departmentApi/DepartmentApi'
 import jobTypeApi from '@/app/apiServices/jobTypeApi/JobTypeApi'
 import toast from 'react-hot-toast'
@@ -26,25 +27,22 @@ type FormValues = {
     department: string;
     salary: string;
     status: string;
+    requirements: string;
 }
 
-
-
 const Page = () => {
-    const [requirements, setRequirements] = useState<string[]>([""])
-    const [requirementErrors, setRequirementErrors] = useState<boolean[]>([false])
-    const [responsibilities, setResponsibilities] = useState<string[]>([""])
-    const [responsibilitiesErrors, setResponsibilitiesErrors] = useState<boolean[]>([false])
-    const [benifitsPerks, setBenifitsPerks] = useState<string[]>([""])
-    const [benifitsPerksErrors, setBenifitsPerksErrors] = useState<boolean[]>([false])
     const navigate = useRouter()
-    const { register, handleSubmit, formState: { errors }, control, reset } = useForm<FormValues>({
-    })
+    const { register, handleSubmit, formState: { errors }, control, reset } = useForm<FormValues>({})
 
     const params = useParams();
     const id = params?.id as string;
     console.log("ID", id);
     const router = useRouter()
+
+    const [responsibilities, setResponsibilities] = useState<string[]>([""])
+    const [responsibilitiesErrors, setResponsibilitiesErrors] = useState<boolean[]>([false])
+    const [benifitsPerks, setBenifitsPerks] = useState<string[]>([""])
+    const [benifitsPerksErrors, setBenifitsPerksErrors] = useState<boolean[]>([false])
 
     // Department Logic
     const [departmentsList, setDepartmentsList] = useState<string[]>([])
@@ -145,44 +143,6 @@ const Page = () => {
         }
     }
 
-    // --- Requirements Logic Starts ---
-
-    const addNewRequirementFun = () => {
-        const lastIndex = requirements.length - 1
-        if (requirements[lastIndex].trim() === "") {
-            // show error for last field
-            const updatedErrors = [...requirementErrors]
-            updatedErrors[lastIndex] = true
-            setRequirementErrors(updatedErrors)
-            return
-        }
-        setRequirements([...requirements, ""])
-        setRequirementErrors([...requirementErrors, false])
-    }
-
-    // Update specific feature value
-    const handleRequirementChange = (index: number, value: string) => {
-        const updated = [...requirements]
-        updated[index] = value
-        setRequirements(updated)
-
-        // clear error when typing
-        const updatedErrors = [...requirementErrors]
-        updatedErrors[index] = value.trim() === ""
-        setRequirementErrors(updatedErrors)
-    }
-
-    // Delete feature
-    const deleteRequirement = (index: number) => {
-        if (requirements?.length === 1) {
-            return;
-        }
-
-        const updated = requirements.filter((_, i) => i !== index)
-        setRequirements(updated)
-    }
-    // --- Requirements Logic Ends ---
-
     // --- Responsibilities Logic Starts ---
 
 
@@ -223,10 +183,7 @@ const Page = () => {
 
     // --- Responsibilities Logic End ---
 
-
-    // --- Requirements Logic Ends ---
-
-    // --- Responsibilities Logic Starts ---
+    // --- Benefits Logic Starts ---
 
 
     const addBenifitsPerksFun = () => {
@@ -264,6 +221,8 @@ const Page = () => {
         setBenifitsPerks(updated)
     }
 
+    // --- Benefits Logic Ends ---
+
 
 
 
@@ -287,11 +246,14 @@ const Page = () => {
                     location: data?.location,
                     jobType: data?.jobType,
                     department: data?.department,
+                    requirements: data.requirements || "",
                 });
 
-                setBenifitsPerks(data.benefits?.length ? data.benefits : [""]);
-                setRequirements(data.requirements?.length ? data.requirements : [""]);
-                setResponsibilities(data.responsibilities?.length ? data.responsibilities : [""]);
+                setResponsibilities(data.responsibilities?.length ? data.responsibilities : [""])
+                setResponsibilitiesErrors(new Array(data.responsibilities?.length || 1).fill(false))
+
+                setBenifitsPerks(data.benefits?.length ? data.benefits : [""])
+                setBenifitsPerksErrors(new Array(data.benefits?.length || 1).fill(false))
             } catch (err) {
                 console.error("❌ Error fetching career:", err);
             }
@@ -301,20 +263,18 @@ const Page = () => {
     }, [id, reset]);
 
     const updateCareerFun = async (data: FormValues) => {
-        const validRequirements = requirements.filter((f) => f.trim() !== "");
         const validResponsibilities = responsibilities.filter((f) => f.trim() !== "");
         const validBenefits = benifitsPerks.filter((f) => f.trim() !== "");
 
-        const allData = {
+        const allData: CareerType = {
             ...data,
-            requirements: validRequirements,
             responsibilities: validResponsibilities,
             benefits: validBenefits
         }
-        await careerApi.updateCareer(id, allData);
-        toast.success("Career has updated")
-        router.push("/dashboard/careers");
 
+        await careerApi.updateCareer(id, allData);
+        toast.success("Career has updated successfully")
+        router.push("/dashboard/careers");
     }
     return (
         <>
@@ -512,32 +472,16 @@ const Page = () => {
                     />
                 </div>
                 <div className='w-[100%]'>
-                    <label
-                        className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2"
-                        style={{
-                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                        }}
-                    >
-                        Requirements
-                    </label>
-                    {requirements.map((req, index) => (
-                        <div className="w-[100%] mb-2 flex items-center justify-between" key={`req-${index}`}>
-                            <input
-                                value={req}
-                                onChange={(e) => handleRequirementChange(index, e.target.value)}
-                                className={`w-[97%] border px-4 text-black py-3 rounded ${requirementErrors[index] ? "border-red-500" : "border-[#E6E6E6]"}`}
-                                placeholder={`Enter requirement ${index + 1}`}
-                            />
-                            <div className="w-[2%] cursor-pointer" onClick={() => deleteRequirement(index)}>
-                                <DeleteIcon width="18.5" height="19.5" />
-                            </div>
-                        </div>
-                    ))}
-
-                    <div className='border-[2px]  mt-4 cursor-pointer agBodyMediumGrey900  border-dashed text-center border-[#E6E6E6] px-4 py-3 rounded'
-                        onClick={addNewRequirementFun}>
-                        Add more Requirement
-                    </div>
+                    <TipTapEditor
+                        label="Requirements"
+                        name="requirements"
+                        required
+                        placeholder="Write requirements"
+                        control={control}
+                        error={errors.requirements}
+                        maxLength={4000}
+                        height="150px"
+                    />
                 </div>
                 <div className='w-[100%]'>
                     <label

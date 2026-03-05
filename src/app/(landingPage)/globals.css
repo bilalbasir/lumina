@@ -78,6 +78,18 @@ body {
   @apply italic text-black;
 }
 
+.tiptap-content h1 {
+  @apply text-2xl font-bold mb-3;
+}
+
+.tiptap-content h2 {
+  @apply text-xl font-semibold mb-2;
+}
+
+.tiptap-content h3 {
+  @apply text-lg font-semibold mb-1;
+}
+
 .tiptap-content h1,
 .tiptap-content h2,
 .tiptap-content h3,

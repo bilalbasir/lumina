@@ -19,72 +19,60 @@ import { useRouter } from 'next/navigation'
 import Loader from '@/components/loader/Loader'
 
 type FormValues = {
-    name: string,
+    name: string;
     bannerImage: FileList;
     secondaryImage: FileList;
     status: string;
-    serviceSuccessRate: string
-    description: string
-    serviceOverView: string
-    subTitle: string
-    seoTitle: string
-    seoDescription: string
+    serviceSuccessRate: string;
+    description: string;
+    serviceOverView: string;
+    subTitle: string;
+    seoTitle: string;
+    seoDescription: string;
 }
 
 
 
 const Page = () => {
     const [tags, setTags] = useState<string[]>([])
-    const [features, setFeatures] = useState<{ title: string; description: string }[]>([
-        { title: "", description: "" }
-    ]);
-    const [featureErrors, setFeatureErrors] = useState<{ title: boolean; description: boolean }[]>([
-        { title: false, description: false }
-    ]);
     const [tagInput, setTagInput] = useState<string>("")
     const navigate = useRouter()
     const { register, handleSubmit, formState: { errors }, control } = useForm<FormValues>()
     const [loading, setLoading] = useState(false)
 
+    const [features, setFeatures] = useState<{ title: string, description: string }[]>([{ title: "", description: "" }])
+    const [featuresErrors, setFeaturesErrors] = useState<{ title: boolean, description: boolean }[]>([{ title: false, description: false }])
 
-
-    const addNewFeatureFun = () => {
-        const lastIndex = features.length - 1;
-        const lastFeature = features[lastIndex];
-
-        if (lastFeature.title.trim() === "" || lastFeature.description.trim() === "") {
-            const updatedErrors = [...featureErrors];
+    // --- Features logic ---
+    const addFeature = () => {
+        const lastIndex = features.length - 1
+        if (features[lastIndex].title.trim() === "" || features[lastIndex].description.trim() === "") {
+            const updatedErrors = [...featuresErrors]
             updatedErrors[lastIndex] = {
-                title: lastFeature.title.trim() === "",
-                description: lastFeature.description.trim() === ""
-            };
-            setFeatureErrors(updatedErrors);
-            return;
+                title: features[lastIndex].title.trim() === "",
+                description: features[lastIndex].description.trim() === ""
+            }
+            setFeaturesErrors(updatedErrors)
+            return
         }
+        setFeatures([...features, { title: "", description: "" }])
+        setFeaturesErrors([...featuresErrors, { title: false, description: false }])
+    }
 
-        setFeatures([...features, { title: "", description: "" }]);
-        setFeatureErrors([...featureErrors, { title: false, description: false }]);
-    };
+    const removeFeature = (index: number) => {
+        setFeatures(features.filter((_, i) => i !== index))
+        setFeaturesErrors(featuresErrors.filter((_, i) => i !== index))
+    }
 
-    // Update specific feature value
-    const handleFeatureChange = (index: number, field: "title" | "description", value: string) => {
-        const updated = [...features];
-        updated[index][field] = value;
-        setFeatures(updated);
+    const handleFeatureChange = (index: number, field: 'title' | 'description', value: string) => {
+        const updatedFeatures = [...features]
+        updatedFeatures[index][field] = value
+        setFeatures(updatedFeatures)
 
-        const updatedErrors = [...featureErrors];
-        updatedErrors[index][field] = value.trim() === "";
-        setFeatureErrors(updatedErrors);
-    };
-
-    // Delete feature
-    const deleteFeature = (index: number) => {
-        if (features.length === 1) return; // at least 1 feature must remain
-        const updated = features.filter((_, i) => i !== index);
-        const updatedErrors = featureErrors.filter((_, i) => i !== index);
-        setFeatures(updated);
-        setFeatureErrors(updatedErrors);
-    };
+        const updatedErrors = [...featuresErrors]
+        updatedErrors[index][field] = value.trim() === ""
+        setFeaturesErrors(updatedErrors)
+    }
 
     // --- Tags Logic ---
     const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -119,14 +107,6 @@ const Page = () => {
     });
 
     const addServiceFun = (data: FormValues) => {
-        const invalidFeature = features.some(
-            (f) => f.title.trim() === "" || f.description.trim() === ""
-        );
-
-        if (invalidFeature) {
-            toast.error("Please add all features before submitting");
-            return;
-        }
         if (tags?.length === 0) {
             toast.error("Please add atleast one tag");
             return;
@@ -142,6 +122,12 @@ const Page = () => {
         formData.append("seoTitle", data.seoTitle || "");
         formData.append("seoDescription", data.seoDescription || "");
 
+        // Features mapping
+        features.forEach((feature, idx) => {
+            formData.append(`features[${idx}][title]`, feature.title);
+            formData.append(`features[${idx}][description]`, feature.description);
+        });
+
         // banner image
         if (data.bannerImage && data.bannerImage.length > 0) {
             formData.append("bannerImage", data.bannerImage[0]);
@@ -154,9 +140,6 @@ const Page = () => {
 
 
         tags.forEach(tag => formData.append("tags[]", tag));
-        features.forEach(feature => {
-            formData.append("features[]", JSON.stringify(feature));
-        });
 
         mutation.mutate(formData);
     };
@@ -270,41 +253,40 @@ const Page = () => {
                     </div>
                 </div>
                 <div className='w-[100%] mt-4'>
-                    <label
-                        className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2"
-                        style={{
-                            fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
-                        }}
-                    >
+                    <label className="w-full capitalize text-[#131313] text-sm font-medium leading-[150%] mb-2">
                         Features *
                     </label>
-
                     {features.map((feature, index) => (
-                        <div key={index} className='w-[100%] flex flex-col md:flex-row items-center justify-between gap-2 mb-3'>
-                            <input
-                                value={feature.title}
-                                onChange={(e) => handleFeatureChange(index, "title", e.target.value)}
-                                className={`w-full md:w-[48%] border-gray-400 border px-4 py-3 rounded text-[#131313] ${featureErrors[index].title ? "border-red-500" : ""}`}
-                                placeholder={`Feature Title ${index + 1}`}
-                            />
-                            <input
-                                value={feature.description}
-                                onChange={(e) => handleFeatureChange(index, "description", e.target.value)}
-                                className={`w-full md:w-[48%] border-gray-400 border px-4 py-3 rounded text-[#131313] ${featureErrors[index].description ? "border-red-500" : ""}`}
-                                placeholder={`Feature Description ${index + 1}`}
-                            />
-                            <div className='cursor-pointer ml-2' onClick={() => deleteFeature(index)}>
-                                <DeleteIcon width="18.5" height="19.5" />
+                        <div key={index} className="flex flex-col gap-2 mb-4 p-4 border border-gray-200 rounded">
+                            <div className="flex justify-between items-center">
+                                <span className="text-sm font-semibold">Feature {index + 1}</span>
+                                {features.length > 1 && (
+                                    <button type="button" onClick={() => removeFeature(index)}>
+                                        <DeleteIcon width="18" height="18" />
+                                    </button>
+                                )}
                             </div>
+                            <input
+                                className={`w-full border px-4 py-2 rounded text-sm text-black ${featuresErrors[index].title ? 'border-red-500' : 'border-[#E6E6E6]'}`}
+                                placeholder="Feature Title"
+                                value={feature.title}
+                                onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
+                            />
+                            <textarea
+                                className={`w-full border px-4 py-2 rounded text-sm text-black h-20 ${featuresErrors[index].description ? 'border-red-500' : 'border-[#E6E6E6]'}`}
+                                placeholder="Feature Description"
+                                value={feature.description}
+                                onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
+                            />
                         </div>
                     ))}
-
-                    <div
-                        className='border-[2px] mt-2 cursor-pointer border-dashed text-center text-[#131313] border-gray-400 px-4 py-3 rounded'
-                        onClick={addNewFeatureFun}
+                    <button
+                        type="button"
+                        onClick={addFeature}
+                        className="w-full border-2 border-dashed border-[#E6E6E6] py-3 rounded text-sm text-gray-500 hover:bg-gray-50"
                     >
-                        Add more feature
-                    </div>
+                        + Add More Feature
+                    </button>
                 </div>
 
                 {/* SEO Settings */}

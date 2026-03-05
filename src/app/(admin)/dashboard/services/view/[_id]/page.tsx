@@ -7,7 +7,7 @@ import { useParams } from "next/navigation"; // 👈 params lene k liye
 import serviceApi from "@/app/apiServices/servicesApi/ServiceApi"; // 👈 aapka API service
 import CheckIcon from "@/components/icons/checkIcon/CheckIcon";
 import { cloudinaryBaseUrl, getCloudinaryUrl } from "@/app/apiServices/baseUrl/BaseUrl";
-import { FeatureType, ServiceType } from "@/types/ServiceType";
+import { ServiceType } from "@/types/ServiceType";
 
 const Page = () => {
     const params = useParams(); // { id: "68caa14b59b6ab089420761b" }
@@ -105,11 +105,10 @@ const Page = () => {
                     <label className="w-full text-sm font-medium text-[#131313] leading-[150%]">
                         Features
                     </label>
-                    <ul className="list-disc pl-6 text-gray-700">
-                        {serviceData.features?.map((feature: FeatureType, idx: number) => (
+                    <ul className="list-disc pl-6 text-gray-700 mt-2">
+                        {serviceData.features?.map((feature, idx: number) => (
                             <li key={idx} className="flex items-start gap-x-2">
                                 <p className="mt-2">
-
                                     <CheckIcon color="#00624F" />
                                 </p>
                                 <div className="flex items-center gap-x-2">

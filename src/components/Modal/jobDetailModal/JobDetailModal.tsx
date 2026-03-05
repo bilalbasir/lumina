@@ -9,7 +9,6 @@ import Tags from '@/components/tags/Tags'
 import HealthIcon from '@/components/icons/healthIcon/HealthIcon'
 import GreyLine from '@/components/greyLine/GreyLine'
 import CheckIcon from '@/components/icons/checkIcon/CheckIcon'
-import StarIcon from '@/components/icons/starIcon/StarIcon'
 import Link from 'next/link'
 import { slugify } from '@/utils/slugify'
 import careerApi from '@/app/apiServices/careerApi/CareerApi'
@@ -96,62 +95,32 @@ const JobDetailModal: React.FC<jobDescriptionProps> = (id) => {
                 <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Job Description</p>
                     <div
-                        className='text-[14px] text-[#686868]'
+                        className='text-[14px] text-[#686868] tiptap-content'
                         dangerouslySetInnerHTML={{ __html: jobDetailData?.jobDescription || "" }}
                     />
                 </div>
-                <div className='flex flex-col gap-y-2s mt-4'>
+                <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Key Responsibilities</p>
-                    <div className='flex flex-col gap-y-2 mt-3 '>
-                        {jobDetailData?.responsibilities?.map(data =>
-                            <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
-
-                                <div className='w-[20px]'>
-
-                                    <CheckIcon color="#00624F" />
-                                </div>
-                                <p className='w-[100%]'>{data}</p>
-                            </p>
-
-
-                        )}
-
-
-                    </div>
+                    <ul className='list-disc pl-5 text-[14px] text-[#686868]'>
+                        {jobDetailData?.responsibilities?.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
                 </div>
-                <div className='flex flex-col gap-y-2s mt-4'>
+                <div className='flex flex-col gap-y-2 mt-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Requirements</p>
-                    <div className='flex flex-col gap-y-2 mt-3 '>
-                        {jobDetailData?.requirements?.map(data =>
-                            <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
-
-                                <div className='w-[20px]'>
-
-                                    <CheckIcon color="#00624F" />
-                                </div>
-                                <p className='w-[100%]'>{data}</p>
-                            </p>
-
-
-                        )}
-                    </div>
+                    <div
+                        className='text-[14px] text-[#686868] tiptap-content'
+                        dangerouslySetInnerHTML={{ __html: jobDetailData?.requirements || "" }}
+                    />
                 </div>
-                <div className='flex flex-col gap-y-2s mt-4 mb-4'>
+                <div className='flex flex-col gap-y-2 mt-4 mb-4'>
                     <p className='text-[#131313] font-semibold text-[20px]'>Benefits & Perks</p>
-                    <div className='flex flex-col gap-y-2 mt-3 '>
-                        {jobDetailData?.benefits?.map(data =>
-                            <p key={data} className='text-[14px] text-[#686868] flex items-center gap-x-3'>
-
-                                <div className='w-[20px]'>
-
-                                    <StarIcon color="#00624F" />
-                                </div>
-                                <p className='w-[100%]'>{data}</p>
-                            </p>
-
-
-                        )}
-                    </div>
+                    <ul className='list-disc pl-5 text-[14px] text-[#686868]'>
+                        {jobDetailData?.benefits?.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
                 </div>
                 <GreyLine />
                 <div className='mt-4 mb-4 flex items-center justify-center'>
