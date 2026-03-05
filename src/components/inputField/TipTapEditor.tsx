@@ -102,7 +102,7 @@ const EditorInner = ({ value, onChange, onBlur, placeholder, error, maxLength, h
         },
         editorProps: {
             attributes: {
-                class: `prose focus:outline-none ${height ? `h-[${height}]` : 'min-h-[150px]'} overflow-y-auto p-4 max-w-none text-sm leading-[150%] text-[#131313]`,
+                class: `prose focus:outline-none overflow-y-auto p-4 max-w-none text-sm leading-[150%] text-[#131313]`,
                 style: `font-family: Onest, -apple-system, Roboto, Helvetica, sans-serif; ${height ? `height: ${height};` : ''}`,
                 'data-placeholder': placeholder,
             },
@@ -114,14 +114,21 @@ const EditorInner = ({ value, onChange, onBlur, placeholder, error, maxLength, h
 
     // Sync external value changes (like form resets or initial data)
     useEffect(() => {
-        if (editor && value !== editor.getHTML()) {
-            const currentHTML = editor.getHTML()
-            // Only update if the content is meaningfully different to avoid cursor jumps
-            if (value !== currentHTML) {
-                editor.commands.setContent(value || '', { emitUpdate: false })
-            }
+        if (!editor || editor.isDestroyed || value === undefined) return;
+
+        const currentHTML = editor.getHTML();
+
+        // Handle initial load or external data updates
+        if (value !== currentHTML) {
+            // Use setTimeout to ensure the editor is fully ready if immediatelyRender is false
+            const timeoutId = setTimeout(() => {
+                if (!editor.isDestroyed && value !== editor.getHTML()) {
+                    editor.commands.setContent(value || '', { emitUpdate: false });
+                }
+            }, 0);
+            return () => clearTimeout(timeoutId);
         }
-    }, [value, editor])
+    }, [value, editor]);
 
     return (
         <div className="w-full">
