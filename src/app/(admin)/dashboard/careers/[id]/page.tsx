@@ -475,7 +475,6 @@ const Page = () => {
                     <TipTapEditor
                         label="Requirements"
                         name="requirements"
-                        required
                         placeholder="Write requirements"
                         control={control}
                         error={errors.requirements}
