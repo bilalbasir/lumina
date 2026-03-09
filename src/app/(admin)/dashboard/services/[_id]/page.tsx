@@ -124,9 +124,8 @@ const Page = () => {
             formData.append("seoTitle", data.seoTitle || "");
             formData.append("seoDescription", data.seoDescription || "");
 
-            features.forEach((feature, idx) => {
-                formData.append(`features[${idx}][title]`, feature.title);
-                formData.append(`features[${idx}][description]`, feature.description);
+            features.forEach((feature) => {
+                formData.append("features", JSON.stringify(feature));
             });
 
             if (data.bannerImage?.[0]) {
@@ -137,7 +136,7 @@ const Page = () => {
             }
 
             tags.forEach((t) => {
-                formData.append("tags[]", t);
+                formData.append("tags", t);
             });
 
             const res = await serviceApi.updateService(id, formData);

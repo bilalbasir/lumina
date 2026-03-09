@@ -123,9 +123,8 @@ const Page = () => {
         formData.append("seoDescription", data.seoDescription || "");
 
         // Features mapping
-        features.forEach((feature, idx) => {
-            formData.append(`features[${idx}][title]`, feature.title);
-            formData.append(`features[${idx}][description]`, feature.description);
+        features.forEach((feature) => {
+            formData.append("features", JSON.stringify(feature));
         });
 
         // banner image
@@ -139,7 +138,7 @@ const Page = () => {
         }
 
 
-        tags.forEach(tag => formData.append("tags[]", tag));
+        tags.forEach(tag => formData.append("tags", tag));
 
         mutation.mutate(formData);
     };
@@ -259,7 +258,7 @@ const Page = () => {
                     {features.map((feature, index) => (
                         <div key={index} className="flex flex-col gap-2 mb-4 p-4 border border-gray-200 rounded">
                             <div className="flex justify-between items-center">
-                                <span className="text-sm font-semibold">Feature {index + 1}</span>
+                                <span className="text-sm font-semibold text-black">Feature {index + 1}</span>
                                 {features.length > 1 && (
                                     <button type="button" onClick={() => removeFeature(index)}>
                                         <DeleteIcon width="18" height="18" />

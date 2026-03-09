@@ -12,6 +12,8 @@ export interface ServiceType {
     bannerImage?: string;
     secondaryImage?: string;
     description?: string;
+    seoTitle?: string;
+    seoDescription?: string;
     serviceSuccessRate?: string;
     status: ServiceStatus;
     features: FeatureType[];
