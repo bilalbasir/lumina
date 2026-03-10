@@ -66,7 +66,7 @@ const ModalDetail = createSlice({
             state.deleteId = ""
         }),
         isDeleteLeadsmodalOpenReducer: ((state) => {
-            state.isDeleteLeadsModalOpen = true
+            state.isModalOpen = true
             state.isDeleteLeadsModalOpen = true
         }),
         isDeleteLeadsmodalCloseReducer: ((state) => {
@@ -74,7 +74,7 @@ const ModalDetail = createSlice({
             state.isDeleteLeadsModalOpen = false
         }),
         isDeleteApplicantmodalOpenReducer: ((state) => {
-            state.isDeleteApplicantModalOpen = true
+            state.isModalOpen = true
             state.isDeleteApplicantModalOpen = true
         }),
         isDeleteApplicantmodalCloseReducer: ((state) => {

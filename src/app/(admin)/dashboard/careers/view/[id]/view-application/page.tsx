@@ -78,7 +78,7 @@ const Page = () => {
         // 👇 ab id apke pass hai, yahan navigate / state update / modal open kar skte ho
     };
     const handleDeleteClick = (id: string) => {
-        console.log("Edit clicked, ID:", id);
+        console.log("Delete clicked, ID:", id);
         setSelectedApplicantId(id)
         dispatch(isDeleteApplicantmodalOpenReducer())
     }

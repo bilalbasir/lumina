@@ -43,9 +43,6 @@ const ViewApplicationModal: React.FC<ViewApplicationModalProps> = (id) => {
 
         let resume = applicantData.resume;
         if (resume.startsWith('http')) {
-            // Fix double extension for existing entries if present
-            resume = resume.replace(/\.pdf\.pdf$/i, '.pdf');
-
             // Force download using Cloudinary's attachment flag
             if (resume.includes('/upload/') && !resume.includes('fl_attachment')) {
                 resume = resume.replace('/upload/', '/upload/fl_attachment/');
@@ -53,7 +50,16 @@ const ViewApplicationModal: React.FC<ViewApplicationModalProps> = (id) => {
         }
 
         const previewUrl = resume.startsWith('http') ? resume : `${imageBaseUrl}/${resume}`;
-        window.open(previewUrl, "_blank");
+
+        // Create a temporary link element for downloading
+        const link = document.createElement("a");
+        link.href = previewUrl;
+        link.target = "_blank";
+        // Optionally set download attribute (might be ignored for cross-origin URLs without proper headers)
+        link.setAttribute("download", `resume-${applicantData.firstName}-${applicantData.lastName}`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     console.log("applicantData>>>>>>>>>>", applicantData);
