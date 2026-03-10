@@ -52,6 +52,18 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
 
 
   const handleFileChange = (file: File | null) => {
+    if (file && file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      toast.error("Only PDF files are allowed.");
+      setFormData(prev => ({ ...prev, resume: null }));
+      return;
+    }
+
+    if (file && file.size > 10 * 1024 * 1024) {
+      toast.error("File size exceeds the 10MB limit.");
+      setFormData(prev => ({ ...prev, resume: null }));
+      return;
+    }
+
     setFormData(prev => ({ ...prev, resume: file }));
   };
 
@@ -255,7 +267,7 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
               <label className="flex h-40 px-5 py-9 justify-center items-center w-full rounded border-2 border-dashed border-[#D1D5DB] cursor-pointer hover:border-[#00634F] transition-colors">
                 <input
                   type="file"
-                  accept=".pdf,.doc,.docx"
+                  accept=".pdf"
                   onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
                   className="hidden"
                   required
@@ -267,7 +279,7 @@ const JobApplicationForm = ({ jobTitle, id }: JobApplicationFormProps) => {
                       className="text-gray-900 text-center text-sm font-medium leading-5"
                       style={{ fontFamily: 'Roboto, -apple-system, Roboto, Helvetica, sans-serif' }}
                     >
-                      {formData.resume ? formData.resume.name : 'Landing Pages.docx'}
+                      {formData.resume ? formData.resume.name : 'Upload your resume'}
                     </p>
                     <p
                       className="text-gray-500 text-center text-xs leading-4"
