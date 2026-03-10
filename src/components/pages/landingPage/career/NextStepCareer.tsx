@@ -1,8 +1,11 @@
+'use client'
 import React from 'react'
 import Image from 'next/image'
 import PrimaryButton from '../../../button/PrimaryButton'
+import { useRouter } from 'next/navigation'
 
 const NextStepCareer = () => {
+    const router = useRouter()
     return (
         <div className=" bg-white w-full  py-16">
             <div className='relative h-[450px]'>
@@ -28,8 +31,8 @@ const NextStepCareer = () => {
                             Ready to join a team that values innovation, growth, and making a real impact? Discover your next opportunity with Lumina Talent Advisory.
                         </p>
                         <div className='flex flex-col sm:flex-row items-center justify-center gap-4 mt-8'>
-                            <PrimaryButton text='Apply Today' />
-                            <PrimaryButton text='Learn More About Us' />
+                            <PrimaryButton onClick={() => router.push('/contactus')} text='Apply Today' />
+                            <PrimaryButton onClick={() => router.push('/aboutus')} text='Learn More About Us' />
                         </div>
                     </div>
                 </div>

@@ -339,7 +339,7 @@ const CurrentOpportunitiesSection = () => {
                         style={{
                           fontFamily: "Onest, -apple-system, Roboto, Helvetica, sans-serif",
                         }}
-                        onClick={() => { showJobDetailFun(careers?._id); setLoading(true) }}
+                        onClick={() => { showJobDetailFun(careers?._id) }}
                       >
                         view job details
                       </div>

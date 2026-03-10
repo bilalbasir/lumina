@@ -41,11 +41,19 @@ const ViewApplicationModal: React.FC<ViewApplicationModalProps> = (id) => {
     const handleDownload = () => {
         if (!applicantData?.resume) return;
 
-        // Check if the resume is already a full URL (Cloudinary)
-        const resume = applicantData.resume;
-        const previewUrl = resume.startsWith('http') ? resume : `${imageBaseUrl}/${resume}`;
+        let resume = applicantData.resume;
+        if (resume.startsWith('http')) {
+            // Fix double extension for existing entries if present
+            resume = resume.replace(/\.pdf\.pdf$/i, '.pdf');
 
-        window.open(previewUrl, "_blank"); // 👈 ab browser me open hoga
+            // Force download using Cloudinary's attachment flag
+            if (resume.includes('/upload/') && !resume.includes('fl_attachment')) {
+                resume = resume.replace('/upload/', '/upload/fl_attachment/');
+            }
+        }
+
+        const previewUrl = resume.startsWith('http') ? resume : `${imageBaseUrl}/${resume}`;
+        window.open(previewUrl, "_blank");
     };
 
     console.log("applicantData>>>>>>>>>>", applicantData);

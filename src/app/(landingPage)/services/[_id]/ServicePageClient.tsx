@@ -239,31 +239,71 @@ export default function ServicePageClient() {
                         </p>
                     </div>
                     {/* Service Cards Grid - Array Integration */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {serviceData?.features?.map((feature: any, index: number) => (
-                            <div
-                                key={index}
-                                className="border-[rgba(229,248,255,0.40)] bg-[rgba(229,248,255,0.40)] flex flex-col items-center gap-10 self-stretch px-6 py-10 rounded-[20px] border"
-                            >
-                                <div className="flex flex-col items-center gap-3 self-stretch">
-                                    <h3
-                                        className="text-[20px] font-bold text-[#202020] leading-[150%] text-center uppercase"
-                                        style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
-                                    >
-                                        {feature.title}
-                                    </h3>
-                                    <p
-                                        className="text-base text-[#4E4E4E] leading-[150%] text-center"
-                                        style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
-                                    >
-                                        {feature.description}
-                                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {serviceData?.features?.map((feature: any, index: number) => {
+                            const featureStyle = [
+                                {
+                                    cardBorder: "border-[rgba(255,210,210,0.63)]",
+                                    cardBg: "bg-[rgba(255,243,243,0.40)]",
+                                    iconBorder: "border-[#FAEDFF]",
+                                    iconBg: "bg-[#FAEDFF]",
+                                }, // Red-ish
+                                {
+                                    cardBorder: "border-[#D6FFCC]",
+                                    cardBg: "bg-[rgba(224,255,216,0.30)]",
+                                    iconBorder: "border-[#E0FFD8]",
+                                    iconBg: "bg-[#E0FFD8]",
+                                }, // Green
+                                {
+                                    cardBorder: "border-[#D2F3FF]",
+                                    cardBg: "bg-[rgba(229,248,255,0.40)]",
+                                    iconBorder: "border-[#E5F8FF]",
+                                    iconBg: "bg-[#E5F8FF]",
+                                }, // Blue
+                            ];
+
+                            const { cardBorder, cardBg, iconBorder, iconBg } = featureStyle[index % 3]; // cycle through
+
+                            return (
+                                <div
+                                    key={index}
+                                    className={`flex-1 p-6 rounded-[20px] border ${cardBorder} ${cardBg}`}
+                                >
+                                    <div className="flex flex-col gap-4">
+                                        {/* Icon */}
+                                        <div
+                                            className={`w-12 h-12 rounded-full border-8 ${iconBorder} ${iconBg} flex items-center justify-center`}
+                                        >
+                                            <CirclePlusIcon color="#6B21A8" />
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="flex flex-col gap-2">
+                                            <h3
+                                                className="text-lg md:text-[22px] font-bold text-[#181818] leading-[150%]"
+                                                style={{
+                                                    fontFamily:
+                                                        "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                                                }}
+                                            >
+                                                {feature.title || "Candidate Sourcing"}
+                                            </h3>
+                                            <div
+                                                className="text-sm text-[#4E4E4E] leading-[150%] rich-text-content tiptap-content"
+                                                style={{
+                                                    fontFamily:
+                                                        "Onest, -apple-system, Roboto, Helvetica, sans-serif",
+                                                }}
+                                                dangerouslySetInnerHTML={{ __html: feature.description || "Comprehensive talent pipeline development using advanced sourcing techniques and industry networks to identify qualified candidates." }}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex items-center justify-center p-3 rounded-full bg-[#00624F]">
-                                    <CirclePlusIcon color="white" />
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
+
+
+
                     </div>
                 </div>
             </section>

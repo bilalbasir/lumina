@@ -13,8 +13,7 @@ interface ModalLayoutProps {
 }
 
 const ModalLayout: React.FC<ModalLayoutProps> = ({ children, showCrossIcon = "true" }) => {
-    // const isModalOpen = useSelector((state: RootState) => state.ModalDetail.isModalOpen)
-    const isModalOpen = true
+    const isModalOpen = useSelector((state: RootState) => state.ModalDetail.isModalOpen)
 
     const dispatch = useDispatch()
     const closeModal = () => {
