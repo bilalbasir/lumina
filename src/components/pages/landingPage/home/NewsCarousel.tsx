@@ -2,33 +2,23 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useGetAllBlogsWoPagination } from '@/hooks/use-blog-hook';
 
 const NewsCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { data: blogsRes, isLoading } = useGetAllBlogsWoPagination();
 
-  const newsItems = [
-    {
-      publication: "Fortune",
-      title: "Why Courageous Cultures Outperform Safe Ones",
-      link: "#",
-      publicationColor: "#0F766E"
-    },
-    {
-      publication: "Harvard Business Review",
-      title: "The Future of Remote Leadership Excellence",
-      link: "#",
-      publicationColor: "#0F766E"
-    },
-    {
-      publication: "Forbes",
-      title: "Building Resilient Teams in Uncertain Times",
-      link: "#",
-      publicationColor: "#0F766E"
-    }
-  ];
+  const newsItems = blogsRes?.data?.blogs?.slice(0, 3).map((blog: any) => ({
+    publication: "Lumina Insights",
+    title: blog.title,
+    overview: blog.shortDescription || "",
+    link: `/blogs/${blog.slugUrl}`,
+    publicationColor: "#0F766E"
+  })) || [];
 
   // Auto-slide functionality
   useEffect(() => {
+    if (newsItems.length === 0) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % newsItems.length);
     }, 5000); // Change slide every 5 seconds
@@ -39,6 +29,9 @@ const NewsCarousel = () => {
   const handleIndicatorClick = (index: number) => {
     setCurrentSlide(index);
   };
+
+  if (isLoading) return null; // Or a skeleton
+  if (newsItems.length === 0) return null; // Hide if no news
 
   return (
     <section className="relative w-full h-[525px] bg-[#F0F9F1] overflow-hidden">
@@ -100,12 +93,6 @@ const NewsCarousel = () => {
         <div className="flex flex-col items-center gap-15 max-w-5xl text-center">
           {/* Header */}
           <div className="flex flex-col items-center gap-6">
-            <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1D1D1D] leading-[120%]"
-              style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }}
-            >
-              Lumina Talent in the News
-            </h2>
 
             {/* Publication and Article */}
             <div className="flex flex-col items-center gap-5">
@@ -118,6 +105,13 @@ const NewsCarousel = () => {
               >
                 {newsItems[currentSlide].publication}
               </h3>
+
+              <h2
+                className=" text-base sm:text-lg md:text-xl text-[#686868] leading-[150%] max-w-[692px]"
+                style={{ fontFamily: 'Onest, -apple-system, Roboto, Helvetica, sans-serif' }} dangerouslySetInnerHTML={{ __html: newsItems[currentSlide].overview }}
+              />
+
+
 
               {/* Article Link */}
               <Link
